@@ -1,0 +1,53 @@
+plugins {
+	id 'java'
+	id 'idea'
+	id 'org.springframework.boot' version '1.5.12.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.4.RELEASE'
+	id "com.palantir.docker" version "0.19.2"
+}
+
+group = 'com.mycompany'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+	maven { url = "https://repo.spring.io/milestone" }
+}
+
+ext {
+	springfoxSwaggerVersion = '2.8.0'
+	modelMapperVersion = '1.1.3'
+	keycloakVersion = '4.0.0.Beta1'
+//	springCloudVersion = 'Finchley.M9'
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
+	compile('org.springframework.boot:spring-boot-starter-security')
+	compile('org.springframework.boot:spring-boot-starter-web')
+//	compile('org.springframework.cloud:spring-cloud-starter-vault-config')
+	compile('org.projectlombok:lombok')
+	compile("org.modelmapper:modelmapper:${modelMapperVersion}")
+	compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
+	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
+	compile("org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}")
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+//	testCompile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
+	testCompile('org.springframework.security:spring-security-test')
+}
+
+dependencyManagement {
+	imports {
+//		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
+	}
+}
+
+docker {
+	name = 'docker.mycompany.com/book-service'
+	dockerfile = file('docker/Dockerfile')
+	files jar.archivePath
+	buildArgs(['JAR_FILE': "${jar.archiveName}"])
+}

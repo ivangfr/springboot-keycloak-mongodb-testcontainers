@@ -1,0 +1,18 @@
+version: '3.5'
+services:
+
+  mongodb:
+    image: mongo:3.6.3
+    container_name: mongodb
+    ports:
+      - 27017:27017
+
+  keycloak:
+    image: jboss/keycloak:4.0.0.Beta1
+    hostname: keycloak
+    container_name: keycloak
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+    ports:
+      - 8181:8080

@@ -1,0 +1,15 @@
+endpoints:
+  env.sensitive: false
+  trace.sensitive: false
+spring:
+  data:
+    mongodb:
+      uri: mongodb://${MONGODB_ADDR:localhost}:${MONGODB_PORT:27017}/bookdb
+keycloak:
+  auth-server-url: http://${KEYCLOAK_ADDR:localhost}:${KEYCLOAK_PORT:8181}/auth
+  realm: company-services
+  resource: book-services
+  credentials:
+    secret: ${CLIENT_SECRET}
+  ssl-required: external
+  principal-attribute: preferred_username
