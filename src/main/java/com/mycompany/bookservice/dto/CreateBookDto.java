@@ -13,10 +13,10 @@ import java.math.BigDecimal;
 public class CreateBookDto {
 
     @NotNull
-    private String title;
+    private String authorName;
 
     @NotNull
-    private String authorName;
+    private String title;
 
     @NotNull
     private BigDecimal price;

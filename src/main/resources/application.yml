@@ -8,8 +8,7 @@ spring:
 keycloak:
   auth-server-url: http://${KEYCLOAK_ADDR:localhost}:${KEYCLOAK_PORT:8181}/auth
   realm: company-services
-  resource: book-services
-  credentials:
-    secret: ${CLIENT_SECRET}
+  resource: book-service
   ssl-required: external
   principal-attribute: preferred_username
+  use-resource-role-mappings: true

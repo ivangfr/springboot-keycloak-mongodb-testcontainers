@@ -34,7 +34,7 @@ dependencies {
 	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
 	compile("org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-//	testCompile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
+	testCompile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
 	testCompile('org.springframework.security:spring-security-test')
 }
 

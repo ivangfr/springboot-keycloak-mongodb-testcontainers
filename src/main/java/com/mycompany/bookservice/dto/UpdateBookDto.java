@@ -11,8 +11,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UpdateBookDto {
 
-    private String title;
     private String authorName;
+    private String title;
     private BigDecimal price;
 
 }
