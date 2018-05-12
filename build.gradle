@@ -4,6 +4,7 @@ plugins {
 	id 'org.springframework.boot' version '1.5.12.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.4.RELEASE'
 	id "com.palantir.docker" version "0.19.2"
+	id "com.avast.gradle.docker-compose" version "0.7.1"
 }
 
 group = 'com.mycompany'
@@ -12,13 +13,15 @@ sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+	jcenter()
 	maven { url = "https://repo.spring.io/milestone" }
 }
 
 ext {
-	springfoxSwaggerVersion = '2.8.0'
+	springfoxSwaggerVersion = '2.9.0'
 	modelMapperVersion = '1.1.3'
 	keycloakVersion = '4.0.0.Beta1'
+//	jjwtVersion = '0.9.0'
 //	springCloudVersion = 'Finchley.M9'
 }
 
@@ -33,6 +36,11 @@ dependencies {
 	compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
 	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
 	compile("org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}")
+	compile("org.keycloak:keycloak-admin-client:${keycloakVersion}")
+	testCompile('org.jboss.resteasy:resteasy-jaxrs:3.5.1.Final')             // \
+	testCompile('org.jboss.resteasy:resteasy-client:3.5.1.Final')            //  -> dependencies needed by keycloak-admin-client
+	testCompile('org.jboss.resteasy:resteasy-jackson2-provider:3.5.1.Final') // /
+//	compile("io.jsonwebtoken:jjwt:${jjwtVersion}")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
 	testCompile('org.springframework.security:spring-security-test')
@@ -45,9 +53,54 @@ dependencyManagement {
 	}
 }
 
+// adding docker plugin
+
 docker {
 	name = 'docker.mycompany.com/book-service'
 	dockerfile = file('docker/Dockerfile')
 	files jar.archivePath
 	buildArgs(['JAR_FILE': "${jar.archiveName}"])
 }
+
+// adding docker-compose plugin
+
+dockerCompose {
+	useComposeFiles = ['dev/docker-compose.yml']
+	startedServices = ['keycloak']
+}
+
+// adding integration test
+
+sourceSets {
+	integrationTest {
+		java {
+			compileClasspath += main.output + test.output
+			runtimeClasspath += main.output + test.output
+			srcDir file('src/integration-test/java')
+		}
+	}
+}
+
+idea {
+	module {
+		testSourceDirs += project.sourceSets.integrationTest.java.srcDirs
+		testSourceDirs += project.sourceSets.integrationTest.resources.srcDirs
+	}
+}
+
+configurations {
+	integrationTestCompile.extendsFrom testCompile
+	integrationTestRuntime.extendsFrom testRuntime
+}
+
+task integrationTest(type: Test) {
+	group 'springboot-testing'
+	description 'Runs the integration tests'
+
+	testClassesDirs = sourceSets.integrationTest.output.classesDirs
+	classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+check.dependsOn integrationTest
+integrationTest.mustRunAfter test
+dockerCompose.isRequiredBy(integrationTest)

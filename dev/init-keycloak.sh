@@ -71,3 +71,15 @@ curl -i -X POST "http://$KEYCLOAK_ADDR/auth/admin/realms/company-services/users/
 -H "Authorization: Bearer $ADMIN_TOKEN" \
 -H "Content-Type: application/json" \
 -d '[{"id":"'"$ROLE_ID"'","name":"manage_books"}]'
+
+echo "---------"
+echo "Getting user access token"
+
+curl -s -X POST \
+"http://$KEYCLOAK_ADDR/auth/realms/company-services/protocol/openid-connect/token" \
+-H "Content-Type: application/x-www-form-urlencoded" \
+-d "username=ivan.franchin" \
+-d "password=123" \
+-d "grant_type=password" \
+-d "client_secret=$BOOKSERVICE_CLIENT_SECRET" \
+-d "client_id=book-service" | jq -r .access_token

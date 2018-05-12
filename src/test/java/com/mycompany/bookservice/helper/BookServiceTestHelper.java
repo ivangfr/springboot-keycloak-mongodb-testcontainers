@@ -15,7 +15,7 @@ public class BookServiceTestHelper {
     private static final UUID ID = UUID.fromString("d8bcc132-c704-4d21-b05f-9557d7fc3d91");
     private static final String AUTHOR_NAME = "Ivan Franchin";
     private static final String TITLE = "Springboot";
-    private static final BigDecimal PRICE = new BigDecimal(29.99);
+    private static final BigDecimal PRICE = new BigDecimal("29.99");
 
     /* Book */
 

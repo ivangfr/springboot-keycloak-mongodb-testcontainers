@@ -202,7 +202,7 @@ An example of utilization is:
 ```
 @RunWith(SpringRunner.class)
 @DataMongoTest
-public class ExampleRepositoryTests {
+public class BookRepositoryTests {
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -241,10 +241,12 @@ public class BookServiceImplTest {
 `@WebMvcTest` is limited to a single controller and is used in combination with `@MockBean` to provide mock implementations for required dependencies.
 `@WebMvcTest` also auto-configures `MockMvc`. Mock MVC offers a powerful way to quickly test MVC controllers without needing to start a full HTTP server.
 In the example bellow, you can see that we mocking the services (in this case `bookService`) used by `BookController`.
+The annotation `@AutoConfigureMockMvc(secure = false)` is used to disable security configuration. 
 
 ```
 @RunWith(SpringRunner.class)
 @WebMvcTest(BookController.class)
+@AutoConfigureMockMvc(secure = false)
 public class BookControllerTests {
 
     @Autowired

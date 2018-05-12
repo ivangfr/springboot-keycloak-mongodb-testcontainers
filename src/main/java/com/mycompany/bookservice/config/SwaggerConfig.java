@@ -59,8 +59,9 @@ public class SwaggerConfig {
 
     private SecurityContext securityContext() {
         return SecurityContext.builder().securityReferences(defaultAuth())
-                // TODO waiting for the springfox 2.9.0. it will include http methods (POST, PUT, etc) in the forPaths
+                // TODO How to use the new forHttpMethods?
                 .forPaths(regex("/api/books.*"))
+                //.forHttpMethods(equalTo(HttpMethod.POST))
                 .build();
     }
 

@@ -8,10 +8,19 @@ services:
       - 27017:27017
 
   keycloak:
-    image: jboss/keycloak:4.0.0.Beta1
+    image: jboss/keycloak:4.0.0.Beta2
     hostname: keycloak
-    container_name: keycloak
+
+    # 'my-keycloak' is set as container_name instead of 'keycloak' to avoid the conflict
+    # that happens when using gradle-docker-compose plugin (started when integrationTest
+    # runs). As far I understood, gradle-docker-compose writes new properties to the
+    # containers it runs, for example, my-keycloak.tcp.8080. However, the
+    # KeycloakSpringBootProperties.java is set to ignore unknown properties. So, if 'keycloak'
+    # name is used, the plugin will create keycloak.tcp.8080 and an exception will be thrown.
+    container_name: my-keycloak
+
     environment:
+      - DB_VENDOR=H2
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
     ports:
