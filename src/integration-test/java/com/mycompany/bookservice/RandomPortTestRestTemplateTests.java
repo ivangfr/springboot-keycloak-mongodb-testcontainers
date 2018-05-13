@@ -154,17 +154,11 @@ public class RandomPortTestRestTemplateTests {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
 
-        ResponseEntity<MessageError> responseEntity = testRestTemplate.postForEntity(
-                "/api/books", new HttpEntity<>(createBookDto, headers), MessageError.class);
+        ResponseEntity<String> responseEntity = testRestTemplate.postForEntity(
+                "/api/books", new HttpEntity<>(createBookDto, headers), String.class);
 
-        assertThat(responseEntity.getHeaders().get("WWW-Authenticate")).isEqualTo(Lists.newArrayList("Bearer realm=\"company-services\", error=\"invalid_token\", error_description=\"Failed to parse JWT\""));
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
-        assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
-        assertThat(responseEntity.getBody().getStatus()).isEqualTo(401);
-        assertThat(responseEntity.getBody().getError()).isEqualTo("Unauthorized");
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("Unable to authenticate using the Authorization header");
-        assertThat(responseEntity.getBody().getPath()).isEqualTo("/api/books");
-        assertThat(responseEntity.getBody().getErrors()).isNull();
+        assertThat(responseEntity.getBody()).isNull();
     }
 
     @Test

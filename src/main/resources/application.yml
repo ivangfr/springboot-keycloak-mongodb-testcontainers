@@ -1,10 +1,13 @@
-endpoints:
-  env.sensitive: false
-  trace.sensitive: false
+management:
+  security.enabled: false
+  endpoints.web.exposure.include: "*"
+  endpoint.health.show-details: always
+
 spring:
   data:
     mongodb:
       uri: mongodb://${MONGODB_ADDR:localhost}:${MONGODB_PORT:27017}/bookdb
+
 keycloak:
   auth-server-url: http://${KEYCLOAK_ADDR:localhost}:${KEYCLOAK_PORT:8181}/auth
   realm: company-services

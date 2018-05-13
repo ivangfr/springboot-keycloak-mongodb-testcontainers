@@ -1,8 +1,8 @@
 plugins {
 	id 'java'
 	id 'idea'
-	id 'org.springframework.boot' version '1.5.12.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.4.RELEASE'
+	id 'org.springframework.boot' version '2.0.2.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.5.RELEASE'
 	id "com.palantir.docker" version "0.19.2"
 	id "com.avast.gradle.docker-compose" version "0.7.1"
 }
@@ -20,9 +20,10 @@ repositories {
 ext {
 	springfoxSwaggerVersion = '2.9.0'
 	modelMapperVersion = '1.1.3'
-	keycloakVersion = '4.0.0.Beta1'
-//	jjwtVersion = '0.9.0'
-//	springCloudVersion = 'Finchley.M9'
+	keycloakVersion = '4.0.0.Beta2'
+	yassonJsonbVersion = '1.0.1'
+	javaxJsonVersion = '1.1.2'
+	resteasyVersion = '3.5.1.Final'
 }
 
 dependencies {
@@ -30,17 +31,17 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-starter-web')
-//	compile('org.springframework.cloud:spring-cloud-starter-vault-config')
 	compile('org.projectlombok:lombok')
 	compile("org.modelmapper:modelmapper:${modelMapperVersion}")
 	compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
 	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
-	compile("org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}")
+	compile("org.keycloak:keycloak-spring-boot-2-starter:${keycloakVersion}")
 	compile("org.keycloak:keycloak-admin-client:${keycloakVersion}")
-	testCompile('org.jboss.resteasy:resteasy-jaxrs:3.5.1.Final')             // \
-	testCompile('org.jboss.resteasy:resteasy-client:3.5.1.Final')            //  -> dependencies needed by keycloak-admin-client
-	testCompile('org.jboss.resteasy:resteasy-jackson2-provider:3.5.1.Final') // /
-//	compile("io.jsonwebtoken:jjwt:${jjwtVersion}")
+	compile("org.glassfish:javax.json:${javaxJsonVersion}")                         // \
+	testCompile("org.jboss.resteasy:resteasy-jaxrs:${resteasyVersion}")             //  \
+	testCompile("org.jboss.resteasy:resteasy-client:${resteasyVersion}")            //   -> dependencies needed by keycloak-admin-client
+	testCompile("org.jboss.resteasy:resteasy-jackson2-provider:${resteasyVersion}") //  /
+	testCompile("org.eclipse:yasson:${yassonJsonbVersion}")                         // /
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
 	testCompile('org.springframework.security:spring-security-test')
@@ -48,7 +49,6 @@ dependencies {
 
 dependencyManagement {
 	imports {
-//		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 		mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
 	}
 }

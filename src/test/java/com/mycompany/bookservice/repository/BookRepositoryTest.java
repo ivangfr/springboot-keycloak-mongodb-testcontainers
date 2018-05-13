@@ -10,9 +10,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-import static com.mycompany.bookservice.helper.BookServiceTestHelper.getABook;
 import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultBook;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,9 +45,9 @@ public class BookRepositoryTest {
 
     @Test
     public void given_noBook_when_findOne_then_returnBook() {
-        Book bookFound = bookRepository.findOne(UUID.randomUUID());
+        Optional<Book> bookFound = bookRepository.findById(UUID.randomUUID());
 
-        assertThat(bookFound).isNull();
+        assertThat(bookFound.isPresent()).isFalse();
     }
 
     @Test
@@ -55,9 +55,10 @@ public class BookRepositoryTest {
         Book book = getDefaultBook();
         mongoTemplate.save(book);
 
-        Book bookFound = bookRepository.findOne(book.getId());
+        Optional<Book> bookFound = bookRepository.findById(book.getId());
 
-        assertThat(bookFound).isEqualToComparingFieldByField(book);
+        assertThat(bookFound.isPresent()).isTrue();
+        assertThat(bookFound.get()).isEqualToComparingFieldByField(book);
     }
 
     @Test
@@ -75,13 +76,13 @@ public class BookRepositoryTest {
         Book book = getDefaultBook();
         mongoTemplate.save(book);
 
-        Book bookFound = bookRepository.findOne(book.getId());
-        assertThat(bookFound).isNotNull();
+        Optional<Book> bookFound = bookRepository.findById(book.getId());
+        assertThat(bookFound.isPresent()).isTrue();
 
-        bookRepository.delete(book.getId());
+        bookRepository.delete(book);
 
-        bookFound = bookRepository.findOne(book.getId());
-        assertThat(bookFound).isNull();
+        bookFound = bookRepository.findById(book.getId());
+        assertThat(bookFound.isPresent()).isFalse();
     }
 
     @Test
@@ -89,8 +90,9 @@ public class BookRepositoryTest {
         Book book = getDefaultBook();
         mongoTemplate.save(book);
 
-        Book bookFound = bookRepository.findOne(book.getId());
-        assertThat(bookFound).isEqualToComparingFieldByField(book);
+        Optional<Book> bookFound = bookRepository.findById(book.getId());
+        assertThat(bookFound.isPresent()).isTrue();
+        assertThat(bookFound.get()).isEqualToComparingFieldByField(book);
 
         String newAuthorName = "Ivan Franchin Jr.";
         String newTitle = "Java 8";
@@ -102,10 +104,11 @@ public class BookRepositoryTest {
 
         bookRepository.save(book);
 
-        bookFound = bookRepository.findOne(book.getId());
-        assertThat(bookFound.getAuthorName()).isEqualTo(newAuthorName);
-        assertThat(bookFound.getTitle()).isEqualTo(newTitle);
-        assertThat(bookFound.getPrice()).isEqualTo(newPrice);
+        bookFound = bookRepository.findById(book.getId());
+        assertThat(bookFound.isPresent()).isTrue();
+        assertThat(bookFound.get().getAuthorName()).isEqualTo(newAuthorName);
+        assertThat(bookFound.get().getTitle()).isEqualTo(newTitle);
+        assertThat(bookFound.get().getPrice()).isEqualTo(newPrice);
     }
 
 }

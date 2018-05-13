@@ -1,6 +1,5 @@
 package com.mycompany.bookservice.config;
 
-import org.apache.http.HttpHeaders;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -49,7 +48,7 @@ public class SwaggerConfig {
     }
 
     private ApiKey apiKey() {
-        return new ApiKey(API_KEY_NAME, HttpHeaders.AUTHORIZATION, "header");
+        return new ApiKey(API_KEY_NAME, "Authorization", "header");
     }
 
     @Bean
