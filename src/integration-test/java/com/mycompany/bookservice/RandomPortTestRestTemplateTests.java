@@ -48,7 +48,7 @@ public class RandomPortTestRestTemplateTests {
     private Keycloak keycloakBookService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         String serverUrl = "http://localhost:8181/auth";
         keycloakAdmin = KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
@@ -100,7 +100,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         keycloakAdmin.realm("company-services").remove();
     }
 
@@ -246,7 +246,7 @@ public class RandomPortTestRestTemplateTests {
 
         ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(
                 "/api/books/" + id, HttpMethod.DELETE,
-                new HttpEntity<>(null, headers), MessageError.class);
+                new HttpEntity<>(headers), MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
@@ -269,7 +269,7 @@ public class RandomPortTestRestTemplateTests {
 
         ResponseEntity<BookDto> responseEntity = testRestTemplate.exchange(
                 "/api/books/" + book.getId(), HttpMethod.DELETE,
-                new HttpEntity<>(null, headers), BookDto.class);
+                new HttpEntity<>(headers), BookDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody().getId()).isNotNull();

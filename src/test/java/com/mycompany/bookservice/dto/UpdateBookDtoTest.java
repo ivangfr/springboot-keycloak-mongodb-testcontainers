@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import static com.mycompany.bookservice.helper.BookServiceTestHelper.getACreateBookDto;
 import static com.mycompany.bookservice.helper.BookServiceTestHelper.getAnUpdateBookDto;
 import static org.assertj.core.api.Assertions.assertThat;
 

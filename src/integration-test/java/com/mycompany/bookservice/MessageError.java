@@ -16,7 +16,7 @@ public class MessageError {
     private List<ErrorDetail> errors;
 
     @Data
-    static class ErrorDetail {
+    public static class ErrorDetail {
         private List<String> codes;
         private String defaultMessage;
         private String objectName;
