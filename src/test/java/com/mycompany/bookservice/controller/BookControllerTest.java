@@ -10,6 +10,7 @@ import com.mycompany.bookservice.model.Book;
 import com.mycompany.bookservice.service.BookService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -44,6 +46,9 @@ public class BookControllerTest {
 
     @MockBean
     private BookService bookService;
+
+    @Mock
+    private Principal principal;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -101,9 +106,11 @@ public class BookControllerTest {
         CreateBookDto createBookDto = getDefaultCreateBookDto();
         Book book = getDefaultBook();
 
+        given(principal.getName()).willReturn("ivan.franchin");
         given(bookService.saveBook(any(Book.class))).willReturn(book);
 
         ResultActions resultActions = mockMvc.perform(post("/api/books")
+                .principal(principal)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(createBookDto)))
@@ -125,10 +132,12 @@ public class BookControllerTest {
         updateBookDto.setPrice(new BigDecimal("99.99"));
         updateBookDto.setTitle("Java 9");
 
+        given(principal.getName()).willReturn("ivan.franchin");
         given(bookService.validateAndGetBookById(book.getId())).willReturn(book);
         given(bookService.saveBook(any(Book.class))).willReturn(book);
 
         ResultActions resultActions = mockMvc.perform(patch("/api/books/" + book.getId())
+                .principal(principal)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(updateBookDto)))
@@ -145,9 +154,12 @@ public class BookControllerTest {
     @Test
     public void given_noBook_when_updateBook_then_returnNotFound() throws Exception {
         UpdateBookDto updateBookDto = getDefaultUpdateBookDto();
+
+        given(principal.getName()).willReturn("ivan.franchin");
         willThrow(BookNotFoundException.class).given(bookService).validateAndGetBookById(any(UUID.class));
 
         ResultActions resultActions = mockMvc.perform(patch("/api/books/" + UUID.randomUUID())
+                .principal(principal)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(updateBookDto)))
@@ -160,10 +172,12 @@ public class BookControllerTest {
     public void given_oneBook_when_deleteBook_then_returnBookJson() throws Exception {
         Book book = getDefaultBook();
 
+        given(principal.getName()).willReturn("ivan.franchin");
         given(bookService.validateAndGetBookById(book.getId())).willReturn(book);
         willDoNothing().given(bookService).deleteBook(any(Book.class));
 
         ResultActions resultActions = mockMvc.perform(delete("/api/books/" + book.getId())
+                .principal(principal)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print());
 
@@ -177,9 +191,11 @@ public class BookControllerTest {
 
     @Test
     public void given_noBook_when_deleteBook_then_returnNotFound() throws Exception {
+        given(principal.getName()).willReturn("ivan.franchin");
         willThrow(BookNotFoundException.class).given(bookService).validateAndGetBookById(any(UUID.class));
 
         ResultActions resultActions = mockMvc.perform(delete("/api/books/" + UUID.randomUUID())
+                .principal(principal)
                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print());
 
