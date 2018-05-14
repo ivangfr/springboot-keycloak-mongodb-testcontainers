@@ -19,6 +19,7 @@ repositories {
 
 ext {
 	springfoxSwaggerVersion = '2.9.0'
+	findbugsVersion = '3.0.2'
 	modelMapperVersion = '1.1.3'
 	keycloakVersion = '4.0.0.Beta2'
 	yassonJsonbVersion = '1.0.1'
@@ -32,6 +33,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.projectlombok:lombok')
+	compile("com.google.code.findbugs:jsr305:${findbugsVersion}")
 	compile("org.modelmapper:modelmapper:${modelMapperVersion}")
 	compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
 	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
