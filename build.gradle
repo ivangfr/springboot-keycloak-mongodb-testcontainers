@@ -80,13 +80,14 @@ sourceSets {
 			runtimeClasspath += main.output + test.output
 			srcDir file('src/integration-test/java')
 		}
+//		resources.srcDir file('src/integration-test/resources')
 	}
 }
 
 idea {
 	module {
 		testSourceDirs += project.sourceSets.integrationTest.java.srcDirs
-		testSourceDirs += project.sourceSets.integrationTest.resources.srcDirs
+//		testSourceDirs += project.sourceSets.integrationTest.resources.srcDirs
 	}
 }
 

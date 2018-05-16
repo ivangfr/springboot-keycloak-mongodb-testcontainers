@@ -19,8 +19,12 @@ The application will have its endpoints related to add/update/delete books secur
 
 2. Inside `/springboot-testing-mongodb-keycloak/dev` folder run
 ```
-docker-compose up
+docker-compose up -d
 ```
+> To stop and remove containers, networks, images, and volumes
+> ```
+> docker-compose down
+> ```
 
 ### Configure Keycloak
 
@@ -43,10 +47,7 @@ export BOOKSERVICE_CLIENT_SECRET=...
 
 #### Manually using `Keycloak UI`
 
-1. Access the link
-```
-http://localhost:8181
-```
+1. Access the link: [http://localhost:8181/auth/admin/master/console](http://localhost:8181/auth/admin/master/console)
 
 2. Login with the credentials
 ```
