@@ -47,7 +47,7 @@ export BOOKSERVICE_CLIENT_SECRET=...
 
 #### Manually using `Keycloak UI`
 
-1. Access the link: [http://localhost:8181/auth/admin/master/console](http://localhost:8181/auth/admin/master/console)
+1. Access the link: http://localhost:8181/auth/admin/master/console
 
 2. Login with the credentials
 ```
