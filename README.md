@@ -4,14 +4,14 @@
 
 The goals of this project are:
 
-- Create a REST API application to manage books, `book-service`. The data is stored in a `MongoDB` database.
+- Create a REST API application to manage books, `book-service`. The data is stored in a [`MongoDB`](https://www.mongodb.com) database.
 The application will have its endpoints related to add/update/delete books secured.
-- Use `Keycloak` as authentication and authorization server;
+- Use [`Keycloak`](https://www.keycloak.org) as authentication and authorization server;
 - Explore the utilities and annotations that Spring Boot provides when testing applications.
 
 ## Start Environment
 
-***Note. In order to run some commands/scripts, you must have [`jq`][1] installed on you machine***
+***Note. In order to run some commands/scripts, you must have [`jq`](https://stedolan.github.io/jq) installed on you machine***
 
 ### Docker Compose
 
@@ -23,14 +23,14 @@ docker-compose up -d
 ```
 > To stop and remove containers, networks, images, and volumes
 > ```
-> docker-compose down
+> docker-compose down -v
 > ```
 
 ### Configure Keycloak
 
 You have two options to configure `Keycloak`: running `init_keycloak.sh` script or manually using `Keycloak UI`.
 
-#### Running `init_keycloak.sh` script
+#### Automatically running script
 
 1. Go `/springboot-testing-mongodb-keycloak/dev` folder
 
@@ -45,7 +45,7 @@ It will create automatically the `company-services` realm, `book-service` client
 export BOOKSERVICE_CLIENT_SECRET=...
 ```
 
-#### Manually using `Keycloak UI`
+#### Manually using Keycloak UI
 
 1. Access the link: http://localhost:8181/auth/admin/master/console
 
@@ -89,16 +89,15 @@ Password: admin
 
 **Done!** That is all the configuration needed on `Keycloak`. 
 
-### Start `book-service`
+### Start book-service
 
 1. Open a new terminal
 
 2. Start `book-service` application
 
 In `springboot-testing-mongodb-keycloak` root folder, run:
-
 ```
-gradle bootRun 
+gradle clean bootRun 
 ```
 
 ## Test using cURL
@@ -302,5 +301,3 @@ Integration tests should run separated from the unit tests and, mainly, it shoul
 
 - https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html
 - http://www.baeldung.com/spring-boot-testing
-
-[1]: https://stedolan.github.io/jq

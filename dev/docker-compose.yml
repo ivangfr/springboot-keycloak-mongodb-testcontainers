@@ -6,6 +6,9 @@ services:
     container_name: mongodb
     ports:
       - 27017:27017
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017/bookdb --quiet
+      start_period: 10s
 
   keycloak:
     image: jboss/keycloak:4.0.0.Beta2
@@ -25,3 +28,6 @@ services:
       - KEYCLOAK_PASSWORD=admin
     ports:
       - 8181:8080
+    healthcheck:
+      test: "curl -f http://localhost:8080/auth || exit 1"
+      start_period: 10s
