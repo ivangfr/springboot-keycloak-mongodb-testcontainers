@@ -11,7 +11,7 @@ services:
       start_period: 10s
 
   keycloak:
-    image: jboss/keycloak:4.0.0.Beta2
+    image: jboss/keycloak:4.0.0.Final
     hostname: keycloak
 
     # 'my-keycloak' is set as container_name instead of 'keycloak' to avoid the conflict
@@ -23,7 +23,6 @@ services:
     container_name: my-keycloak
 
     environment:
-      - DB_VENDOR=H2
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
     ports:
