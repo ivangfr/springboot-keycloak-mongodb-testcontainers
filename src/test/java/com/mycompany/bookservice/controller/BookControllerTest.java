@@ -8,8 +8,8 @@ import com.mycompany.bookservice.dto.UpdateBookDto;
 import com.mycompany.bookservice.exception.BookNotFoundException;
 import com.mycompany.bookservice.model.Book;
 import com.mycompany.bookservice.service.BookService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,7 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(BookController.class)
 @Import(ModelMapperConfig.class)
 @AutoConfigureMockMvc(secure = false)
@@ -54,7 +54,7 @@ public class BookControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void given_noBook_when_getAllBooks_then_returnEmptyJsonArray() throws Exception {
+    void given_noBook_when_getAllBooks_then_returnStatusOkAndEmptyJsonArray() throws Exception {
         given(bookService.getAllBooks()).willReturn(new ArrayList<>());
 
         ResultActions resultActions = mockMvc.perform(get("/api/books")
@@ -67,7 +67,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void given_oneBook_when_getAllBooks_then_returnJsonArrayWithOneBook() throws Exception {
+    void given_oneBook_when_getAllBooks_then_returnStatusOkAndJsonArrayWithOneBook() throws Exception {
         Book book = getDefaultBook();
         given(bookService.getAllBooks()).willReturn(Lists.newArrayList(book));
 
@@ -85,7 +85,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void given_oneBook_when_getBookById_then_returnBookJson() throws Exception {
+    void given_existingBookId_when_getBookById_then_returnStatusOkAndBookJson() throws Exception {
         Book book = getDefaultBook();
         given(bookService.validateAndGetBookById(book.getId())).willReturn(book);
 
@@ -102,7 +102,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void given_noBook_when_createBook_then_returnBookJson() throws Exception {
+    void given_validBook_when_createBook_then_returnStatusCreatedAndBookJson() throws Exception {
         CreateBookDto createBookDto = getDefaultCreateBookDto();
         Book book = getDefaultBook();
 
@@ -125,7 +125,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void given_oneBook_when_updateBook_then_returnBookJsonUpdated() throws Exception {
+    void given_existingBookId_when_updateBook_then_returnStatusOkAndBookJsonUpdated() throws Exception {
         Book book = getDefaultBook();
 
         UpdateBookDto updateBookDto = new UpdateBookDto();
@@ -152,7 +152,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void given_noBook_when_updateBook_then_returnNotFound() throws Exception {
+    void given_nonExistingBookId_when_updateBook_then_returnStatusNotFound() throws Exception {
         UpdateBookDto updateBookDto = getDefaultUpdateBookDto();
 
         given(principal.getName()).willReturn("ivan.franchin");
@@ -169,7 +169,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void given_oneBook_when_deleteBook_then_returnBookJson() throws Exception {
+    void given_existingBookId_when_deleteBook_then_returnStatusOkAndBookJson() throws Exception {
         Book book = getDefaultBook();
 
         given(principal.getName()).willReturn("ivan.franchin");
@@ -190,7 +190,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void given_noBook_when_deleteBook_then_returnNotFound() throws Exception {
+    void given_nonExistingBookId_when_deleteBook_then_returnStatusNotFound() throws Exception {
         given(principal.getName()).willReturn("ivan.franchin");
         willThrow(BookNotFoundException.class).given(bookService).validateAndGetBookById(any(UUID.class));
 

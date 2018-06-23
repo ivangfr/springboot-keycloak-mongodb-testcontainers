@@ -1,12 +1,13 @@
 package com.mycompany.bookservice.repository;
 
 import com.mycompany.bookservice.model.Book;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,8 +17,9 @@ import java.util.UUID;
 import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultBook;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataMongoTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class BookRepositoryTest {
 
     @Autowired
@@ -27,14 +29,14 @@ public class BookRepositoryTest {
     private BookRepository bookRepository;
 
     @Test
-    public void given_noBook_when_findAll_then_returnEmptyArray() {
+    void given_noBook_when_findAll_then_returnEmptyArray() {
         List<Book> books = bookRepository.findAll();
 
         assertThat(books).hasSize(0);
     }
 
     @Test
-    public void given_oneBook_when_findAll_then_returnArrayWithOneBook() {
+    void given_oneBook_when_findAll_then_returnArrayWithOneBook() {
         Book book = getDefaultBook();
         mongoTemplate.save(book);
 
@@ -44,14 +46,14 @@ public class BookRepositoryTest {
     }
 
     @Test
-    public void given_noBook_when_findOne_then_returnBook() {
+    void given_nonExistingBookId_when_findById_then_returnBook() {
         Optional<Book> bookFound = bookRepository.findById(UUID.randomUUID());
 
         assertThat(bookFound.isPresent()).isFalse();
     }
 
     @Test
-    public void given_oneBook_when_findOne_then_returnBook() {
+    void given_existingBookId_when_findById_then_returnBook() {
         Book book = getDefaultBook();
         mongoTemplate.save(book);
 
@@ -62,7 +64,7 @@ public class BookRepositoryTest {
     }
 
     @Test
-    public void given_oneBook_when_findByAuthorNameLike_then_returnBook() {
+    void given_existingBookAuthorNameWithOneBook_when_findByAuthorNameLike_then_returnListWithOneBook() {
         Book book = getDefaultBook();
         mongoTemplate.save(book);
 
@@ -72,7 +74,7 @@ public class BookRepositoryTest {
     }
 
     @Test
-    public void given_oneBook_when_delete_then_bookIsDeleted() {
+    void given_existingBookId_when_delete_then_bookIsDeleted() {
         Book book = getDefaultBook();
         mongoTemplate.save(book);
 
@@ -86,7 +88,7 @@ public class BookRepositoryTest {
     }
 
     @Test
-    public void given_oneBook_when_update_then_bookIsUpdated() {
+    void given_existingBookId_when_update_then_bookIsUpdated() {
         Book book = getDefaultBook();
         mongoTemplate.save(book);
 

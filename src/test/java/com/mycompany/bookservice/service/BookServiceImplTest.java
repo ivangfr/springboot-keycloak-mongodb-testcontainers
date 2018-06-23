@@ -4,12 +4,12 @@ import com.google.common.collect.Lists;
 import com.mycompany.bookservice.exception.BookNotFoundException;
 import com.mycompany.bookservice.model.Book;
 import com.mycompany.bookservice.repository.BookRepository;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,27 +18,26 @@ import java.util.UUID;
 
 import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultBook;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class BookServiceImplTest {
 
     private BookService bookService;
+
+    @MockBean
     private BookRepository bookRepository;
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
-
-    @Before
+    @BeforeEach
     public void setUp() {
-        bookRepository = mock(BookRepository.class);
         bookService = new BookServiceImpl(bookRepository);
     }
 
     @Test
-    public void given_oneBook_when_saveBook_then_returnBook() {
+    void given_validBook_when_saveBook_then_returnBook() {
         Book book = getDefaultBook();
         given(bookRepository.save(book)).willReturn(book);
 
@@ -48,7 +47,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    public void given_noBook_when_getAllBooks_then_returnEmptyList() {
+    void given_noBook_when_getAllBooks_then_returnEmptyList() {
         given(bookRepository.findAll()).willReturn(new ArrayList<>());
 
         List<Book> booksFound = bookService.getAllBooks();
@@ -57,7 +56,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    public void given_oneBook_when_getAllBooks_then_returnListWithOneBook() {
+    void given_oneBook_when_getAllBooks_then_returnListWithOneBook() {
         Book book = getDefaultBook();
         given(bookRepository.findAll()).willReturn(Lists.newArrayList(book));
 
@@ -68,7 +67,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    public void given_oneBook_when_getBookById_then_returnBook() {
+    void given_existingBookId_when_getBookById_then_returnBook() {
         Book book = getDefaultBook();
         given(bookRepository.findById(book.getId())).willReturn(Optional.of(book));
 
@@ -79,7 +78,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    public void given_oneBook_when_getBookByIdUsingNonExistingId_then_returnNull() {
+    void given_nonExistingBookId_when_getBookById_then_returnNull() {
         Book book = getDefaultBook();
         given(bookRepository.findById(book.getId())).willReturn(Optional.of(book));
 
@@ -89,7 +88,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    public void given_oneBook_when_getBooksByAuthorName_then_returnListWithOneBook() {
+    void given_existingBookAuthorNameWithOneBook_when_getBooksByAuthorName_then_returnListWithOneBook() {
         Book book = getDefaultBook();
         given(bookRepository.findByAuthorNameLike(book.getAuthorName())).willReturn(Lists.newArrayList(book));
 
@@ -100,18 +99,18 @@ public class BookServiceImplTest {
     }
 
     @Test
-    public void given_nonExistingBookId_when_validateAndGetBookById_then_throwException() throws BookNotFoundException {
+    void given_nonExistingBookId_when_validateAndGetBookById_then_throwBookNotFoundException() {
         given(bookRepository.findById(any(UUID.class))).willReturn(Optional.ofNullable(null));
 
         UUID id = UUID.randomUUID();
-        expectedException.expect(BookNotFoundException.class);
-        expectedException.expectMessage(String.format("Book with id '%s' not found.", id));
-
-        bookService.validateAndGetBookById(id);
+        Throwable exception = assertThrows(BookNotFoundException.class, () -> {
+            bookService.validateAndGetBookById(id);
+        });
+        assertThat(String.format("Book with id '%s' not found.", id)).isEqualTo(exception.getMessage());
     }
 
     @Test
-    public void given_oneBook_when_validateAndGetBookById_then_returnBook() throws BookNotFoundException {
+    void given_existingBookId_when_validateAndGetBookById_then_returnBook() throws BookNotFoundException {
         Book book = getDefaultBook();
         given(bookRepository.findById(book.getId())).willReturn(Optional.of(book));
 

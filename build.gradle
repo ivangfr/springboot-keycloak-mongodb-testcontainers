@@ -25,6 +25,7 @@ ext {
 	yassonJsonbVersion = '1.0.1'
 	javaxJsonVersion = '1.1.2'
 	resteasyVersion = '3.5.1.Final'
+	junitJupiterVersion = '5.2.0'
 }
 
 dependencies {
@@ -47,6 +48,8 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
 	testCompile('org.springframework.security:spring-security-test')
+	testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+	testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
 }
 
 dependencyManagement {
@@ -62,6 +65,12 @@ docker {
 	dockerfile = file('docker/Dockerfile')
 	files jar.archivePath
 	buildArgs(['JAR_FILE': "${jar.archiveName}"])
+}
+
+// enable JUnit 5
+
+test {
+	useJUnitPlatform()
 }
 
 // adding docker-compose plugin
@@ -102,6 +111,8 @@ task integrationTest(type: Test) {
 
 	testClassesDirs = sourceSets.integrationTest.output.classesDirs
 	classpath = sourceSets.integrationTest.runtimeClasspath
+
+	useJUnitPlatform()
 }
 
 check.dependsOn integrationTest

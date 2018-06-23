@@ -6,10 +6,10 @@ import com.mycompany.bookservice.dto.CreateBookDto;
 import com.mycompany.bookservice.dto.UpdateBookDto;
 import com.mycompany.bookservice.model.Book;
 import com.mycompany.bookservice.repository.BookRepository;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.idm.ClientRepresentation;
@@ -23,7 +23,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.UUID;
 import static com.mycompany.bookservice.helper.BookServiceTestHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class RandomPortTestRestTemplateTests {
@@ -47,8 +47,8 @@ public class RandomPortTestRestTemplateTests {
     private Keycloak keycloakAdmin;
     private Keycloak keycloakBookService;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         String serverUrl = "http://localhost:8181/auth";
         keycloakAdmin = KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
@@ -99,8 +99,8 @@ public class RandomPortTestRestTemplateTests {
                 .build();
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         keycloakAdmin.realm("company-services").remove();
     }
 
@@ -109,7 +109,7 @@ public class RandomPortTestRestTemplateTests {
      * ============== */
 
     @Test
-    public void given_noBooks_when_getAllBooks_then_returnEmptyArray() {
+    void given_noBooks_when_getAllBooks_then_returnStatusOkAndEmptyArray() {
         ResponseEntity<BookDto[]> responseEntity = testRestTemplate.getForEntity("/api/books", BookDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -117,7 +117,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_oneBook_when_getAllBooks_then_returnArrayWithBook() {
+    void given_oneBook_when_getAllBooks_then_returnStatusOkAndArrayWithOneBook() {
         Book book = getDefaultBook();
         bookRepository.save(book);
 
@@ -136,7 +136,7 @@ public class RandomPortTestRestTemplateTests {
      * =============== */
 
     @Test
-    public void given_noBooks_when_createBookWithoutAuthentication_then_returnStatus302() {
+    void given_validBook_when_createBookWithoutAuthentication_then_returnStatus302() {
         CreateBookDto createBookDto = getDefaultCreateBookDto();
         ResponseEntity<String> responseEntity = testRestTemplate.postForEntity(
                 "/api/books", createBookDto, String.class);
@@ -146,7 +146,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_noBooks_when_createBookInformingInvalidToken_then_returnBookJson() {
+    void given_validBook_when_createBookInformingInvalidToken_then_returnStatusUnauthorized() {
         String accessToken = "abcdef";
 
         CreateBookDto createBookDto = getDefaultCreateBookDto();
@@ -162,7 +162,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_noBooks_when_createBookAuthenticated_then_returnBookJson() {
+    void given_validBook_when_createBookAuthenticated_then_returnStatusCreatedAndBookJson() {
         CreateBookDto createBookDto = getDefaultCreateBookDto();
 
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
@@ -185,7 +185,7 @@ public class RandomPortTestRestTemplateTests {
      * ===================== */
 
     @Test
-    public void given_noBook_when_updateBook_then_returnNotFound() {
+    void given_nonExistingBookId_when_updateBook_then_returnStatusNotFound() {
         UUID id = UUID.randomUUID();
         UpdateBookDto updateBookDto = getDefaultUpdateBookDto();
 
@@ -208,7 +208,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_oneBook_when_updateBook_then_returnBookJson() {
+    void given_existingBook_when_updateBook_then_returnStatusOkAndBookJson() {
         Book book = getDefaultBook();
         bookRepository.save(book);
 
@@ -237,7 +237,7 @@ public class RandomPortTestRestTemplateTests {
      * ====================== */
 
     @Test
-    public void given_noBook_when_deleteBook_then_returnNotFound() {
+    void given_nonExistingBookId_when_deleteBook_then_returnStatusNotFound() {
         UUID id = UUID.randomUUID();
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
 
@@ -258,7 +258,7 @@ public class RandomPortTestRestTemplateTests {
     }
 
     @Test
-    public void given_oneBook_when_deleteBook_then_returnBookJson() {
+    void given_existingBookId_when_deleteBook_then_returnStatusOkAndBookJson() {
         Book book = getDefaultBook();
         bookRepository.save(book);
 
