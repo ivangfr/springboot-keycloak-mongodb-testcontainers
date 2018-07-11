@@ -200,7 +200,7 @@ Regular `@Component` beans are not loaded into the `ApplicationContext`.
 An example of utilization is:
 
 ```
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @DataMongoTest
 public class BookRepositoryTests {
 
@@ -219,7 +219,7 @@ public class BookRepositoryTests {
 In order to test the application services, we can use a something similar as shown bellow, as we create an instance of `BookServiceImpl` and mock the `bookRepository` 
 
 ```
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class BookServiceImplTest {
 
     private BookService bookService;
@@ -244,7 +244,7 @@ In the example bellow, you can see that we mocking the services (in this case `b
 The annotation `@AutoConfigureMockMvc(secure = false)` is used to disable security configuration. 
 
 ```
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebMvcTest(BookController.class)
 @AutoConfigureMockMvc(secure = false)
 public class BookControllerTests {
@@ -266,7 +266,7 @@ In the example bellow, it is used `JacksonTester`. However, `GsonTester`, `Jsonb
 Btw, I've tried to use all of them, but just `JacksonTester` worked easily and as expected.  
 
 ```
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @JsonTest
 public class MyJsonTests {
 
@@ -283,7 +283,7 @@ The main goal of the integration tests is, as its name suggests, to integrate th
 So, in order to have it, we can use the `@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)` annotation. What this annotation does is to start a full running server running in a random ports. Spring Boot also provides a `TestRestTemplate` facility, for example:
 
 ```
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class RandomPortTestRestTemplateExampleTests {
 
