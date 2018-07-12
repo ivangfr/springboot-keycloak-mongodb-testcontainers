@@ -3,8 +3,13 @@ package com.mycompany.bookservice.config;
 import com.google.common.collect.Lists;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.*;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.Contact;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -13,9 +18,11 @@ import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.google.common.base.Predicates.in;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
@@ -38,6 +45,7 @@ public class SwaggerConfig {
         ApiInfo apiInfo = new ApiInfo(TITLE, DESCRIPTION, VERSION, "", contact, "", "", new ArrayList<>());
 
         return new Docket(DocumentationType.SWAGGER_2)
+                .useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(regex("/api/.*"))
@@ -58,9 +66,8 @@ public class SwaggerConfig {
 
     private SecurityContext securityContext() {
         return SecurityContext.builder().securityReferences(defaultAuth())
-                // TODO How to use the new forHttpMethods?
                 .forPaths(regex("/api/books.*"))
-                //.forHttpMethods(equalTo(HttpMethod.POST))
+                .forHttpMethods(in(Arrays.asList(HttpMethod.POST, HttpMethod.PATCH, HttpMethod.DELETE)))
                 .build();
     }
 
