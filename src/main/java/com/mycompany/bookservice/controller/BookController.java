@@ -15,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,9 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +38,6 @@ import java.util.stream.Collectors;
 public class BookController {
 
     private final BookService bookService;
-
     private final ModelMapper modelMapper;
 
     public BookController(BookService bookService, ModelMapper modelMapper) {
@@ -166,11 +162,6 @@ public class BookController {
         bookService.deleteBook(book);
 
         return modelMapper.map(book, BookDto.class);
-    }
-
-    @ExceptionHandler(BookNotFoundException.class)
-    public void handleNotFoundException(Exception e, HttpServletResponse response) throws IOException {
-        response.sendError(HttpStatus.NOT_FOUND.value(), e.getMessage());
     }
 
 }

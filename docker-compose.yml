@@ -2,7 +2,7 @@ version: '3.5'
 services:
 
   mongodb:
-    image: mongo:3.6.3
+    image: mongo:4.0.4
     container_name: mongodb
     ports:
       - 27017:27017
@@ -11,14 +11,14 @@ services:
       start_period: 10s
 
   keycloak:
-    image: jboss/keycloak:4.0.0.Final
+    image: jboss/keycloak:4.8.1.Final
     hostname: keycloak
 
     # 'my-keycloak' is set as container_name instead of 'keycloak' to avoid the conflict
     # that happens when using gradle-docker-compose plugin (started when integrationTest
     # runs). As far I understood, gradle-docker-compose writes new properties to the
     # containers it runs, for example, my-keycloak.tcp.8080. However, the
-    # KeycloakSpringBootProperties.java is set to ignore unknown properties. So, if 'keycloak'
+    # KeycloakSpringBootProperties.java is set to NOT ignore unknown properties. So, if 'keycloak'
     # name is used, the plugin will create keycloak.tcp.8080 and an exception will be thrown.
     container_name: my-keycloak
 
@@ -29,4 +29,4 @@ services:
       - 8181:8080
     healthcheck:
       test: "curl -f http://localhost:8080/auth || exit 1"
-      start_period: 10s
+      start_period: 30s

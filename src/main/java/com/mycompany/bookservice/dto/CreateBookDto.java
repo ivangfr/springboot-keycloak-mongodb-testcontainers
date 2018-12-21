@@ -17,11 +17,11 @@ public class CreateBookDto {
     @NotNull
     private String authorName;
 
-    @ApiModelProperty(example = "Spring Boot")
+    @ApiModelProperty(position = 2, example = "Spring Boot")
     @NotNull
     private String title;
 
-    @ApiModelProperty(example = "10.5")
+    @ApiModelProperty(position = 3, example = "10.5")
     @NotNull
     private BigDecimal price;
 

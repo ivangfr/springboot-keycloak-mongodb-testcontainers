@@ -1,10 +1,10 @@
 plugins {
 	id 'java'
 	id 'idea'
-	id 'org.springframework.boot' version '2.0.3.RELEASE'
+	id 'org.springframework.boot' version '2.0.7.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.5.RELEASE'
 	id "com.palantir.docker" version "0.20.1"
-	id "com.avast.gradle.docker-compose" version "0.8.0"
+	id "com.avast.gradle.docker-compose" version "0.8.12"
 }
 
 group = 'com.mycompany'
@@ -21,11 +21,8 @@ ext {
 	springfoxSwaggerVersion = '2.9.2'
 	findbugsVersion = '3.0.2'
 	modelMapperVersion = '2.1.0'
-	keycloakVersion = '4.0.0.Final'
-	yassonJsonbVersion = '1.0.1'
-	javaxJsonVersion = '1.1.2'
-	resteasyVersion = '3.6.0.Final'
-	junitJupiterVersion = '5.2.0'
+	keycloakVersion = '4.8.1.Final'
+	resteasyVersion = '3.6.2.Final'
 }
 
 dependencies {
@@ -38,18 +35,15 @@ dependencies {
 	compile("org.modelmapper:modelmapper:${modelMapperVersion}")
 	compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
 	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
-	compile("org.keycloak:keycloak-spring-boot-2-starter:${keycloakVersion}")
-	compile("org.keycloak:keycloak-admin-client:${keycloakVersion}")
-	compile("org.glassfish:javax.json:${javaxJsonVersion}")                         // \
-	testCompile("org.jboss.resteasy:resteasy-jaxrs:${resteasyVersion}")             //  \
-	testCompile("org.jboss.resteasy:resteasy-client:${resteasyVersion}")            //   -> dependencies needed by keycloak-admin-client
-	testCompile("org.jboss.resteasy:resteasy-jackson2-provider:${resteasyVersion}") //  /
-	testCompile("org.eclipse:yasson:${yassonJsonbVersion}")                         // /
+	compile("org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}")
+	testCompile("org.keycloak:keycloak-admin-client:${keycloakVersion}")			// \
+	testCompile("org.jboss.resteasy:resteasy-client:${resteasyVersion}")            //  -> dependencies needed by keycloak-admin-client during tests
+	testCompile("org.jboss.resteasy:resteasy-jackson2-provider:${resteasyVersion}") // /
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
 	testCompile('org.springframework.security:spring-security-test')
-	testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
-	testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+	testCompile("org.junit.jupiter:junit-jupiter-api")
+	testRuntime("org.junit.jupiter:junit-jupiter-engine")
 }
 
 dependencyManagement {
@@ -76,7 +70,7 @@ test {
 // adding docker-compose plugin
 
 dockerCompose {
-	useComposeFiles = ['dev/docker-compose.yml']
+	useComposeFiles = ['docker-compose.yml']
 	startedServices = ['mongodb','keycloak']
 }
 

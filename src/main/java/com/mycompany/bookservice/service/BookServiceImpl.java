@@ -45,12 +45,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book validateAndGetBookById(UUID id) throws BookNotFoundException {
-        Optional<Book> book = getBookById(id);
-        if (!book.isPresent()) {
-            String message = String.format("Book with id '%s' not found.", id);
-            throw new BookNotFoundException(message);
-        }
-        return book.get();
+        return getBookById(id).
+                orElseThrow(() -> new BookNotFoundException(String.format("Book with id '%s' not found.", id)));
     }
 
 }

@@ -1,9 +1,16 @@
 management:
-  security.enabled: false
-  endpoints.web.exposure.include: "*"
-  endpoint.health.show-details: always
+  security:
+    enabled: false
+  endpoints:
+    web:
+      exposure.include: "*"
+  endpoint:
+    health:
+      show-details: always
 
 spring:
+  application:
+    name: book-service
   data:
     mongodb:
       uri: mongodb://${MONGODB_ADDR:localhost}:${MONGODB_PORT:27017}/bookdb

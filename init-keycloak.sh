@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 KEYCLOAK_ADDR=localhost:8181
 
 echo
@@ -83,3 +85,8 @@ curl -s -X POST \
 -d "grant_type=password" \
 -d "client_secret=$BOOKSERVICE_CLIENT_SECRET" \
 -d "client_id=book-service" | jq -r .access_token
+
+echo
+echo "---------"
+echo "BOOKSERVICE_CLIENT_SECRET=$BOOKSERVICE_CLIENT_SECRET"
+echo "---------"
