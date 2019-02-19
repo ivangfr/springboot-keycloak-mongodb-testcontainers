@@ -7,7 +7,6 @@ import com.mycompany.bookservice.repository.BookRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.rules.ExpectedException;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -21,7 +20,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 
 @ExtendWith(SpringExtension.class)
 public class BookServiceImplTest {
@@ -32,7 +30,7 @@ public class BookServiceImplTest {
     private BookRepository bookRepository;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         bookService = new BookServiceImpl(bookRepository);
     }
 

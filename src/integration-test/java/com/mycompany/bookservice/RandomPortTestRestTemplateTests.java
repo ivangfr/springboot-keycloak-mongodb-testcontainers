@@ -6,8 +6,8 @@ import com.mycompany.bookservice.dto.CreateBookDto;
 import com.mycompany.bookservice.dto.UpdateBookDto;
 import com.mycompany.bookservice.model.Book;
 import com.mycompany.bookservice.repository.BookRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.admin.client.Keycloak;
@@ -20,7 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -30,7 +34,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.mycompany.bookservice.helper.BookServiceTestHelper.*;
+import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultBook;
+import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultCreateBookDto;
+import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultUpdateBookDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -44,11 +50,11 @@ public class RandomPortTestRestTemplateTests {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-    private Keycloak keycloakAdmin;
-    private Keycloak keycloakBookService;
+    private static Keycloak keycloakAdmin;
+    private static Keycloak keycloakBookService;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         String serverUrl = "http://localhost:8181/auth";
         keycloakAdmin = KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
@@ -99,8 +105,8 @@ public class RandomPortTestRestTemplateTests {
                 .build();
     }
 
-    @AfterEach
-    void tearDown() {
+    @AfterAll
+    static void tearDown() {
         keycloakAdmin.realm("company-services").remove();
     }
 
@@ -125,6 +131,7 @@ public class RandomPortTestRestTemplateTests {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).hasSize(1);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody()[0].getId()).isEqualTo(book.getId());
         assertThat(responseEntity.getBody()[0].getAuthorName()).isEqualTo(book.getAuthorName());
         assertThat(responseEntity.getBody()[0].getTitle()).isEqualTo(book.getTitle());
@@ -174,6 +181,7 @@ public class RandomPortTestRestTemplateTests {
                 "/api/books", new HttpEntity<>(createBookDto, headers), BookDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getId()).isNotNull();
         assertThat(responseEntity.getBody().getAuthorName()).isEqualTo(createBookDto.getAuthorName());
         assertThat(responseEntity.getBody().getTitle()).isEqualTo(createBookDto.getTitle());
@@ -199,6 +207,7 @@ public class RandomPortTestRestTemplateTests {
                 new HttpEntity<>(updateBookDto, headers), MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Not Found");
@@ -226,6 +235,7 @@ public class RandomPortTestRestTemplateTests {
                 new HttpEntity<>(updateBookDto, headers), BookDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getId()).isNotNull();
         assertThat(responseEntity.getBody().getAuthorName()).isEqualTo(updateBookDto.getAuthorName());
         assertThat(responseEntity.getBody().getTitle()).isEqualTo(updateBookDto.getTitle());
@@ -249,6 +259,7 @@ public class RandomPortTestRestTemplateTests {
                 new HttpEntity<>(headers), MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
         assertThat(responseEntity.getBody().getError()).isEqualTo("Not Found");
@@ -272,6 +283,7 @@ public class RandomPortTestRestTemplateTests {
                 new HttpEntity<>(headers), BookDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getId()).isNotNull();
         assertThat(responseEntity.getBody().getAuthorName()).isEqualTo(book.getAuthorName());
         assertThat(responseEntity.getBody().getTitle()).isEqualTo(book.getTitle());

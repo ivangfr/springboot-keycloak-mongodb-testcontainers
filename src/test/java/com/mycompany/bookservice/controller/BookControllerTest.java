@@ -26,14 +26,23 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import static com.mycompany.bookservice.helper.BookServiceTestHelper.*;
+import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultBook;
+import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultCreateBookDto;
+import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultUpdateBookDto;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.willThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BookController.class)

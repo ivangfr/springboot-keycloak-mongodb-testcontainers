@@ -1,10 +1,10 @@
 plugins {
 	id 'java'
 	id 'idea'
-	id 'org.springframework.boot' version '2.0.7.RELEASE'
+	id 'org.springframework.boot' version '2.0.8.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.5.RELEASE'
-	id "com.palantir.docker" version "0.20.1"
-	id "com.avast.gradle.docker-compose" version "0.8.12"
+	id 'com.palantir.docker' version '0.20.1'
+	id 'com.avast.gradle.docker-compose' version '0.8.14'
 }
 
 group = 'com.mycompany'
@@ -26,24 +26,24 @@ ext {
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
-	compile('org.springframework.boot:spring-boot-starter-security')
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.projectlombok:lombok')
-	compile("com.google.code.findbugs:jsr305:${findbugsVersion}")
-	compile("org.modelmapper:modelmapper:${modelMapperVersion}")
-	compile("io.springfox:springfox-swagger2:${springfoxSwaggerVersion}")
-	compile("io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}")
-	compile("org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}")
-	testCompile("org.keycloak:keycloak-admin-client:${keycloakVersion}")			// \
-	testCompile("org.jboss.resteasy:resteasy-client:${resteasyVersion}")            //  -> dependencies needed by keycloak-admin-client during tests
-	testCompile("org.jboss.resteasy:resteasy-jackson2-provider:${resteasyVersion}") // /
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('de.flapdoodle.embed:de.flapdoodle.embed.mongo')
-	testCompile('org.springframework.security:spring-security-test')
-	testCompile("org.junit.jupiter:junit-jupiter-api")
-	testRuntime("org.junit.jupiter:junit-jupiter-engine")
+	compile 'org.springframework.boot:spring-boot-starter-actuator'
+	compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	compile 'org.springframework.boot:spring-boot-starter-security'
+	compile 'org.springframework.boot:spring-boot-starter-web'
+	compile 'org.projectlombok:lombok'
+	compile "com.google.code.findbugs:jsr305:${findbugsVersion}"
+	compile "org.modelmapper:modelmapper:${modelMapperVersion}"
+	compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
+	compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
+	compile "org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}"
+	testCompile "org.keycloak:keycloak-admin-client:${keycloakVersion}"            // \
+	testCompile "org.jboss.resteasy:resteasy-client:${resteasyVersion}"            //  -> dependencies needed by keycloak-admin-client during tests
+	testCompile "org.jboss.resteasy:resteasy-jackson2-provider:${resteasyVersion}" // /
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
+	testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+	testCompile 'org.springframework.security:spring-security-test'
+	testCompile "org.junit.jupiter:junit-jupiter-api"
+	testRuntime "org.junit.jupiter:junit-jupiter-engine"
 }
 
 dependencyManagement {
