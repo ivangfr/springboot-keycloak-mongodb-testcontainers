@@ -362,10 +362,9 @@ public class RandomPortTestRestTemplateExampleTests {
 
 Integration tests should run separated from the unit tests and, mainly, it should runs after unit tests. In this project, we created a new integrationTest Gradle task to handle exclusively integration tests.
 
-# References:
+# References
 
 - https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html
-
 - http://www.baeldung.com/spring-boot-testing
 
 # Issues
