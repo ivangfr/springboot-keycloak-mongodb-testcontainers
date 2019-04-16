@@ -55,7 +55,7 @@ public class RandomPortTestRestTemplateTests {
 
     @BeforeAll
     static void setUp() {
-        String serverUrl = "http://localhost:8181/auth";
+        String serverUrl = "http://localhost:8080/auth";
         keycloakAdmin = KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
                 .realm("master")

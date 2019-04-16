@@ -2,31 +2,48 @@ version: '3.5'
 services:
 
   mongodb:
-    image: mongo:4.0.6
+    image: mongo:4.0.9
     container_name: mongodb
+    restart: unless-stopped
     ports:
       - "27017:27017"
     healthcheck:
-      test: echo 'db.stats().ok' | mongo localhost:27017/bookdb --quiet
+      test: "echo 'db.stats().ok' | mongo localhost:27017/bookdb --quiet"
       start_period: 10s
 
   keycloak:
-    image: jboss/keycloak:4.8.1.Final
-    hostname: keycloak
+    image: jboss/keycloak:5.0.0
 
     # 'my-keycloak' is set as container_name instead of 'keycloak' to avoid the conflict
     # that happens when using gradle-docker-compose plugin (started when integrationTest
     # runs). As far I understood, gradle-docker-compose writes new properties to the
-    # containers it runs, for example, my-keycloak.tcp.8080. However, the
+    # containers it runs, for example, my-keycloak.tcp.80. However, the
     # KeycloakSpringBootProperties.java is set to NOT ignore unknown properties. So, if 'keycloak'
-    # name is used, the plugin will create keycloak.tcp.8080 and an exception will be thrown.
+    # name is used, the plugin will create keycloak.tcp.80 and an exception will be thrown.
     container_name: my-keycloak
 
-    environment:
-      - KEYCLOAK_USER=admin
-      - KEYCLOAK_PASSWORD=admin
+    restart: unless-stopped
     ports:
-      - "8181:8080"
+      - "8080:8080"
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
     healthcheck:
       test: "curl -f http://localhost:8080/auth || exit 1"
       start_period: 30s
+
+  book-service:
+    image: docker.mycompany.com/book-service:latest
+    container_name: book-service
+    restart: unless-stopped
+    ports:
+      - "9080:8080"
+    depends_on:
+      - mongodb
+      - keycloak
+    environment:
+      MONGODB_HOST: mongodb
+      KEYCLOAK_HOST: keycloak
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "8080" ]
+      start_period: 1m

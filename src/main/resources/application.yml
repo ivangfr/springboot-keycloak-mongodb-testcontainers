@@ -13,10 +13,10 @@ spring:
     name: book-service
   data:
     mongodb:
-      uri: mongodb://${MONGODB_ADDR:localhost}:${MONGODB_PORT:27017}/bookdb
+      uri: mongodb://${MONGODB_HOST:localhost}:${MONGODB_PORT:27017}/bookdb
 
 keycloak:
-  auth-server-url: http://${KEYCLOAK_ADDR:localhost}:${KEYCLOAK_PORT:8181}/auth
+  auth-server-url: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:8080}/auth
   realm: company-services
   resource: book-service
   ssl-required: external
