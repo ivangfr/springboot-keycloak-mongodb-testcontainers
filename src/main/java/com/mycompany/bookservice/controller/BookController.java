@@ -12,7 +12,6 @@ import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +53,6 @@ public class BookController {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping
     public List<BookDto> getBooks(@RequestParam(required = false) String authorName) {
         boolean filterByAuthorName = !StringUtils.isEmpty(authorName);
@@ -83,7 +81,6 @@ public class BookController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
     public BookDto getBookById(@PathVariable UUID id) throws BookNotFoundException {
         Book book = bookService.validateAndGetBookById(id);
@@ -103,15 +100,15 @@ public class BookController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<BookDto> createBook(@Valid @RequestBody CreateBookDto createBookDto,
-                                              @ApiIgnore Principal principal) {
+    public BookDto createBook(@Valid @RequestBody CreateBookDto createBookDto,
+                              @ApiIgnore Principal principal) {
         log.info("Post request made by {} to create a book {}", principal.getName(), createBookDto);
 
         Book book = modelMapper.map(createBookDto, Book.class);
         book.setId(UUID.randomUUID());
         book = bookService.saveBook(book);
 
-        return new ResponseEntity<>(modelMapper.map(book, BookDto.class), HttpStatus.CREATED);
+        return modelMapper.map(book, BookDto.class);
     }
 
     @ApiOperation(
@@ -126,7 +123,6 @@ public class BookController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}")
     public BookDto updateBook(@PathVariable UUID id,
                               @Valid @RequestBody UpdateBookDto updateBookDto,
@@ -152,7 +148,6 @@ public class BookController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{id}")
     public BookDto deleteBook(@PathVariable UUID id,
                               @ApiIgnore Principal principal) throws BookNotFoundException {
