@@ -1,13 +1,3 @@
-management:
-  security:
-    enabled: false
-  endpoints:
-    web:
-      exposure.include: "*"
-  endpoint:
-    health:
-      show-details: always
-
 spring:
   application:
     name: book-service
@@ -22,3 +12,13 @@ keycloak:
   ssl-required: external
   principal-attribute: preferred_username
   use-resource-role-mappings: true
+
+management:
+  security:
+    enabled: false
+  endpoints:
+    web:
+      exposure.include: "*"
+  endpoint:
+    health:
+      show-details: always
