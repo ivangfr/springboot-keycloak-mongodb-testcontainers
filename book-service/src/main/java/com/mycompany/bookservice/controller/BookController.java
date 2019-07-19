@@ -64,11 +64,10 @@ public class BookController {
 
         List<Book> books = filterByAuthorName ?
                 bookService.getBooksByAuthorName(authorName) : bookService.getAllBooks();
-        List<BookDto> bookDtos = books.stream()
+
+        return books.stream()
                 .map(book -> modelMapper.map(book, BookDto.class))
                 .collect(Collectors.toList());
-
-        return bookDtos;
     }
 
     @ApiOperation(

@@ -1,120 +1,16 @@
-plugins {
-	id 'java'
-	id 'idea'
-	id 'org.springframework.boot' version '2.0.9.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.5.RELEASE'
-	id 'com.palantir.docker' version '0.20.1'
-	id 'com.avast.gradle.docker-compose' version '0.8.14'
+allprojects {
+
 }
 
-group = 'com.mycompany'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 1.8
+subprojects {
+	apply plugin: "java"
+	apply plugin: "idea"
 
-repositories {
-	mavenCentral()
-	jcenter()
-	maven { url = "https://repo.spring.io/milestone" }
-}
-
-ext {
-	springfoxSwaggerVersion = '2.9.2'
-	findbugsVersion = '3.0.2'
-	modelMapperVersion = '2.1.0'
-	keycloakVersion = '5.0.0'
-	resteasyVersion = '3.6.2.Final'
-}
-
-dependencies {
-	compile 'org.springframework.boot:spring-boot-starter-actuator'
-	compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
-	compile 'org.springframework.boot:spring-boot-starter-security'
-	compile 'org.springframework.boot:spring-boot-starter-web'
-	compile 'org.projectlombok:lombok'
-	compile "com.google.code.findbugs:jsr305:${findbugsVersion}"
-	compile "org.modelmapper:modelmapper:${modelMapperVersion}"
-	compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
-	compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
-	compile "org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}"
-	testCompile "org.keycloak:keycloak-admin-client:${keycloakVersion}"            // \
-	testCompile "org.jboss.resteasy:resteasy-client:${resteasyVersion}"            //  -> dependencies needed by keycloak-admin-client during tests
-	testCompile "org.jboss.resteasy:resteasy-jackson2-provider:${resteasyVersion}" // /
-	testCompile 'org.springframework.boot:spring-boot-starter-test'
-	testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
-	testCompile 'org.springframework.security:spring-security-test'
-	testCompile "org.junit.jupiter:junit-jupiter-api"
-	testRuntime "org.junit.jupiter:junit-jupiter-engine"
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		jcenter()
+		maven { url "https://repo.spring.io/milestone" }
 	}
+
 }
-
-// adding arguments to bootRun, for example: gradle bootRun -Dserver.port=9080
-
-bootRun {
-	systemProperties = System.properties
-}
-
-// adding docker plugin
-
-docker {
-	name = 'docker.mycompany.com/book-service'
-	dockerfile = file('docker/Dockerfile')
-	files jar.archivePath
-	buildArgs(['JAR_FILE': "${jar.archiveName}"])
-}
-
-// enable JUnit 5
-
-test {
-	useJUnitPlatform()
-}
-
-// adding docker-compose plugin
-
-dockerCompose {
-	useComposeFiles = ['docker-compose.yml']
-	startedServices = ['mongodb','keycloak']
-}
-
-// adding integration test
-
-sourceSets {
-	integrationTest {
-		java {
-			compileClasspath += main.output + test.output
-			runtimeClasspath += main.output + test.output
-			srcDir file('src/integration-test/java')
-		}
-//		resources.srcDir file('src/integration-test/resources')
-	}
-}
-
-idea {
-	module {
-		testSourceDirs += project.sourceSets.integrationTest.java.srcDirs
-//		testSourceDirs += project.sourceSets.integrationTest.resources.srcDirs
-	}
-}
-
-configurations {
-	integrationTestCompile.extendsFrom testCompile
-	integrationTestRuntime.extendsFrom testRuntime
-}
-
-task integrationTest(type: Test) {
-	group 'springboot-testing'
-	description 'Runs the integration tests'
-
-	testClassesDirs = sourceSets.integrationTest.output.classesDirs
-	classpath = sourceSets.integrationTest.runtimeClasspath
-
-	useJUnitPlatform()
-}
-
-check.dependsOn integrationTest
-integrationTest.mustRunAfter test
-dockerCompose.isRequiredBy(integrationTest)

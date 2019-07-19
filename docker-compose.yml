@@ -2,7 +2,7 @@ version: '3.5'
 services:
 
   mongodb:
-    image: mongo:4.0.9
+    image: mongo:4.0.10
     container_name: mongodb
     restart: unless-stopped
     ports:
@@ -12,7 +12,7 @@ services:
       start_period: 10s
 
   keycloak:
-    image: jboss/keycloak:5.0.0
+    image: jboss/keycloak:6.0.1
 
     # 'my-keycloak' is set as container_name instead of 'keycloak' to avoid the conflict
     # that happens when using gradle-docker-compose plugin (started when integrationTest
@@ -33,7 +33,7 @@ services:
       start_period: 30s
 
   book-service:
-    image: docker.mycompany.com/book-service:latest
+    image: docker.mycompany.com/book-service:1.0.0
     container_name: book-service
     restart: unless-stopped
     ports:
