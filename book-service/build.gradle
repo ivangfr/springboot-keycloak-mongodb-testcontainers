@@ -20,7 +20,7 @@ repositories {
 ext {
 	springfoxSwaggerVersion = '2.9.2'
 	findbugsVersion = '3.0.2'
-	modelMapperVersion = '2.1.0'
+	modelMapperVersion = '2.3.5'
 	lombokVersion = '1.18.8'
 	keycloakVersion = '5.0.0'
 	resteasyVersion = '3.6.2.Final'
@@ -105,16 +105,18 @@ dependencies {
 	compile "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
 	compile "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
 	compile "org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}"
+	// -- Lombok & Gradle 5
+	compile "org.projectlombok:lombok:${lombokVersion}"
+	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+	testCompile "org.projectlombok:lombok:${lombokVersion}"
+	integrationTestAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+	// --
 	
-	compile "org.projectlombok:lombok:${lombokVersion}"                            // \
-	annotationProcessor "org.projectlombok:lombok:${lombokVersion}"                //  \ -> Lombok & Gradle 5
-	testCompile "org.projectlombok:lombok:${lombokVersion}"                        //  /
-	integrationTestAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}" // /
-	
-	testCompile "org.keycloak:keycloak-admin-client:${keycloakVersion}"            // \
-	testCompile "org.jboss.resteasy:resteasy-client:${resteasyVersion}"            //  -> dependencies needed by keycloak-admin-client during tests
-	testCompile "org.jboss.resteasy:resteasy-jackson2-provider:${resteasyVersion}" // /
-	
+	// -- dependencies needed by keycloak-admin-client during tests
+	testCompile "org.keycloak:keycloak-admin-client:${keycloakVersion}"
+	testCompile "org.jboss.resteasy:resteasy-client:${resteasyVersion}"
+	testCompile "org.jboss.resteasy:resteasy-jackson2-provider:${resteasyVersion}"
+	// --
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
 	testCompile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 	testCompile 'org.springframework.security:spring-security-test'

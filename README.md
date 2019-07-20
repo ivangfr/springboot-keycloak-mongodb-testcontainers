@@ -254,7 +254,6 @@ List all books in `MongoDB`
 docker exec -it mongodb mongo
 use bookdb
 db.book.find()
-exit
 ```
 
 ### jwt.io
