@@ -230,19 +230,19 @@ docker-compose down -v
 
 ## Running unit and integration testing
 
-1. In order to run unit and integration testing type
+In a terminal and inside `springboot-testing-mongodb-keycloak` root folder, run the command below to run unit and
+integration tests
 ```
-./gradlew book-service:test integrationTest
-```
-
-2. From `springboot-testing-mongodb-keycloak` root folder, unit testing report can be found in
-```
-/build/reports/tests/test/index.html
+./gradlew book-service:cleanTest test integrationTest
 ```
 
-3. From `springboot-testing-mongodb-keycloak` root folder, integration testing report can be found in
+- From `springboot-testing-mongodb-keycloak` root folder, **Unit Testing Report** can be found at
 ```
-/build/reports/tests/integrationTest/index.html
+book-service/build/reports/tests/test/index.html
+```
+- From `springboot-testing-mongodb-keycloak` root folder, **Integration Testing Report** can be found at
+```
+book-service/build/reports/tests/integrationTest/index.html
 ```
 
 ## Useful Links/Commands
