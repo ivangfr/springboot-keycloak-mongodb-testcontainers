@@ -22,7 +22,7 @@ ext {
 	findbugsVersion = '3.0.2'
 	modelMapperVersion = '2.3.5'
 	lombokVersion = '1.18.8'
-	keycloakVersion = '5.0.0'
+	keycloakVersion = '6.0.1'
 	resteasyVersion = '3.6.2.Final'
 }
 
