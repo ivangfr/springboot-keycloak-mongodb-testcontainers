@@ -53,7 +53,6 @@ the user `ivan.franchin` with the role `manage_books` assigned.
 
 ![keycloak](images/keycloak.png)
 
-
 #### Login
 
 - Access http://localhost:8080/auth/admin/master/console

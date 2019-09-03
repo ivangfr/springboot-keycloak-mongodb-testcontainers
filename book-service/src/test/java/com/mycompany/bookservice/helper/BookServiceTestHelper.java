@@ -10,6 +10,9 @@ import java.util.UUID;
 
 public class BookServiceTestHelper {
 
+    private BookServiceTestHelper() {
+    }
+
     /* Default Book Values */
 
     private static final UUID ID = UUID.fromString("d8bcc132-c704-4d21-b05f-9557d7fc3d91");

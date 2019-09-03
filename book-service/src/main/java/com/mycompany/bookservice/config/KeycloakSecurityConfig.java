@@ -17,6 +17,8 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @KeycloakConfiguration
 public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
+    private static final String MANAGE_BOOKS = "manage_books";
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
         KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
@@ -40,9 +42,9 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         super.configure(http);
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/books").hasRole("manage_books")
-                .antMatchers(HttpMethod.PATCH, "/api/books/*").hasRole("manage_books")
-                .antMatchers(HttpMethod.DELETE, "/api/books/*").hasRole("manage_books")
+                .antMatchers(HttpMethod.POST, "/api/books").hasRole(MANAGE_BOOKS)
+                .antMatchers(HttpMethod.PATCH, "/api/books/*").hasRole(MANAGE_BOOKS)
+                .antMatchers(HttpMethod.DELETE, "/api/books/*").hasRole(MANAGE_BOOKS)
                 .anyRequest().permitAll();
     }
 }

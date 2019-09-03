@@ -15,10 +15,10 @@ public class UpdateBookDto {
     @ApiModelProperty(example = "James Gosling")
     private String authorName;
 
-    @ApiModelProperty(position = 2, example = "Java 8")
+    @ApiModelProperty(position = 1, example = "Java 8")
     private String title;
 
-    @ApiModelProperty(position = 3, example = "20.5")
+    @ApiModelProperty(position = 2, example = "20.5")
     private BigDecimal price;
 
 }

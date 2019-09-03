@@ -101,9 +101,7 @@ public class BookServiceImplTest {
         given(bookRepository.findById(any(UUID.class))).willReturn(Optional.empty());
 
         UUID id = UUID.randomUUID();
-        Throwable exception = assertThrows(BookNotFoundException.class, () -> {
-            bookService.validateAndGetBookById(id);
-        });
+        Throwable exception = assertThrows(BookNotFoundException.class, () -> bookService.validateAndGetBookById(id));
         assertThat(String.format("Book with id '%s' not found.", id)).isEqualTo(exception.getMessage());
     }
 
