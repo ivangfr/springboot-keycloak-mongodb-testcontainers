@@ -29,14 +29,14 @@ public class BookRepositoryTest {
     private BookRepository bookRepository;
 
     @Test
-    void given_noBook_when_findAll_then_returnEmptyArray() {
+    void givenNoBookWhenFindAllThenReturnEmptyArray() {
         List<Book> books = bookRepository.findAll();
 
         assertThat(books).hasSize(0);
     }
 
     @Test
-    void given_oneBook_when_findAll_then_returnArrayWithOneBook() {
+    void givenOneBookWhenFindAllThenReturnArrayWithOneBook() {
         Book book = getDefaultBook();
         mongoTemplate.save(book);
 
@@ -46,14 +46,14 @@ public class BookRepositoryTest {
     }
 
     @Test
-    void given_nonExistingBookId_when_findById_then_returnBook() {
+    void givenNonExistingBookIdWhenFindByIdThenReturnBook() {
         Optional<Book> bookFound = bookRepository.findById(UUID.randomUUID());
 
         assertThat(bookFound.isPresent()).isFalse();
     }
 
     @Test
-    void given_existingBookId_when_findById_then_returnBook() {
+    void givenExistingBookIdWhenFindByIdThenReturnBook() {
         Book book = getDefaultBook();
         mongoTemplate.save(book);
 
@@ -64,7 +64,7 @@ public class BookRepositoryTest {
     }
 
     @Test
-    void given_existingBookAuthorNameWithOneBook_when_findByAuthorNameLike_then_returnListWithOneBook() {
+    void givenExistingBookAuthorNameWithOneBookWhenFindByAuthorNameLikeThenReturnListWithOneBook() {
         Book book = getDefaultBook();
         mongoTemplate.save(book);
 
@@ -74,7 +74,7 @@ public class BookRepositoryTest {
     }
 
     @Test
-    void given_existingBookId_when_delete_then_bookIsDeleted() {
+    void givenExistingBookIdWhenDeleteThenBookIsDeleted() {
         Book book = getDefaultBook();
         mongoTemplate.save(book);
 
@@ -88,7 +88,7 @@ public class BookRepositoryTest {
     }
 
     @Test
-    void given_existingBookId_when_update_then_bookIsUpdated() {
+    void givenExistingBookIdWhenUpdateThenBookIsUpdated() {
         Book book = getDefaultBook();
         mongoTemplate.save(book);
 

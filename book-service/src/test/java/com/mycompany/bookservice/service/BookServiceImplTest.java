@@ -35,7 +35,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    void given_validBook_when_saveBook_then_returnBook() {
+    void givenValidBookWhenSaveBookThenReturnBook() {
         Book book = getDefaultBook();
         given(bookRepository.save(book)).willReturn(book);
 
@@ -45,7 +45,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    void given_noBook_when_getAllBooks_then_returnEmptyList() {
+    void givenNoBookWhenGetAllBooksThenReturnEmptyList() {
         given(bookRepository.findAll()).willReturn(new ArrayList<>());
 
         List<Book> booksFound = bookService.getAllBooks();
@@ -54,7 +54,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    void given_oneBook_when_getAllBooks_then_returnListWithOneBook() {
+    void givenOneBookWhenGetAllBooksThenReturnListWithOneBook() {
         Book book = getDefaultBook();
         given(bookRepository.findAll()).willReturn(Lists.newArrayList(book));
 
@@ -65,28 +65,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    void given_existingBookId_when_getBookById_then_returnBook() {
-        Book book = getDefaultBook();
-        given(bookRepository.findById(book.getId())).willReturn(Optional.of(book));
-
-        Optional<Book> bookFound = bookService.getBookById(book.getId());
-
-        assertThat(bookFound.isPresent()).isTrue();
-        assertThat(bookFound.get()).isEqualToComparingFieldByField(book);
-    }
-
-    @Test
-    void given_nonExistingBookId_when_getBookById_then_returnNull() {
-        Book book = getDefaultBook();
-        given(bookRepository.findById(book.getId())).willReturn(Optional.of(book));
-
-        Optional<Book> bookFound = bookService.getBookById(UUID.randomUUID());
-
-        assertThat(bookFound.isPresent()).isFalse();
-    }
-
-    @Test
-    void given_existingBookAuthorNameWithOneBook_when_getBooksByAuthorName_then_returnListWithOneBook() {
+    void givenExistingBookAuthorNameWithOneBookWhenGetBooksByAuthorNameThenReturnListWithOneBook() {
         Book book = getDefaultBook();
         given(bookRepository.findByAuthorNameLike(book.getAuthorName())).willReturn(Lists.newArrayList(book));
 
@@ -97,7 +76,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    void given_nonExistingBookId_when_validateAndGetBookById_then_throwBookNotFoundException() {
+    void givenNonExistingBookIdWhenValidateAndGetBookByIdThenThrowBookNotFoundException() {
         given(bookRepository.findById(any(UUID.class))).willReturn(Optional.empty());
 
         UUID id = UUID.randomUUID();
@@ -106,7 +85,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    void given_existingBookId_when_validateAndGetBookById_then_returnBook() throws BookNotFoundException {
+    void givenExistingBookIdWhenValidateAndGetBookByIdThenReturnBook() throws BookNotFoundException {
         Book book = getDefaultBook();
         given(bookRepository.findById(book.getId())).willReturn(Optional.of(book));
 

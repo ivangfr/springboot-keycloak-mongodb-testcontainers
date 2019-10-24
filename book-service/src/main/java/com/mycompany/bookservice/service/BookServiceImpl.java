@@ -6,7 +6,6 @@ import com.mycompany.bookservice.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -21,11 +20,6 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
-    }
-
-    @Override
-    public Optional<Book> getBookById(UUID id) {
-        return bookRepository.findById(id);
     }
 
     @Override
@@ -45,7 +39,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book validateAndGetBookById(UUID id) throws BookNotFoundException {
-        return getBookById(id).
+        return bookRepository.findById(id).
                 orElseThrow(() -> new BookNotFoundException(String.format("Book with id '%s' not found.", id)));
     }
 

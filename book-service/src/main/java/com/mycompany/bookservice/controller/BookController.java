@@ -82,7 +82,10 @@ public class BookController {
     })
     @GetMapping("/{id}")
     public BookDto getBookById(@PathVariable UUID id) throws BookNotFoundException {
+        log.info("Get books with id equals to {}", id);
+
         Book book = bookService.validateAndGetBookById(id);
+
         return modelMapper.map(book, BookDto.class);
     }
 
@@ -99,8 +102,7 @@ public class BookController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public BookDto createBook(@Valid @RequestBody CreateBookDto createBookDto,
-                              @ApiIgnore Principal principal) {
+    public BookDto createBook(@Valid @RequestBody CreateBookDto createBookDto, @ApiIgnore Principal principal) {
         log.info("Post request made by {} to create a book {}", principal.getName(), createBookDto);
 
         Book book = modelMapper.map(createBookDto, Book.class);
@@ -123,8 +125,7 @@ public class BookController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     @PatchMapping("/{id}")
-    public BookDto updateBook(@PathVariable UUID id,
-                              @Valid @RequestBody UpdateBookDto updateBookDto,
+    public BookDto updateBook(@PathVariable UUID id, @Valid @RequestBody UpdateBookDto updateBookDto,
                               @ApiIgnore Principal principal) throws BookNotFoundException {
         log.info("Patch request made by {} to update book with id {}. New values {}", principal.getName(), id, updateBookDto);
 
@@ -148,8 +149,7 @@ public class BookController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     @DeleteMapping("/{id}")
-    public BookDto deleteBook(@PathVariable UUID id,
-                              @ApiIgnore Principal principal) throws BookNotFoundException {
+    public BookDto deleteBook(@PathVariable UUID id, @ApiIgnore Principal principal) throws BookNotFoundException {
         log.info("Delete request made by {} to remove book with id {}", principal.getName(), id);
 
         Book book = bookService.validateAndGetBookById(id);
