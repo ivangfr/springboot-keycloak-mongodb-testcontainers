@@ -268,7 +268,12 @@ token, showing its header and payload.
 - https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html
 - http://www.baeldung.com/spring-boot-testing
 
-## TODO
+## Isssues
 
-- Fix `BookControllerTest` that is disabled. I haven't found a solution to fix those test cases after the deprecated
-the `secure` property in `@AutoConfigureMockMvc` was removed and updating `Keycloak` dependency version.
+- During the startup, there is a warning presented below. It seems to be a `spring-data-mongo` problem
+(https://github.com/aidanwhiteley/books/issues/86)
+```
+WARN 3450 --- [           main] o.s.data.convert.CustomConversions       : Registering converter from class java.time.LocalDateTime to class java.time.Instant as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
+WARN 3450 --- [           main] o.s.data.convert.CustomConversions       : Registering converter from class java.time.Instant to class java.time.LocalDateTime as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
+```
+

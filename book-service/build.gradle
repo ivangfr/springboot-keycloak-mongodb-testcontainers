@@ -30,10 +30,10 @@ repositories {
 ext {
     set('springfoxSwaggerVersion', '2.9.2')
     set('findbugsVersion', '3.0.2')
-    set('modelMapperVersion', '2.3.5')
+    set('mapstructVersion', '1.3.1.Final')
     set('lombokVersion', '1.18.8')
     set('keycloakVersion', '6.0.1')
-    set('resteasyVersion', '3.6.2.Final')
+    set('resteasyVersion', '3.9.0.Final')
 }
 
 dependencyManagement {
@@ -100,15 +100,19 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation "org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}"
-
     implementation "com.google.code.findbugs:jsr305:${findbugsVersion}"
-    implementation "org.modelmapper:modelmapper:${modelMapperVersion}"
+
+    compileOnly "org.mapstruct:mapstruct-jdk8:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
     implementation "io.springfox:springfox-swagger2:${springfoxSwaggerVersion}"
     implementation "io.springfox:springfox-swagger-ui:${springfoxSwaggerVersion}"
 
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
+
+    implementation "org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}"
 
     // -- dependencies needed by keycloak-admin-client during tests
     testImplementation "org.keycloak:keycloak-admin-client:${keycloakVersion}"

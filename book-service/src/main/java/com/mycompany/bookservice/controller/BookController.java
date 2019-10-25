@@ -4,13 +4,13 @@ import com.mycompany.bookservice.dto.BookDto;
 import com.mycompany.bookservice.dto.CreateBookDto;
 import com.mycompany.bookservice.dto.UpdateBookDto;
 import com.mycompany.bookservice.exception.BookNotFoundException;
+import com.mycompany.bookservice.mapper.BookMapper;
 import com.mycompany.bookservice.model.Book;
 import com.mycompany.bookservice.service.BookService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,11 +37,11 @@ import java.util.stream.Collectors;
 public class BookController {
 
     private final BookService bookService;
-    private final ModelMapper modelMapper;
+    private final BookMapper bookMapper;
 
-    public BookController(BookService bookService, ModelMapper modelMapper) {
+    public BookController(BookService bookService, BookMapper bookMapper) {
         this.bookService = bookService;
-        this.modelMapper = modelMapper;
+        this.bookMapper = bookMapper;
     }
 
     @ApiOperation(
@@ -62,12 +62,9 @@ public class BookController {
             log.info("Get all books");
         }
 
-        List<Book> books = filterByAuthorName ?
-                bookService.getBooksByAuthorName(authorName) : bookService.getAllBooks();
+        List<Book> books = filterByAuthorName ? bookService.getBooksByAuthorName(authorName) : bookService.getAllBooks();
 
-        return books.stream()
-                .map(book -> modelMapper.map(book, BookDto.class))
-                .collect(Collectors.toList());
+        return books.stream().map(bookMapper::toBookDto).collect(Collectors.toList());
     }
 
     @ApiOperation(
@@ -86,7 +83,7 @@ public class BookController {
 
         Book book = bookService.validateAndGetBookById(id);
 
-        return modelMapper.map(book, BookDto.class);
+        return bookMapper.toBookDto(book);
     }
 
     @ApiOperation(
@@ -105,11 +102,11 @@ public class BookController {
     public BookDto createBook(@Valid @RequestBody CreateBookDto createBookDto, @ApiIgnore Principal principal) {
         log.info("Post request made by {} to create a book {}", principal.getName(), createBookDto);
 
-        Book book = modelMapper.map(createBookDto, Book.class);
+        Book book = bookMapper.toBook(createBookDto);
         book.setId(UUID.randomUUID());
         book = bookService.saveBook(book);
 
-        return modelMapper.map(book, BookDto.class);
+        return bookMapper.toBookDto(book);
     }
 
     @ApiOperation(
@@ -130,10 +127,10 @@ public class BookController {
         log.info("Patch request made by {} to update book with id {}. New values {}", principal.getName(), id, updateBookDto);
 
         Book book = bookService.validateAndGetBookById(id);
-        modelMapper.map(updateBookDto, book);
+        bookMapper.updateUserFromDto(updateBookDto, book);
         book = bookService.saveBook(book);
 
-        return modelMapper.map(book, BookDto.class);
+        return bookMapper.toBookDto(book);
     }
 
     @ApiOperation(
@@ -155,7 +152,7 @@ public class BookController {
         Book book = bookService.validateAndGetBookById(id);
         bookService.deleteBook(book);
 
-        return modelMapper.map(book, BookDto.class);
+        return bookMapper.toBookDto(book);
     }
 
 }

@@ -2,29 +2,26 @@ package com.mycompany.bookservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import com.mycompany.bookservice.config.ModelMapperConfig;
 import com.mycompany.bookservice.dto.CreateBookDto;
 import com.mycompany.bookservice.dto.UpdateBookDto;
 import com.mycompany.bookservice.exception.BookNotFoundException;
+import com.mycompany.bookservice.mapper.BookMapperImpl;
 import com.mycompany.bookservice.model.Book;
 import com.mycompany.bookservice.service.BookService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.math.BigDecimal;
-import java.security.Principal;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 
 import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultBook;
@@ -45,12 +42,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Disabled
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BookController.class)
-@Import(ModelMapperConfig.class)
-@AutoConfigureMockMvc
+@Import(BookMapperImpl.class) // <-- if this class is missing, run: ./gradlew book-service:assemble
 public class BookControllerTest {
+
+    private static final String MANAGE_BOOKS = "manage_books";
+    private static final String FAKE_ROLE = "fake_role";
 
     @Autowired
     private MockMvc mockMvc;
@@ -58,18 +56,14 @@ public class BookControllerTest {
     @MockBean
     private BookService bookService;
 
-    @Mock
-    private Principal principal;
-
     @Autowired
     private ObjectMapper objectMapper;
 
     @Test
     void givenNoBookWhenGetAllBooksThenReturnStatusOkAndEmptyJsonArray() throws Exception {
-        given(bookService.getAllBooks()).willReturn(new ArrayList<>());
+        given(bookService.getAllBooks()).willReturn(Collections.emptyList());
 
-        ResultActions resultActions = mockMvc.perform(get("/api/books")
-                .accept(MediaType.APPLICATION_JSON))
+        ResultActions resultActions = mockMvc.perform(get("/api/books"))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
@@ -82,8 +76,7 @@ public class BookControllerTest {
         Book book = getDefaultBook();
         given(bookService.getAllBooks()).willReturn(Lists.newArrayList(book));
 
-        ResultActions resultActions = mockMvc.perform(get("/api/books")
-                .accept(MediaType.APPLICATION_JSON))
+        ResultActions resultActions = mockMvc.perform(get("/api/books"))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
@@ -100,8 +93,7 @@ public class BookControllerTest {
         Book book = getDefaultBook();
         given(bookService.validateAndGetBookById(book.getId())).willReturn(book);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/books/" + book.getId())
-                .accept(MediaType.APPLICATION_JSON))
+        ResultActions resultActions = mockMvc.perform(get("/api/books/" + book.getId()))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
@@ -113,17 +105,15 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = MANAGE_BOOKS)
     void givenValidBookWhenCreateBookThenReturnStatusCreatedAndBookJson() throws Exception {
         CreateBookDto createBookDto = getDefaultCreateBookDto();
         Book book = getDefaultBook();
 
-        given(principal.getName()).willReturn("ivan.franchin");
         given(bookService.saveBook(any(Book.class))).willReturn(book);
 
         ResultActions resultActions = mockMvc.perform(post("/api/books")
-                .principal(principal)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createBookDto)))
                 .andDo(print());
 
@@ -136,6 +126,7 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = MANAGE_BOOKS)
     void givenExistingBookIdWhenUpdateBookThenReturnStatusOkAndBookJsonUpdated() throws Exception {
         Book book = getDefaultBook();
 
@@ -143,14 +134,11 @@ public class BookControllerTest {
         updateBookDto.setPrice(new BigDecimal("99.99"));
         updateBookDto.setTitle("Java 9");
 
-        given(principal.getName()).willReturn("ivan.franchin");
         given(bookService.validateAndGetBookById(book.getId())).willReturn(book);
         given(bookService.saveBook(any(Book.class))).willReturn(book);
 
         ResultActions resultActions = mockMvc.perform(patch("/api/books/" + book.getId())
-                .principal(principal)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateBookDto)))
                 .andDo(print());
 
@@ -163,16 +151,14 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = MANAGE_BOOKS)
     void givenNonExistingBookIdWhenUpdateBookThenReturnStatusNotFound() throws Exception {
         UpdateBookDto updateBookDto = getDefaultUpdateBookDto();
 
-        given(principal.getName()).willReturn("ivan.franchin");
         willThrow(BookNotFoundException.class).given(bookService).validateAndGetBookById(any(UUID.class));
 
         ResultActions resultActions = mockMvc.perform(patch("/api/books/" + UUID.randomUUID())
-                .principal(principal)
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateBookDto)))
                 .andDo(print());
 
@@ -180,16 +166,14 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = MANAGE_BOOKS)
     void givenExistingBookIdWhenDeleteBookThenReturnStatusOkAndBookJson() throws Exception {
         Book book = getDefaultBook();
 
-        given(principal.getName()).willReturn("ivan.franchin");
         given(bookService.validateAndGetBookById(book.getId())).willReturn(book);
         willDoNothing().given(bookService).deleteBook(any(Book.class));
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/books/" + book.getId())
-                .principal(principal)
-                .accept(MediaType.APPLICATION_JSON))
+        ResultActions resultActions = mockMvc.perform(delete("/api/books/" + book.getId()))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
@@ -201,16 +185,51 @@ public class BookControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = MANAGE_BOOKS)
     void givenNonExistingBookIdWhenDeleteBookThenReturnStatusNotFound() throws Exception {
-        given(principal.getName()).willReturn("ivan.franchin");
         willThrow(BookNotFoundException.class).given(bookService).validateAndGetBookById(any(UUID.class));
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/books/" + UUID.randomUUID())
-                .principal(principal)
-                .accept(MediaType.APPLICATION_JSON))
+        ResultActions resultActions = mockMvc.perform(delete("/api/books/" + UUID.randomUUID()))
                 .andDo(print());
 
         resultActions.andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(roles = FAKE_ROLE)
+    void givenAUserWithInvalidRolesWhenCreateBookThenReturnStatusForbidden() throws Exception {
+        CreateBookDto createBookDto = getDefaultCreateBookDto();
+
+        ResultActions resultActions = mockMvc.perform(post("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(createBookDto)))
+                .andDo(print());
+
+        resultActions.andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = FAKE_ROLE)
+    void givenAUserWithInvalidRolesWhenUpdateBookThenReturnStatusForbidden() throws Exception {
+        UpdateBookDto updateBookDto = new UpdateBookDto();
+        updateBookDto.setPrice(new BigDecimal("99.99"));
+        updateBookDto.setTitle("Java 9");
+
+        ResultActions resultActions = mockMvc.perform(patch("/api/books/" + UUID.randomUUID())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateBookDto)))
+                .andDo(print());
+
+        resultActions.andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = FAKE_ROLE)
+    void givenAUserWithInvalidRolesWhenDeleteBookReturnStatusForbidden() throws Exception {
+        ResultActions resultActions = mockMvc.perform(delete("/api/books/" + UUID.randomUUID()))
+                .andDo(print());
+
+        resultActions.andExpect(status().isForbidden());
     }
 
 }

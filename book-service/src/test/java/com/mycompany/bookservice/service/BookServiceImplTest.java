@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,7 +46,7 @@ public class BookServiceImplTest {
 
     @Test
     void givenNoBookWhenGetAllBooksThenReturnEmptyList() {
-        given(bookRepository.findAll()).willReturn(new ArrayList<>());
+        given(bookRepository.findAll()).willReturn(Collections.emptyList());
 
         List<Book> booksFound = bookService.getAllBooks();
 
