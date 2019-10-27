@@ -9,8 +9,8 @@ MY_ACCESS_TOKEN_FULL=$(
     -d "password=123" \
     -d "grant_type=password" \
     -d "client_secret=$CLIENT_SECRET" \
-    -d "client_id=book-service"'
-)
+    -d "client_id=book-service"
+  ')
 
 MY_ACCESS_TOKEN=$(echo $MY_ACCESS_TOKEN_FULL | jq -r .access_token)
 echo "Bearer $MY_ACCESS_TOKEN"

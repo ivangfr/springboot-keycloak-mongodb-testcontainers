@@ -268,7 +268,7 @@ token, showing its header and payload.
 - https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html
 - http://www.baeldung.com/spring-boot-testing
 
-## Isssues
+## Issues
 
 - During the startup, there is a warning presented below. It seems to be a `spring-data-mongo` problem
 (https://github.com/aidanwhiteley/books/issues/86)
