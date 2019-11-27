@@ -8,6 +8,9 @@ have its sensitive endpoints (add/update/delete book) secured.
 - Use [`Keycloak`](https://www.keycloak.org) as authentication and authorization server;
 - Explore the utilities and annotations that `Spring Boot` provides when testing applications.
 
+> Note. In the [`Kubernetes Environment`](https://github.com/ivangfr/kubernetes-environment) repository, it is shown how
+to deploy this project in Kubernetes (Minikube)
+
 ## Build Docker Image
 
 In a terminal and inside `springboot-testing-mongodb-keycloak` root folder, run the following command to build
@@ -200,7 +203,7 @@ HTTP/1.1 201
 
 ## Running book-service with Gradle
 
-During development, it is better to just run the application instead of always build the docker image before running
+During development, it is easier to just run the application instead of always build the docker image before running
 it. In order to do that, comment `book-service` in `docker-compose.yml` file (so that it does not start when you start
 the environment) and run it with `Gradle`.
 
