@@ -39,10 +39,10 @@ echo "CLIENT_ID=$CLIENT_ID"
 echo "---------"
 echo "Getting client secret"
 
-BOOKSERVICE_CLIENT_SECRET=$(curl -s "http://$KEYCLOAK_URL/auth/admin/realms/company-services/clients/$CLIENT_ID/client-secret" \
+BOOK_SERVICE_CLIENT_SECRET=$(curl -s "http://$KEYCLOAK_URL/auth/admin/realms/company-services/clients/$CLIENT_ID/client-secret" \
 -H "Authorization: Bearer $ADMIN_TOKEN" | jq -r '.value')
 
-echo "BOOKSERVICE_CLIENT_SECRET=$BOOKSERVICE_CLIENT_SECRET"
+echo "BOOK_SERVICE_CLIENT_SECRET=$BOOK_SERVICE_CLIENT_SECRET"
 
 echo "---------"
 echo "Creating client role"
@@ -85,10 +85,10 @@ curl -s -X POST \
 -d "username=ivan.franchin" \
 -d "password=123" \
 -d "grant_type=password" \
--d "client_secret=$BOOKSERVICE_CLIENT_SECRET" \
+-d "client_secret=$BOOK_SERVICE_CLIENT_SECRET" \
 -d "client_id=book-service" | jq -r .access_token
 
 echo
 echo "---------"
-echo "BOOKSERVICE_CLIENT_SECRET=$BOOKSERVICE_CLIENT_SECRET"
+echo "BOOK_SERVICE_CLIENT_SECRET=$BOOK_SERVICE_CLIENT_SECRET"
 echo "---------"
