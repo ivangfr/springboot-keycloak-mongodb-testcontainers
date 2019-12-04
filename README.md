@@ -8,8 +8,8 @@ have its sensitive endpoints (add/update/delete book) secured.
 - Use [`Keycloak`](https://www.keycloak.org) as authentication and authorization server;
 - Explore the utilities and annotations that `Spring Boot` provides when testing applications.
 
-> Note. In the [`Kubernetes Environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/bookservice-kong-keycloak)
-repository, it is shown how to deploy this project in Kubernetes (Minikube)
+> Note. In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/bookservice-kong-keycloak)
+repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
 
 ## Prerequisite
 
