@@ -2,14 +2,11 @@
 
 The goals of this project are:
 
-- Create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) Web application that
-manages books, called `book-service`. The data is stored in [`MongoDB`](https://www.mongodb.com). The application will
-have its sensitive endpoints (add/update/delete book) secured.
+- Create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) Web application that manages books, called `book-service`. The data is stored in [`MongoDB`](https://www.mongodb.com). The application will have its sensitive endpoints (add/update/delete book) secured.
 - Use [`Keycloak`](https://www.keycloak.org) as authentication and authorization server;
 - Explore the utilities and annotations that `Spring Boot` provides when testing applications.
 
-> Note. In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/bookservice-kong-keycloak)
-repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
+> **Note:** In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/bookservice-kong-keycloak) repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
 
 ## Prerequisite
 
@@ -17,8 +14,7 @@ In order to run some commands/scripts, you must have [`jq`](https://stedolan.git
 
 ## Build Docker Image
 
-In a terminal and inside `springboot-testing-mongodb-keycloak` root folder, run the following command to build
-`book-service` docker image
+In a terminal and inside `springboot-testing-mongodb-keycloak` root folder, run the following command to build `book-service` docker image
 ```
 ./gradlew book-service:clean book-service:build book-service:docker -x test -x integrationTest
 ```
@@ -52,11 +48,9 @@ In a terminal and inside `springboot-testing-mongodb-keycloak` root folder run
 ./init-keycloak.sh
 ```
 
-This script creates `company-services` realm, `book-service` client, `manage_books` client role and the user
-`ivan.franchin` with the role `manage_books` assigned.
+This script creates `company-services` realm, `book-service` client, `manage_books` client role and the user `ivan.franchin` with the role `manage_books` assigned.
 
-`BOOK_SERVICE_CLIENT_SECRET` value is shown at the end of the script. It will be needed whenever we call `Keycloak` to
-get a token to access `book-service`
+`BOOK_SERVICE_CLIENT_SECRET` value is shown at the end of the script. It will be needed whenever we call `Keycloak` to get a token to access `book-service`
 
 ### Using Keycloak website
 
@@ -150,8 +144,7 @@ get a token to access `book-service`
    HTTP/1.1 302
    ```
 
-1. If you do not have the access token stored in `BEARER_MY_ACCESS_TOKEN` environment variable, get it by following the
-steps describe at [Getting Access Token](#getting-access-token)
+1. If you do not have the access token stored in `BEARER_MY_ACCESS_TOKEN` environment variable, get it by following the steps describe at [Getting Access Token](#getting-access-token)
 
 1. Call the endpoint `POST /api/books`, now informing the access token
    ```
@@ -177,11 +170,9 @@ steps describe at [Getting Access Token](#getting-access-token)
 
 1. Access http://localhost:9080/swagger-ui.html
 
-1. Click on `GET /api/books` to open it. Then, click on `Try it out` button and, finally, click on `Execute` button
-It will return a http status code `200` and an empty list or a list with some books if you've already added them
+1. Click on `GET /api/books` to open it. Then, click on `Try it out` button and, finally, click on `Execute` button It will return a http status code `200` and an empty list or a list with some books if you've already added them
 
-1. Now, let's try to call a secured endpoint without authentication. Click on `POST /api/books` to open it. Then, click
-on `Try it out` button (you can use the default values) and, finally, on `Execute` button. It will return:
+1. Now, let's try to call a secured endpoint without authentication. Click on `POST /api/books` to open it. Then, click on `Try it out` button (you can use the default values) and, finally, on `Execute` button. It will return:
    ```
    TypeError: Failed to fetch
    ```
@@ -190,8 +181,7 @@ on `Try it out` button (you can use the default values) and, finally, on `Execut
 
 1. Copy the token generated (something like that starts with `Bearer ...`) and go back to `Swagger`
 
-1. Click on the `Authorize` button and paste access token (copied previously) in the value field. Then, click on
-`Authorize` and, to finalize, click on `Close`
+1. Click on the `Authorize` button and paste access token (copied previously) in the value field. Then, click on `Authorize` and, to finalize, click on `Close`
 
 1. Go to `POST /api/books`, click on `Try it out` and then on `Execute` button. It will return something like
    ```
@@ -206,9 +196,7 @@ on `Try it out` button (you can use the default values) and, finally, on `Execut
 
 ## Running book-service with Gradle
 
-During development, it is easier to just run the application instead of always build the docker image before running
-it. In order to do that, comment `book-service` in `docker-compose.yml` file (so that it does not start when you start
-the environment) and run it with `Gradle`.
+During development, it is easier to just run the application instead of always build the docker image before running it. In order to do that, comment `book-service` in `docker-compose.yml` file (so that it does not start when you start the environment) and run it with `Gradle`.
 
 1. Open a terminal and inside `springboot-testing-mongodb-keycloak` root folder, start the application by running
    ```
@@ -220,8 +208,7 @@ the environment) and run it with `Gradle`.
    export BOOK_SERVICE_CLIENT_SECRET=...
    ```
 
-1. In order to get the access token from `Keycloak`, run the following commands. Note that we are informing `localhost`
-   in the second argument. It changes `Keycloak` host inside the script.
+1. In order to get the access token from `Keycloak`, run the following commands. Note that we are informing `localhost` in the second argument. It changes `Keycloak` host inside the script.
    ```
    BEARER_MY_ACCESS_TOKEN=$(./get-access-token.sh $BOOK_SERVICE_CLIENT_SECRET localhost)
    echo $BEARER_MY_ACCESS_TOKEN
@@ -238,8 +225,7 @@ docker-compose down -v
 
 ## Running unit and integration testing
 
-In a terminal and inside `springboot-testing-mongodb-keycloak` root folder, run the command below to run unit and
-integration tests
+In a terminal and inside `springboot-testing-mongodb-keycloak` root folder, run the command below to run unit and integration tests
 ```
 ./gradlew book-service:cleanTest book-service:test book-service:integrationTest
 ```
@@ -254,7 +240,7 @@ integration tests
   book-service/build/reports/tests/integrationTest/index.html
   ```
 
-## Useful Links/Commands
+## Useful Links & Commands
 
 ### MongoDB
 
@@ -267,15 +253,13 @@ db.book.find()
 
 ### jwt.io
 
-With [jwt.io](https://jwt.io) you can inform the JWT token received from `Keycloak` and the online tool decodes the
-token, showing its header and payload.
+With [jwt.io](https://jwt.io) you can inform the JWT token received from `Keycloak` and the online tool decodes the token, showing its header and payload.
 
 ## Issues
 
 - Unable to update to `Keycloak` version `8.0.0` due to this issue, https://issues.jboss.org/browse/KEYCLOAK-11282
 
-- During the startup, there is a warning presented below. It seems to be a `spring-data-mongo` problem
-  (https://github.com/aidanwhiteley/books/issues/86)
+- During the startup, there is a warning presented below. It seems to be a `spring-data-mongo` problem (https://github.com/aidanwhiteley/books/issues/86)
   ```
   WARN 3450 --- [           main] o.s.data.convert.CustomConversions       : Registering converter from class java.time.LocalDateTime to class java.time.Instant as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
   WARN 3450 --- [           main] o.s.data.convert.CustomConversions       : Registering converter from class java.time.Instant to class java.time.LocalDateTime as reading converter although it doesn't convert from a store-supported type! You might wanna check you annotation setup at the converter implementation.
