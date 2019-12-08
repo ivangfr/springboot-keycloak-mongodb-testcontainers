@@ -2,13 +2,17 @@ version: '3.7'
 services:
 
   mongodb:
-    image: mongo:4.2.1
+    image: bitnami/mongodb:4.2.1
     container_name: mongodb
-    restart: unless-stopped
     ports:
       - "27017:27017"
+    environment:
+      MONGODB_DATABASE: bookdb
+      MONGODB_USERNAME: bookuser
+      MONGODB_PASSWORD: bookpass
+      MONGODB_ROOT_PASSWORD: secret
     healthcheck:
-      test: "echo 'db.stats().ok' | mongo localhost:27017/bookdb --quiet"
+      test: echo 'db.stats().ok' | mongo localhost:27017/bookreviewdb --quiet
       start_period: 10s
 
   keycloak:
@@ -44,6 +48,8 @@ services:
     environment:
       MONGODB_HOST: mongodb
       KEYCLOAK_HOST: keycloak
+      SPRING_DATA_MONGODB_USERNAME: bookuser
+      SPRING_DATA_MONGODB_PASSWORD: bookpass
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "8080" ]
       start_period: 1m
