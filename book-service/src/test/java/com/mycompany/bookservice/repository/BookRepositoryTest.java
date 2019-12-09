@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
@@ -19,7 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @DataMongoTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@TestPropertySource(properties = {
+        "spring.data.mongodb.uri=mongodb://localhost:27017/bookdb"
+})
 public class BookRepositoryTest {
 
     @Autowired
@@ -98,7 +103,7 @@ public class BookRepositoryTest {
 
         String newAuthorName = "Ivan Franchin Jr.";
         String newTitle = "Java 8";
-        BigDecimal newPrice = new BigDecimal(12.99);
+        BigDecimal newPrice = new BigDecimal("12.99");
 
         book.setAuthorName(newAuthorName);
         book.setTitle(newTitle);
