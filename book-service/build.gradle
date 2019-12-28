@@ -40,12 +40,6 @@ dependencyManagement {
     }
 }
 
-// adding arguments to bootRun, for example: gradle bootRun -Dserver.port=9080
-
-bootRun {
-    systemProperties = System.properties
-}
-
 // adding docker plugin
 
 docker {
@@ -59,7 +53,7 @@ docker {
 
 dockerCompose {
     useComposeFiles = ['../docker-compose.yml']
-    startedServices = ['mongodb', 'keycloak']
+    startedServices = ['keycloak'] // mongodb is not included because it's provided by 'de.flapdoodle.embed:de.flapdoodle.embed.mongo' dependency
 }
 
 // adding integration test

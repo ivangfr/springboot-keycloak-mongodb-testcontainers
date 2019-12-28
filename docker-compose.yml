@@ -12,7 +12,7 @@ services:
       MONGODB_PASSWORD: bookpass
       MONGODB_ROOT_PASSWORD: secret
     healthcheck:
-      test: echo 'db.stats().ok' | mongo localhost:27017/bookreviewdb --quiet
+      test: echo 'db.stats().ok' | mongo localhost:27017/bookdb --quiet
       start_period: 10s
 
   keycloak:
@@ -32,6 +32,7 @@ services:
     environment:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: admin
+      DB_VENDOR: h2
     healthcheck:
       test: "curl -f http://localhost:8080/auth || exit 1"
       start_period: 30s
