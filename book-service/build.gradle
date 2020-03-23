@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.2.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'org.springframework.boot' version '2.2.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'com.palantir.docker' version '0.22.1'
     id 'com.avast.gradle.docker-compose' version '0.9.4'
 }
@@ -29,8 +29,7 @@ ext {
     set('springfoxSwaggerVersion', '2.9.2')
     set('findbugsVersion', '3.0.2')
     set('mapstructVersion', '1.3.1.Final')
-    set('lombokVersion', '1.18.8')
-    set('keycloakVersion', '6.0.1')
+    set('keycloakVersion', '9.0.0')
     set('resteasyVersion', '3.9.0.Final')
 }
 

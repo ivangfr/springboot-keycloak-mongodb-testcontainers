@@ -2,6 +2,7 @@ package com.mycompany.bookservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import com.mycompany.bookservice.config.KeycloakConfig;
 import com.mycompany.bookservice.dto.CreateBookDto;
 import com.mycompany.bookservice.dto.UpdateBookDto;
 import com.mycompany.bookservice.exception.BookNotFoundException;
@@ -44,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BookController.class)
-@Import(BookMapperImpl.class) // <-- if this class is missing, run: ./gradlew book-service:assemble
+@Import({BookMapperImpl.class, KeycloakConfig.class}) // <-- if this class is missing, run: ./gradlew book-service:assemble
 public class BookControllerTest {
 
     private static final String MANAGE_BOOKS = "manage_books";
