@@ -16,7 +16,7 @@ services:
       start_period: 10s
 
   keycloak:
-    image: jboss/keycloak:9.0.0
+    image: jboss/keycloak:9.0.2
 
     # 'my-keycloak' is set as container_name instead of 'keycloak' to avoid the conflict
     # that happens when using gradle-docker-compose plugin (started when integrationTest
