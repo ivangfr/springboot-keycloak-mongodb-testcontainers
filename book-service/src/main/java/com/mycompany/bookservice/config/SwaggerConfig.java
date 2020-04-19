@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.base.Predicates.in;
+import static com.google.common.base.Predicates.not;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
@@ -63,8 +64,8 @@ public class SwaggerConfig {
 
     private SecurityContext securityContext() {
         return SecurityContext.builder().securityReferences(defaultAuth())
-                .forPaths(regex("/api/books.*"))
-                .forHttpMethods(in(Arrays.asList(HttpMethod.POST, HttpMethod.PATCH, HttpMethod.DELETE)))
+                .forPaths(regex("/api/.*"))
+                .forHttpMethods(not(in(Collections.singletonList(HttpMethod.GET))))
                 .build();
     }
 
