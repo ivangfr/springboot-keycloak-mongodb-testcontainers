@@ -1,7 +1,6 @@
 package com.mycompany.bookservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
 import com.mycompany.bookservice.dto.CreateBookDto;
 import com.mycompany.bookservice.dto.UpdateBookDto;
 import com.mycompany.bookservice.exception.BookNotFoundException;
@@ -49,9 +48,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(BookMapperImpl.class) // if BookMapperImpl.class is missing, run: ./gradlew book-service:assemble
 public class BookControllerTest {
 
-    private static final String MANAGE_BOOKS = "manage_books";
-    private static final String FAKE_ROLE = "fake_role";
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -65,7 +61,7 @@ public class BookControllerTest {
     void givenNoBookWhenGetAllBooksThenReturnStatusOkAndEmptyJsonArray() throws Exception {
         given(bookService.getAllBooks()).willReturn(Collections.emptyList());
 
-        ResultActions resultActions = mockMvc.perform(get("/api/books"))
+        ResultActions resultActions = mockMvc.perform(get(API_BOOKS_URL))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
@@ -76,18 +72,18 @@ public class BookControllerTest {
     @Test
     void givenOneBookWhenGetAllBooksThenReturnStatusOkAndJsonArrayWithOneBook() throws Exception {
         Book book = getDefaultBook();
-        given(bookService.getAllBooks()).willReturn(Lists.newArrayList(book));
+        given(bookService.getAllBooks()).willReturn(Collections.singletonList(book));
 
-        ResultActions resultActions = mockMvc.perform(get("/api/books"))
+        ResultActions resultActions = mockMvc.perform(get(API_BOOKS_URL))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id", is(book.getId().toString())))
-                .andExpect(jsonPath("$[0].authorName", is(book.getAuthorName())))
-                .andExpect(jsonPath("$[0].title", is(book.getTitle())))
-                .andExpect(jsonPath("$[0].price", is(book.getPrice().doubleValue())));
+                .andExpect(jsonPath(JSON_$, hasSize(1)))
+                .andExpect(jsonPath(JSON_$_0_ID, is(book.getId().toString())))
+                .andExpect(jsonPath(JSON_$_0_AUTHOR_NAME, is(book.getAuthorName())))
+                .andExpect(jsonPath(JSON_$_0_TITLE, is(book.getTitle())))
+                .andExpect(jsonPath(JSON_$_0_PRICE, is(book.getPrice().doubleValue())));
     }
 
     @Test
@@ -95,15 +91,15 @@ public class BookControllerTest {
         Book book = getDefaultBook();
         given(bookService.validateAndGetBookById(book.getId())).willReturn(book);
 
-        ResultActions resultActions = mockMvc.perform(get("/api/books/" + book.getId()))
+        ResultActions resultActions = mockMvc.perform(get(API_BOOKS_ID_URL, book.getId()))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(book.getId().toString())))
-                .andExpect(jsonPath("$.authorName", is(book.getAuthorName())))
-                .andExpect(jsonPath("$.title", is(book.getTitle())))
-                .andExpect(jsonPath("$.price", is(book.getPrice().doubleValue())));
+                .andExpect(jsonPath(JSON_$_ID, is(book.getId().toString())))
+                .andExpect(jsonPath(JSON_$_AUTHOR_NAME, is(book.getAuthorName())))
+                .andExpect(jsonPath(JSON_$_TITLE, is(book.getTitle())))
+                .andExpect(jsonPath(JSON_$_PRICE, is(book.getPrice().doubleValue())));
     }
 
     @Test
@@ -114,17 +110,17 @@ public class BookControllerTest {
 
         given(bookService.saveBook(any(Book.class))).willReturn(book);
 
-        ResultActions resultActions = mockMvc.perform(post("/api/books")
+        ResultActions resultActions = mockMvc.perform(post(API_BOOKS_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createBookDto)))
                 .andDo(print());
 
         resultActions.andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(book.getId().toString())))
-                .andExpect(jsonPath("$.authorName", is(book.getAuthorName())))
-                .andExpect(jsonPath("$.title", is(book.getTitle())))
-                .andExpect(jsonPath("$.price", is(book.getPrice().doubleValue())));
+                .andExpect(jsonPath(JSON_$_ID, is(book.getId().toString())))
+                .andExpect(jsonPath(JSON_$_AUTHOR_NAME, is(book.getAuthorName())))
+                .andExpect(jsonPath(JSON_$_TITLE, is(book.getTitle())))
+                .andExpect(jsonPath(JSON_$_PRICE, is(book.getPrice().doubleValue())));
     }
 
     @Test
@@ -139,17 +135,17 @@ public class BookControllerTest {
         given(bookService.validateAndGetBookById(book.getId())).willReturn(book);
         given(bookService.saveBook(any(Book.class))).willReturn(book);
 
-        ResultActions resultActions = mockMvc.perform(patch("/api/books/" + book.getId())
+        ResultActions resultActions = mockMvc.perform(patch(API_BOOKS_ID_URL, book.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateBookDto)))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(book.getId().toString())))
-                .andExpect(jsonPath("$.authorName", is(book.getAuthorName())))
-                .andExpect(jsonPath("$.title", is(updateBookDto.getTitle())))
-                .andExpect(jsonPath("$.price", is(updateBookDto.getPrice().doubleValue())));
+                .andExpect(jsonPath(JSON_$_ID, is(book.getId().toString())))
+                .andExpect(jsonPath(JSON_$_AUTHOR_NAME, is(book.getAuthorName())))
+                .andExpect(jsonPath(JSON_$_TITLE, is(updateBookDto.getTitle())))
+                .andExpect(jsonPath(JSON_$_PRICE, is(updateBookDto.getPrice().doubleValue())));
     }
 
     @Test
@@ -159,7 +155,7 @@ public class BookControllerTest {
 
         willThrow(BookNotFoundException.class).given(bookService).validateAndGetBookById(any(UUID.class));
 
-        ResultActions resultActions = mockMvc.perform(patch("/api/books/" + UUID.randomUUID())
+        ResultActions resultActions = mockMvc.perform(patch(API_BOOKS_ID_URL, UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateBookDto)))
                 .andDo(print());
@@ -175,15 +171,15 @@ public class BookControllerTest {
         given(bookService.validateAndGetBookById(book.getId())).willReturn(book);
         willDoNothing().given(bookService).deleteBook(any(Book.class));
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/books/" + book.getId()))
+        ResultActions resultActions = mockMvc.perform(delete(API_BOOKS_ID_URL, book.getId()))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(book.getId().toString())))
-                .andExpect(jsonPath("$.authorName", is(book.getAuthorName())))
-                .andExpect(jsonPath("$.title", is(book.getTitle())))
-                .andExpect(jsonPath("$.price", is(book.getPrice().doubleValue())));
+                .andExpect(jsonPath(JSON_$_ID, is(book.getId().toString())))
+                .andExpect(jsonPath(JSON_$_AUTHOR_NAME, is(book.getAuthorName())))
+                .andExpect(jsonPath(JSON_$_TITLE, is(book.getTitle())))
+                .andExpect(jsonPath(JSON_$_PRICE, is(book.getPrice().doubleValue())));
     }
 
     @Test
@@ -191,7 +187,7 @@ public class BookControllerTest {
     void givenNonExistingBookIdWhenDeleteBookThenReturnStatusNotFound() throws Exception {
         willThrow(BookNotFoundException.class).given(bookService).validateAndGetBookById(any(UUID.class));
 
-        ResultActions resultActions = mockMvc.perform(delete("/api/books/" + UUID.randomUUID()))
+        ResultActions resultActions = mockMvc.perform(delete(API_BOOKS_ID_URL, UUID.randomUUID()))
                 .andDo(print());
 
         resultActions.andExpect(status().isNotFound());
@@ -202,7 +198,7 @@ public class BookControllerTest {
     void givenAUserWithInvalidRolesWhenCreateBookThenReturnStatusForbidden() throws Exception {
         CreateBookDto createBookDto = getDefaultCreateBookDto();
 
-        ResultActions resultActions = mockMvc.perform(post("/api/books")
+        ResultActions resultActions = mockMvc.perform(post(API_BOOKS_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createBookDto)))
                 .andDo(print());
@@ -217,7 +213,7 @@ public class BookControllerTest {
         updateBookDto.setPrice(new BigDecimal("99.99"));
         updateBookDto.setTitle("Java 9");
 
-        ResultActions resultActions = mockMvc.perform(patch("/api/books/" + UUID.randomUUID())
+        ResultActions resultActions = mockMvc.perform(patch(API_BOOKS_ID_URL, UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateBookDto)))
                 .andDo(print());
@@ -228,10 +224,28 @@ public class BookControllerTest {
     @Test
     @WithMockUser(roles = FAKE_ROLE)
     void givenAUserWithInvalidRolesWhenDeleteBookReturnStatusForbidden() throws Exception {
-        ResultActions resultActions = mockMvc.perform(delete("/api/books/" + UUID.randomUUID()))
+        ResultActions resultActions = mockMvc.perform(delete(API_BOOKS_ID_URL, UUID.randomUUID()))
                 .andDo(print());
 
         resultActions.andExpect(status().isForbidden());
     }
+
+    private static final String MANAGE_BOOKS = "manage_books";
+    private static final String FAKE_ROLE = "fake_role";
+
+    private static final String API_BOOKS_URL = "/api/books";
+    private static final String API_BOOKS_ID_URL = "/api/books/{id}";
+
+    private static final String JSON_$ = "$";
+
+    private static final String JSON_$_ID = "$.id";
+    private static final String JSON_$_AUTHOR_NAME = "$.authorName";
+    private static final String JSON_$_TITLE = "$.title";
+    private static final String JSON_$_PRICE = "$.price";
+
+    private static final String JSON_$_0_ID = "$[0].id";
+    private static final String JSON_$_0_AUTHOR_NAME = "$[0].authorName";
+    private static final String JSON_$_0_TITLE = "$[0].title";
+    private static final String JSON_$_0_PRICE = "$[0].price";
 
 }

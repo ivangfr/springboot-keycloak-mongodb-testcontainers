@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.6.RELEASE'
+    id 'org.springframework.boot' version '2.2.7.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'com.palantir.docker' version '0.22.1'
     id 'com.avast.gradle.docker-compose' version '0.9.4'
@@ -29,7 +29,7 @@ ext {
     set('springfoxSwaggerVersion', '2.9.2')
     set('findbugsVersion', '3.0.2')
     set('mapstructVersion', '1.3.1.Final')
-    set('keycloakVersion', '9.0.2')
+    set('keycloakVersion', '9.0.3')
     set('resteasyVersion', '3.9.0.Final')
 }
 
@@ -90,10 +90,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     implementation "com.google.code.findbugs:jsr305:${findbugsVersion}"
 
-    compileOnly "org.mapstruct:mapstruct-jdk8:${mapstructVersion}"
+    compileOnly "org.mapstruct:mapstruct:${mapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 

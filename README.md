@@ -10,13 +10,15 @@ The goals of this project are:
 
 ## Prerequisite
 
-In order to run some commands/scripts, you must have [`jq`](https://stedolan.github.io/jq) installed on you machine
+- **jq**
+
+  In order to run some commands/scripts, you must have [`jq`](https://stedolan.github.io/jq) installed on you machine
 
 ## Application
 
 - **book-service**
   
-  `Spring Boot` Web application that manages books. The data is stored in [`MongoDB`](https://www.mongodb.com) and the application has its sensitive endpoints (add, update and delete book) secured.
+  `Spring Boot` Web application that manages books. [`MongoDB`](https://www.mongodb.com) is used as storage, and the application has its sensitive endpoints (add, update and delete books) secured.
 
 ## Start Environment
 
@@ -176,7 +178,7 @@ There are two ways: running a script or using `Keycloak` website
 
 1. Access http://localhost:9080/swagger-ui.html
 
-1. Click on `GET /api/books` to open it. Then, click on `Try it out` button and, finally, click on `Execute` button It will return a http status code `200` and an empty list or a list with some books if you've already added them
+1. Click on `book-controller` and after on `GET /api/books` to open it. Then, click on `Try it out` button and, finally, click on `Execute` button. It will return a http status code `200` and an empty list or a list with some books if you've already added them
 
 1. Now, let's try to call a secured endpoint without authentication. Click on `POST /api/books` to open it. Then, click on `Try it out` button (you can use the default values) and, finally, on `Execute` button. It will return:
    ```
@@ -261,7 +263,8 @@ There are two ways: running a script or using `Keycloak` website
 
 - In a terminal and inside `springboot-testing-mongodb-keycloak` root folder, run the command below to run unit and integration tests
   ```
-  ./gradlew book-service:cleanTest book-service:test book-service:integrationTest
+  ./gradlew book-service:clean book-service:assemble book-service:cleanTest \
+  book-service:test book-service:integrationTest
   ```
 
 - From `springboot-testing-mongodb-keycloak` root folder, **Unit Testing Report** can be found at

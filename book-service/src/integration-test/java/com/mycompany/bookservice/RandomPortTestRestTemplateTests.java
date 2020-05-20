@@ -1,6 +1,5 @@
 package com.mycompany.bookservice;
 
-import com.google.common.collect.Lists;
 import com.mycompany.bookservice.dto.BookDto;
 import com.mycompany.bookservice.dto.CreateBookDto;
 import com.mycompany.bookservice.dto.UpdateBookDto;
@@ -9,7 +8,6 @@ import com.mycompany.bookservice.repository.BookRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.idm.ClientRepresentation;
@@ -28,8 +26,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +38,6 @@ import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultC
 import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultUpdateBookDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @TestPropertySource(properties = {
@@ -59,9 +56,8 @@ public class RandomPortTestRestTemplateTests {
 
     @BeforeAll
     static void setUp() {
-        String serverUrl = "http://localhost:8080/auth";
         keycloakAdmin = KeycloakBuilder.builder()
-                .serverUrl(serverUrl)
+                .serverUrl(KEYCLOAK_SERVER_URL)
                 .realm("master")
                 .username("admin")
                 .password("admin")
@@ -70,57 +66,53 @@ public class RandomPortTestRestTemplateTests {
 
         // Realm
         RealmRepresentation realmRepresentation = new RealmRepresentation();
-        realmRepresentation.setRealm("company-services");
+        realmRepresentation.setRealm(COMPANY_SERVICE_REALM_NAME);
         realmRepresentation.setEnabled(true);
 
         // Client
         ClientRepresentation clientRepresentation = new ClientRepresentation();
-        clientRepresentation.setId("book-service");
+        clientRepresentation.setId(BOOK_SERVICE_CLIENT_ID);
         clientRepresentation.setDirectAccessGrantsEnabled(true);
-        clientRepresentation.setSecret("abc123");
-        realmRepresentation.setClients(Lists.newArrayList(clientRepresentation));
+        clientRepresentation.setSecret(BOOK_SERVICE_CLIENT_SECRET);
+        realmRepresentation.setClients(Collections.singletonList(clientRepresentation));
 
         // Client roles
         Map<String, List<String>> clientRoles = new HashMap<>();
-        clientRoles.put("book-service", Lists.newArrayList("manage_books"));
+        clientRoles.put(BOOK_SERVICE_CLIENT_ID, BOOK_SERVICE_ROLES);
 
         // Credentials
         CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
         credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
-        credentialRepresentation.setValue("123");
+        credentialRepresentation.setValue(USER_PASSWORD);
 
         // User
         UserRepresentation userRepresentation = new UserRepresentation();
-        userRepresentation.setUsername("ivan.franchin");
+        userRepresentation.setUsername(USER_USERNAME);
         userRepresentation.setEnabled(true);
-        userRepresentation.setCredentials(Lists.newArrayList(credentialRepresentation));
+        userRepresentation.setCredentials(Collections.singletonList(credentialRepresentation));
         userRepresentation.setClientRoles(clientRoles);
-        realmRepresentation.setUsers(Lists.newArrayList(userRepresentation));
+        realmRepresentation.setUsers(Collections.singletonList(userRepresentation));
 
         keycloakAdmin.realms().create(realmRepresentation);
 
         keycloakBookService = KeycloakBuilder.builder()
-                .serverUrl(serverUrl)
-                .realm("company-services")
-                .username("ivan.franchin")
-                .password("123")
-                .clientId("book-service")
-                .clientSecret("abc123")
+                .serverUrl(KEYCLOAK_SERVER_URL)
+                .realm(COMPANY_SERVICE_REALM_NAME)
+                .username(USER_USERNAME)
+                .password(USER_PASSWORD)
+                .clientId(BOOK_SERVICE_CLIENT_ID)
+                .clientSecret(BOOK_SERVICE_CLIENT_SECRET)
                 .build();
     }
 
     @AfterAll
     static void tearDown() {
-        keycloakAdmin.realm("company-services").remove();
+        keycloakAdmin.realm(COMPANY_SERVICE_REALM_NAME).remove();
     }
-
-    /*
-     * GET /api/books
-     * ============== */
 
     @Test
     void givenNoBooksWhenGetAllBooksThenReturnStatusOkAndEmptyArray() {
-        ResponseEntity<BookDto[]> responseEntity = testRestTemplate.getForEntity("/api/books", BookDto[].class);
+        ResponseEntity<BookDto[]> responseEntity = testRestTemplate.getForEntity(API_BOOKS_URL, BookDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).hasSize(0);
@@ -131,7 +123,7 @@ public class RandomPortTestRestTemplateTests {
         Book book = getDefaultBook();
         bookRepository.save(book);
 
-        ResponseEntity<BookDto[]> responseEntity = testRestTemplate.getForEntity("/api/books", BookDto[].class);
+        ResponseEntity<BookDto[]> responseEntity = testRestTemplate.getForEntity(API_BOOKS_URL, BookDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).hasSize(1);
@@ -142,15 +134,10 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody()[0].getPrice()).isEqualTo(book.getPrice());
     }
 
-    /*
-     * POST /api/books
-     * =============== */
-
     @Test
     void givenValidBookWhenCreateBookWithoutAuthenticationThenReturnStatus302() {
         CreateBookDto createBookDto = getDefaultCreateBookDto();
-        ResponseEntity<String> responseEntity = testRestTemplate.postForEntity(
-                "/api/books", createBookDto, String.class);
+        ResponseEntity<String> responseEntity = testRestTemplate.postForEntity(API_BOOKS_URL, createBookDto, String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         assertThat(responseEntity.getBody()).isNull();
@@ -158,15 +145,10 @@ public class RandomPortTestRestTemplateTests {
 
     @Test
     void givenValidBookWhenCreateBookInformingInvalidTokenThenReturnStatusUnauthorized() {
-        String accessToken = "abcdef";
-
         CreateBookDto createBookDto = getDefaultCreateBookDto();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-
-        ResponseEntity<String> responseEntity = testRestTemplate.postForEntity(
-                "/api/books", new HttpEntity<>(createBookDto, headers), String.class);
+        HttpHeaders headers = authBearerHeaders("abcdef");
+        ResponseEntity<String> responseEntity = testRestTemplate.postForEntity(API_BOOKS_URL, new HttpEntity<>(createBookDto, headers), String.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(responseEntity.getBody()).isNull();
@@ -178,11 +160,8 @@ public class RandomPortTestRestTemplateTests {
 
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-
-        ResponseEntity<BookDto> responseEntity = testRestTemplate.postForEntity(
-                "/api/books", new HttpEntity<>(createBookDto, headers), BookDto.class);
+        HttpHeaders headers = authBearerHeaders(accessToken);
+        ResponseEntity<BookDto> responseEntity = testRestTemplate.postForEntity(API_BOOKS_URL, new HttpEntity<>(createBookDto, headers), BookDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(responseEntity.getBody()).isNotNull();
@@ -192,31 +171,25 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getPrice()).isEqualTo(createBookDto.getPrice());
     }
 
-    /*
-     * PATCH /api/books/{id}
-     * ===================== */
-
     @Test
     void givenNonExistingBookIdWhenUpdateBookThenReturnStatusNotFound() {
         UUID id = UUID.randomUUID();
         UpdateBookDto updateBookDto = getDefaultUpdateBookDto();
 
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
+        HttpHeaders headers = authBearerHeaders(accessToken);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-
-        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(
-                "/api/books/" + id, HttpMethod.PATCH,
+        String url = String.format(API_BOOKS_ID_URL, id);
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(url, HttpMethod.PATCH,
                 new HttpEntity<>(updateBookDto, headers), MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
-        assertThat(responseEntity.getBody().getError()).isEqualTo("Not Found");
+        assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_NOT_FOUND);
         assertThat(responseEntity.getBody().getMessage()).isEqualTo("Book with id '" + id + "' not found.");
-        assertThat(responseEntity.getBody().getPath()).isEqualTo("/api/books/" + id);
+        assertThat(responseEntity.getBody().getPath()).isEqualTo(url);
         assertThat(responseEntity.getBody().getErrors()).isNull();
     }
 
@@ -230,12 +203,10 @@ public class RandomPortTestRestTemplateTests {
         updateBookDto.setTitle("Java 9");
 
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
+        HttpHeaders headers = authBearerHeaders(accessToken);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-
-        ResponseEntity<BookDto> responseEntity = testRestTemplate.exchange(
-                "/api/books/" + book.getId(), HttpMethod.PATCH,
+        String url = String.format(API_BOOKS_ID_URL, book.getId());
+        ResponseEntity<BookDto> responseEntity = testRestTemplate.exchange(url, HttpMethod.PATCH,
                 new HttpEntity<>(updateBookDto, headers), BookDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -246,29 +217,24 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getPrice()).isEqualTo(book.getPrice());
     }
 
-    /*
-     * DELETE /api/books/{id}
-     * ====================== */
-
     @Test
     void givenNonExistingBookIdWhenDeleteBookThenReturnStatusNotFound() {
         UUID id = UUID.randomUUID();
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
+        HttpHeaders headers = authBearerHeaders(accessToken);
 
-        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(
-                "/api/books/" + id, HttpMethod.DELETE,
+        String url = String.format(API_BOOKS_ID_URL, id);
+        ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE,
                 new HttpEntity<>(headers), MessageError.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
-        assertThat(responseEntity.getBody().getError()).isEqualTo("Not Found");
+        assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_NOT_FOUND);
         assertThat(responseEntity.getBody().getMessage()).isEqualTo("Book with id '" + id + "' not found.");
-        assertThat(responseEntity.getBody().getPath()).isEqualTo("/api/books/" + id);
+        assertThat(responseEntity.getBody().getPath()).isEqualTo(url);
         assertThat(responseEntity.getBody().getErrors()).isNull();
     }
 
@@ -278,12 +244,10 @@ public class RandomPortTestRestTemplateTests {
         bookRepository.save(book);
 
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
+        HttpHeaders headers = authBearerHeaders(accessToken);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-
-        ResponseEntity<BookDto> responseEntity = testRestTemplate.exchange(
-                "/api/books/" + book.getId(), HttpMethod.DELETE,
+        String url = String.format(API_BOOKS_ID_URL, book.getId());
+        ResponseEntity<BookDto> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE,
                 new HttpEntity<>(headers), BookDto.class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -293,5 +257,24 @@ public class RandomPortTestRestTemplateTests {
         assertThat(responseEntity.getBody().getTitle()).isEqualTo(book.getTitle());
         assertThat(responseEntity.getBody().getPrice()).isEqualTo(book.getPrice());
     }
+
+    private HttpHeaders authBearerHeaders(String accessToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+        return headers;
+    }
+
+    private static final String KEYCLOAK_SERVER_URL = "http://localhost:8080/auth";
+    private static final String COMPANY_SERVICE_REALM_NAME = "company-services";
+    private static final String BOOK_SERVICE_CLIENT_ID = "book-service";
+    private static final String BOOK_SERVICE_CLIENT_SECRET = "abc123";
+    private static final List<String> BOOK_SERVICE_ROLES = Collections.singletonList("manage_books");
+    private static final String USER_USERNAME = "ivan.franchin";
+    private static final String USER_PASSWORD = "123";
+
+    private static final String API_BOOKS_URL = "/api/books";
+    private static final String API_BOOKS_ID_URL = "/api/books/%s";
+
+    private static final String ERROR_NOT_FOUND = "Not Found";
 
 }

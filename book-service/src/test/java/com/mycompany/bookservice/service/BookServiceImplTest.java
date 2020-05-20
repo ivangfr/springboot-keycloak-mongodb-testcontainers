@@ -1,13 +1,13 @@
 package com.mycompany.bookservice.service;
 
-import com.google.common.collect.Lists;
 import com.mycompany.bookservice.exception.BookNotFoundException;
 import com.mycompany.bookservice.model.Book;
 import com.mycompany.bookservice.repository.BookRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
@@ -22,17 +22,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
+@Import(BookServiceImpl.class)
 public class BookServiceImplTest {
 
+    @Autowired
     private BookService bookService;
 
     @MockBean
     private BookRepository bookRepository;
-
-    @BeforeEach
-    void setUp() {
-        bookService = new BookServiceImpl(bookRepository);
-    }
 
     @Test
     void givenValidBookWhenSaveBookThenReturnBook() {
@@ -40,7 +37,6 @@ public class BookServiceImplTest {
         given(bookRepository.save(book)).willReturn(book);
 
         Book bookSaved = bookService.saveBook(book);
-
         assertThat(bookSaved).isEqualToComparingFieldByField(book);
     }
 
@@ -49,17 +45,15 @@ public class BookServiceImplTest {
         given(bookRepository.findAll()).willReturn(Collections.emptyList());
 
         List<Book> booksFound = bookService.getAllBooks();
-
         assertThat(booksFound).hasSize(0);
     }
 
     @Test
     void givenOneBookWhenGetAllBooksThenReturnListWithOneBook() {
         Book book = getDefaultBook();
-        given(bookRepository.findAll()).willReturn(Lists.newArrayList(book));
+        given(bookRepository.findAll()).willReturn(Collections.singletonList(book));
 
         List<Book> booksFound = bookService.getAllBooks();
-
         assertThat(booksFound).hasSize(1);
         assertThat(booksFound.get(0)).isEqualToComparingFieldByField(book);
     }
@@ -67,10 +61,9 @@ public class BookServiceImplTest {
     @Test
     void givenExistingBookAuthorNameWithOneBookWhenGetBooksByAuthorNameThenReturnListWithOneBook() {
         Book book = getDefaultBook();
-        given(bookRepository.findByAuthorNameLike(book.getAuthorName())).willReturn(Lists.newArrayList(book));
+        given(bookRepository.findByAuthorNameLike(book.getAuthorName())).willReturn(Collections.singletonList(book));
 
         List<Book> booksFound = bookService.getBooksByAuthorName(book.getAuthorName());
-
         assertThat(booksFound).hasSize(1);
         assertThat(booksFound.get(0)).isEqualToComparingFieldByField(book);
     }
@@ -90,7 +83,6 @@ public class BookServiceImplTest {
         given(bookRepository.findById(book.getId())).willReturn(Optional.of(book));
 
         Book bookFound = bookService.validateAndGetBookById(book.getId());
-
         assertThat(bookFound).isEqualToComparingFieldByField(book);
     }
 

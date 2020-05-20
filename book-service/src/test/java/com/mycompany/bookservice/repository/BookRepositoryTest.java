@@ -2,14 +2,12 @@ package com.mycompany.bookservice.repository;
 
 import com.mycompany.bookservice.model.Book;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,7 +17,6 @@ import java.util.UUID;
 import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultBook;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
 @DataMongoTest
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @TestPropertySource(properties = {
@@ -101,21 +98,17 @@ public class BookRepositoryTest {
         assertThat(bookFound.isPresent()).isTrue();
         assertThat(bookFound.get()).isEqualToComparingFieldByField(book);
 
-        String newAuthorName = "Ivan Franchin Jr.";
-        String newTitle = "Java 8";
-        BigDecimal newPrice = new BigDecimal("12.99");
-
-        book.setAuthorName(newAuthorName);
-        book.setTitle(newTitle);
-        book.setPrice(newPrice);
+        book.setAuthorName("Ivan Franchin Jr.");
+        book.setTitle("Java 8");
+        book.setPrice(new BigDecimal("12.99"));
 
         bookRepository.save(book);
 
         bookFound = bookRepository.findById(book.getId());
         assertThat(bookFound.isPresent()).isTrue();
-        assertThat(bookFound.get().getAuthorName()).isEqualTo(newAuthorName);
-        assertThat(bookFound.get().getTitle()).isEqualTo(newTitle);
-        assertThat(bookFound.get().getPrice()).isEqualTo(newPrice);
+        assertThat(bookFound.get().getAuthorName()).isEqualTo(book.getAuthorName());
+        assertThat(bookFound.get().getTitle()).isEqualTo(book.getTitle());
+        assertThat(bookFound.get().getPrice()).isEqualTo(book.getPrice());
     }
 
 }
