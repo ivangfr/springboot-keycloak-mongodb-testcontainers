@@ -1,6 +1,5 @@
 package com.mycompany.bookservice.service;
 
-import com.mycompany.bookservice.exception.BookNotFoundException;
 import com.mycompany.bookservice.model.Book;
 
 import java.util.List;
@@ -16,6 +15,6 @@ public interface BookService {
 
     void deleteBook(Book book);
 
-    Book validateAndGetBookById(UUID id) throws BookNotFoundException;
+    Book validateAndGetBookById(UUID id);
 
 }

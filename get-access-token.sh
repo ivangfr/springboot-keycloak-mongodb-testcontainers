@@ -13,4 +13,4 @@ MY_ACCESS_TOKEN_FULL=$(
   ')
 
 MY_ACCESS_TOKEN=$(echo $MY_ACCESS_TOKEN_FULL | jq -r .access_token)
-echo "Bearer $MY_ACCESS_TOKEN"
+echo "$MY_ACCESS_TOKEN"

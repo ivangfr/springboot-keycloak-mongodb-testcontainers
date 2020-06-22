@@ -1,6 +1,6 @@
 package com.mycompany.bookservice.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,15 +15,15 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class CreateBookDto {
 
-    @ApiModelProperty(example = "Craig Walls")
+    @Schema(example = "Craig Walls")
     @NotBlank
     private String authorName;
 
-    @ApiModelProperty(position = 1, example = "Spring Boot")
+    @Schema(example = "Spring Boot")
     @NotBlank
     private String title;
 
-    @ApiModelProperty(position = 2, example = "10.5")
+    @Schema(example = "10.5")
     @NotNull
     @Positive
     private BigDecimal price;

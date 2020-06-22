@@ -78,7 +78,7 @@ public class BookServiceImplTest {
     }
 
     @Test
-    void givenExistingBookIdWhenValidateAndGetBookByIdThenReturnBook() throws BookNotFoundException {
+    void givenExistingBookIdWhenValidateAndGetBookByIdThenReturnBook() {
         Book book = getDefaultBook();
         given(bookRepository.findById(book.getId())).willReturn(Optional.of(book));
 

@@ -3,19 +3,17 @@ package com.mycompany.bookservice.service;
 import com.mycompany.bookservice.exception.BookNotFoundException;
 import com.mycompany.bookservice.model.Book;
 import com.mycompany.bookservice.repository.BookRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
-
-    public BookServiceImpl(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
 
     @Override
     public List<Book> getAllBooks() {
@@ -38,9 +36,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book validateAndGetBookById(UUID id) throws BookNotFoundException {
-        return bookRepository.findById(id).
-                orElseThrow(() -> new BookNotFoundException(String.format("Book with id '%s' not found.", id)));
+    public Book validateAndGetBookById(UUID id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException(String.format("Book with id '%s' not found.", id)));
     }
 
 }
