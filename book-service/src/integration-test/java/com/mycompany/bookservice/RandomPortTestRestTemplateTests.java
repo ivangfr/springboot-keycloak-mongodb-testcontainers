@@ -5,9 +5,11 @@ import com.mycompany.bookservice.dto.CreateBookDto;
 import com.mycompany.bookservice.dto.UpdateBookDto;
 import com.mycompany.bookservice.model.Book;
 import com.mycompany.bookservice.repository.BookRepository;
+import lombok.Data;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.idm.ClientRepresentation;
@@ -25,7 +27,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,11 +39,9 @@ import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultC
 import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultUpdateBookDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(ContainersExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@TestPropertySource(properties = {
-        "spring.data.mongodb.uri=mongodb://localhost:27017/bookdb" // connecting to embedded mongodb provided by 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
-})
 public class RandomPortTestRestTemplateTests {
 
     @Autowired
@@ -199,7 +198,7 @@ public class RandomPortTestRestTemplateTests {
         bookRepository.save(book);
 
         UpdateBookDto updateBookDto = new UpdateBookDto();
-        updateBookDto.setAuthorName("Ivan Franchin Jr.");
+        updateBookDto.setAuthorName("Ivan Franchin 2");
         updateBookDto.setTitle("Java 9");
 
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
@@ -262,6 +261,28 @@ public class RandomPortTestRestTemplateTests {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         return headers;
+    }
+
+    @Data
+    private static class MessageError {
+        private String timestamp;
+        private int status;
+        private String error;
+        private String message;
+        private String path;
+        private String errorCode;
+        private List<ErrorDetail> errors;
+
+        @Data
+        public static class ErrorDetail {
+            private List<String> codes;
+            private String defaultMessage;
+            private String objectName;
+            private String field;
+            private String rejectedValue;
+            private boolean bindingFailure;
+            private String code;
+        }
     }
 
     private static final String KEYCLOAK_SERVER_URL = "http://localhost:8080/auth";

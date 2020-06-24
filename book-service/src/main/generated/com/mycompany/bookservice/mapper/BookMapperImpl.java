@@ -4,13 +4,13 @@ import com.mycompany.bookservice.dto.BookDto;
 import com.mycompany.bookservice.dto.CreateBookDto;
 import com.mycompany.bookservice.dto.UpdateBookDto;
 import com.mycompany.bookservice.model.Book;
-import javax.annotation.Generated;
+import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2020-03-22T23:28:41+0000",
-    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 1.8.0_102 (Oracle Corporation)"
+    date = "2020-06-23T19:05:56+0100",
+    comments = "version: 1.3.1.Final, compiler: javac, environment: Java 11.0.7 (Oracle Corporation)"
 )
 @Component
 public class BookMapperImpl implements BookMapper {

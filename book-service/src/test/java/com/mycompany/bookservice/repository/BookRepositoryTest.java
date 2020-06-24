@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,9 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataMongoTest
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-@TestPropertySource(properties = {
-        "spring.data.mongodb.uri=mongodb://localhost:27017/bookdb"
-})
 public class BookRepositoryTest {
 
     @Autowired
@@ -98,7 +94,7 @@ public class BookRepositoryTest {
         assertThat(bookFound.isPresent()).isTrue();
         assertThat(bookFound.get()).isEqualToComparingFieldByField(book);
 
-        book.setAuthorName("Ivan Franchin Jr.");
+        book.setAuthorName("Ivan Franchin 2");
         book.setTitle("Java 8");
         book.setPrice(new BigDecimal("12.99"));
 

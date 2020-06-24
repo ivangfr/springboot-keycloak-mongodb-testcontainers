@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 MY_ACCESS_TOKEN_FULL=$(
-  docker exec -t -e CLIENT_SECRET=$1 -e KEYCLOAK_HOST=${2:-localhost} my-keycloak bash -c '
+  docker exec -t -e CLIENT_SECRET=$1 -e KEYCLOAK_HOST=${2:-localhost} keycloak bash -c '
     curl -s -X POST \
     http://$KEYCLOAK_HOST:8080/auth/realms/company-services/protocol/openid-connect/token \
     -H "Content-Type: application/x-www-form-urlencoded" \

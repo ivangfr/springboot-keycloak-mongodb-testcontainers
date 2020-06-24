@@ -2,8 +2,9 @@
 
 The goals of this project are:
 
-- Create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that manages books, called `book-service`.
+- Create a [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application that manages books, called `book-service`;
 - Use [`Keycloak`](https://www.keycloak.org) as authentication and authorization server;
+- Test using [`Testcontainers`](https://www.testcontainers.org/);
 - Explore the utilities and annotations that `Spring Boot` provides when testing applications.
 
 > **Note:** In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/bookservice-kong-keycloak) repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
@@ -177,9 +178,13 @@ There are two ways: running a script or using `Keycloak` website
 
 1. Access http://localhost:9080/swagger-ui.html
 
-1. Click on `book-controller` and after on `GET /api/books` to open it. Then, click on `Try it out` button and, finally, click on `Execute` button. It will return a http status code `200` and an empty list or a list with some books if you've already added them
+1. Click on `GET /api/books` to open it. Then, click on `Try it out` button and, finally, on `Execute` button.
 
-1. Now, let's try to call a secured endpoint without authentication. Click on `POST /api/books` to open it. Then, click on `Try it out` button (you can use the default values) and, finally, on `Execute` button. It will return:
+   It will return a http status code `200` and an empty list or a list with some books if you've already added them
+
+1. Now, let's try to call a secured endpoint without authentication. Click on `POST /api/books` to open it. Then, click on `Try it out` button (you can use the default values) and, finally, on `Execute` button.
+
+   It will return:
    ```
    TypeError: Failed to fetch
    ```
@@ -190,7 +195,9 @@ There are two ways: running a script or using `Keycloak` website
 
 1. Click on the `Authorize` button and paste access token (copied previously) in the value field. Then, click on `Authorize` and, to finalize, click on `Close`
 
-1. Go to `POST /api/books`, click on `Try it out` and then on `Execute` button. It will return something like
+1. Go to `POST /api/books`, click on `Try it out` and then on `Execute` button.
+
+   It will return something like
    ```
    HTTP/1.1 201
    {
@@ -232,47 +239,13 @@ There are two ways: running a script or using `Keycloak` website
    ```
 
 1. In order to get the access token from `Keycloak`, run the following commands.
-   > **Note:** the `keycloak` is informed in the second argument of the script. It changes `localhost` host inside the script. This way, we won't have the error complaining about an invalid token due to an invalid token issuer.
+   > **Note:** the `keycloak` string is informed in the second argument of the script. It changes `localhost` host inside the script. This way, we won't have the error complaining about an invalid token due to an invalid token issuer.
    ```
    ACCESS_TOKEN=$(./get-access-token.sh $BOOK_SERVICE_CLIENT_SECRET keycloak)
    echo $ACCESS_TOKEN
    ```
 
 1. Test using cURL or Swagger are the same as explained above
-
-## Shutdown
-
-- Stop `book-service`
-  - If it was started with `Gradle`, go to the terminal where the application is running and press `Ctrl+C`
-  - If it was started as a Docker container, run the command below
-    ```
-    docker stop book-service
-    ```
-
-- To stop and remove docker-compose containers, networks and volumes, make sure you are in `springboot-testing-mongodb-keycloak` and run
-  ```
-  docker-compose down -v
-  ```
-
-## Running Unit and Integration Tests
-
-- Before start running the test, make sure you run the [Shutdown](#shutdown) steps
-
-- In a terminal and inside `springboot-testing-mongodb-keycloak` root folder, run the command below to run unit and integration tests
-  ```
-  ./gradlew book-service:clean book-service:assemble book-service:cleanTest \
-  book-service:test book-service:integrationTest
-  ```
-
-- From `springboot-testing-mongodb-keycloak` root folder, **Unit Testing Report** can be found at
-  ```
-  book-service/build/reports/tests/test/index.html
-  ```
-  
-- From `springboot-testing-mongodb-keycloak` root folder, **Integration Testing Report** can be found at
-  ```
-  book-service/build/reports/tests/integrationTest/index.html
-  ```
 
 ## Useful Links & Commands
 
@@ -290,10 +263,43 @@ There are two ways: running a script or using `Keycloak` website
 
   With [jwt.io](https://jwt.io) you can inform the JWT token received from `Keycloak` and the online tool decodes the token, showing its header and payload.
 
+## Shutdown
+
+- Stop `book-service`
+  - If it was started with `Gradle`, go to the terminal where the application is running and press `Ctrl+C`
+  - If it was started as a Docker container, run the command below
+    ```
+    docker stop book-service
+    ```
+
+- To stop and remove docker-compose containers, networks and volumes, make sure you are in `springboot-testing-mongodb-keycloak` and run
+  ```
+  docker-compose down -v
+  ```
+
+## Running Unit and Integration Tests
+
+- Before start running the test, make sure you run the [Shutdown](#shutdown) steps. During integration tests, `Testcontainers` will start automatically `MongoDB` and `Keycloak` containers before the tests begin and shuts them down when the tests finish.
+
+- In a terminal and inside `springboot-testing-mongodb-keycloak` root folder, run the command below to run unit and integration tests
+  ```
+  ./gradlew book-service:clean book-service:assemble book-service:cleanTest \
+  book-service:test book-service:integrationTest
+  ```
+
+- From `springboot-testing-mongodb-keycloak` root folder, **Unit Testing Report** can be found at
+  ```
+  book-service/build/reports/tests/test/index.html
+  ```
+  
+- From `springboot-testing-mongodb-keycloak` root folder, **Integration Testing Report** can be found at
+  ```
+  book-service/build/reports/tests/integrationTest/index.html
+  ```
+
 ## References
 
 - https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html
-- http://www.baeldung.com/spring-boot-testing
 
 ## Issues
 
@@ -306,160 +312,4 @@ There are two ways: running a script or using `Keycloak` website
   	at org.keycloak.adapters.springsecurity.config.KeycloakSpringConfigResolverWrapper.resolve(KeycloakSpringConfigResolverWrapper.java:40)
   	at org.keycloak.adapters.AdapterDeploymentContext.resolveDeployment(AdapterDeploymentContext.java:89)
   ...
-  ```
-  
-- When updated to `Spring Boot` version `2.3.1.RELEASE` the test cases in `BookRepositoryTest` don't work anymore. The exception is shown below
-  ```
-  org.springframework.data.mongodb.UncategorizedMongoDbException: Exception authenticating MongoCredential{mechanism=SCRAM-SHA-1, userName='change-me', source='bookdb', password=<hidden>, mechanismProperties=<hidden>}; nested exception is com.mongodb.MongoSecurityException: Exception authenticating MongoCredential{mechanism=SCRAM-SHA-1, userName='change-me', source='bookdb', password=<hidden>, mechanismProperties=<hidden>}
-  	at org.springframework.data.mongodb.core.MongoExceptionTranslator.translateExceptionIfPossible(MongoExceptionTranslator.java:133)
-  	at org.springframework.data.mongodb.core.MongoTemplate.potentiallyConvertRuntimeException(MongoTemplate.java:2863)
-  	at org.springframework.data.mongodb.core.MongoTemplate.executeFindOneInternal(MongoTemplate.java:2738)
-  	at org.springframework.data.mongodb.core.MongoTemplate.doFindOne(MongoTemplate.java:2455)
-  	at org.springframework.data.mongodb.core.MongoTemplate.doFindOne(MongoTemplate.java:2425)
-  	at org.springframework.data.mongodb.core.MongoTemplate.findById(MongoTemplate.java:876)
-  	at org.springframework.data.mongodb.repository.support.SimpleMongoRepository.findById(SimpleMongoRepository.java:121)
-  	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-  	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-  	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-  	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
-  	at org.springframework.data.repository.core.support.ImplementationInvocationMetadata.invoke(ImplementationInvocationMetadata.java:72)
-  	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:382)
-  	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:205)
-  	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:549)
-  	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-  	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:155)
-  	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:130)
-  	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-  	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:80)
-  	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-  	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:95)
-  	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
-  	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:212)
-  	at com.sun.proxy.$Proxy106.findById(Unknown Source)
-  	at com.mycompany.bookservice.repository.BookRepositoryTest.givenNonExistingBookIdWhenFindByIdThenReturnBook(BookRepositoryTest.java:52)
-  	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-  	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-  	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-  	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
-  	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:686)
-  	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-  	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
-  	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
-  	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
-  	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
-  	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
-  	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
-  	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
-  	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
-  	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
-  	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
-  	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
-  	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
-  	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$6(TestMethodTestDescriptor.java:212)
-  	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-  	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:208)
-  	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:137)
-  	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:71)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:135)
-  	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:125)
-  	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:135)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:123)
-  	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:122)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:80)
-  	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
-  	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:139)
-  	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:125)
-  	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:135)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:123)
-  	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:122)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:80)
-  	at java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
-  	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:139)
-  	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:125)
-  	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:135)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:123)
-  	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:122)
-  	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:80)
-  	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:32)
-  	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-  	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:51)
-  	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:220)
-  	at org.junit.platform.launcher.core.DefaultLauncher.lambda$execute$6(DefaultLauncher.java:188)
-  	at org.junit.platform.launcher.core.DefaultLauncher.withInterceptedStreams(DefaultLauncher.java:202)
-  	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:181)
-  	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:128)
-  	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.processAllTestClasses(JUnitPlatformTestClassProcessor.java:99)
-  	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.access$000(JUnitPlatformTestClassProcessor.java:79)
-  	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor.stop(JUnitPlatformTestClassProcessor.java:75)
-  	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.stop(SuiteTestClassProcessor.java:61)
-  	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-  	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-  	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-  	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
-  	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
-  	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
-  	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
-  	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
-  	at com.sun.proxy.$Proxy2.stop(Unknown Source)
-  	at org.gradle.api.internal.tasks.testing.worker.TestWorker.stop(TestWorker.java:132)
-  	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-  	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-  	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-  	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
-  	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
-  	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
-  	at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:182)
-  	at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:164)
-  	at org.gradle.internal.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:412)
-  	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
-  	at org.gradle.internal.concurrent.ManagedExecutorImpl$1.run(ManagedExecutorImpl.java:48)
-  	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
-  	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
-  	at org.gradle.internal.concurrent.ThreadFactoryImpl$ManagedThreadRunnable.run(ThreadFactoryImpl.java:56)
-  	at java.base/java.lang.Thread.run(Thread.java:834)
-  Caused by: com.mongodb.MongoSecurityException: Exception authenticating MongoCredential{mechanism=SCRAM-SHA-1, userName='change-me', source='bookdb', password=<hidden>, mechanismProperties=<hidden>}
-  	at com.mongodb.internal.connection.SaslAuthenticator.wrapException(SaslAuthenticator.java:201)
-  	at com.mongodb.internal.connection.SaslAuthenticator.access$300(SaslAuthenticator.java:40)
-  	at com.mongodb.internal.connection.SaslAuthenticator$1.run(SaslAuthenticator.java:78)
-  	at com.mongodb.internal.connection.SaslAuthenticator$1.run(SaslAuthenticator.java:47)
-  	at com.mongodb.internal.connection.SaslAuthenticator.doAsSubject(SaslAuthenticator.java:207)
-  	at com.mongodb.internal.connection.SaslAuthenticator.authenticate(SaslAuthenticator.java:47)
-  	at com.mongodb.internal.connection.InternalStreamConnectionInitializer.authenticate(InternalStreamConnectionInitializer.java:152)
-  	at com.mongodb.internal.connection.InternalStreamConnectionInitializer.initialize(InternalStreamConnectionInitializer.java:61)
-  	at com.mongodb.internal.connection.InternalStreamConnection.open(InternalStreamConnection.java:128)
-  	at com.mongodb.internal.connection.UsageTrackingInternalConnection.open(UsageTrackingInternalConnection.java:50)
-  	at com.mongodb.internal.connection.DefaultConnectionPool$PooledConnection.open(DefaultConnectionPool.java:435)
-  	at com.mongodb.internal.connection.DefaultConnectionPool.get(DefaultConnectionPool.java:117)
-  	at com.mongodb.internal.connection.DefaultConnectionPool.get(DefaultConnectionPool.java:102)
-  	at com.mongodb.internal.connection.DefaultServer.getConnection(DefaultServer.java:90)
-  	at com.mongodb.internal.binding.ClusterBinding$ClusterBindingConnectionSource.getConnection(ClusterBinding.java:112)
-  	at com.mongodb.internal.operation.FindOperation$1.call(FindOperation.java:628)
-  	at com.mongodb.internal.operation.FindOperation$1.call(FindOperation.java:625)
-  	at com.mongodb.internal.operation.OperationHelper.withReadConnectionSource(OperationHelper.java:462)
-  	at com.mongodb.internal.operation.FindOperation.execute(FindOperation.java:625)
-  	at com.mongodb.internal.operation.FindOperation.execute(FindOperation.java:77)
-  	at com.mongodb.client.internal.MongoClientDelegate$DelegateOperationExecutor.execute(MongoClientDelegate.java:190)
-  	at com.mongodb.client.internal.FindIterableImpl.first(FindIterableImpl.java:189)
-  	at org.springframework.data.mongodb.core.MongoTemplate$FindOneCallback.doInCollection(MongoTemplate.java:2906)
-  	at org.springframework.data.mongodb.core.MongoTemplate$FindOneCallback.doInCollection(MongoTemplate.java:2877)
-  	at org.springframework.data.mongodb.core.MongoTemplate.executeFindOneInternal(MongoTemplate.java:2735)
-  	... 111 more
-  Caused by: com.mongodb.MongoCommandException: Command failed with error 18 (AuthenticationFailed): 'Authentication failed.' on server localhost:27017. The full response is {"ok": 0.0, "errmsg": "Authentication failed.", "code": 18, "codeName": "AuthenticationFailed"}
-  	at com.mongodb.internal.connection.ProtocolHelper.getCommandFailureException(ProtocolHelper.java:175)
-  	at com.mongodb.internal.connection.InternalStreamConnection.receiveCommandMessageResponse(InternalStreamConnection.java:302)
-  	at com.mongodb.internal.connection.InternalStreamConnection.sendAndReceive(InternalStreamConnection.java:258)
-  	at com.mongodb.internal.connection.CommandHelper.sendAndReceive(CommandHelper.java:83)
-  	at com.mongodb.internal.connection.CommandHelper.executeCommand(CommandHelper.java:33)
-  	at com.mongodb.internal.connection.SaslAuthenticator.sendSaslStart(SaslAuthenticator.java:158)
-  	at com.mongodb.internal.connection.SaslAuthenticator.access$100(SaslAuthenticator.java:40)
-  	at com.mongodb.internal.connection.SaslAuthenticator$1.run(SaslAuthenticator.java:54)
-  	... 133 more
   ```

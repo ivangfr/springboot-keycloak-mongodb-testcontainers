@@ -1,8 +1,7 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.8.RELEASE'
+    id 'org.springframework.boot' version '2.3.1.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'com.google.cloud.tools.jib' version '2.4.0'
-    id 'com.avast.gradle.docker-compose' version '0.9.4'
 }
 
 group = 'com.mycompany'
@@ -30,19 +29,13 @@ ext {
     set('springdocOpenApiVerison', '1.4.1')
     set('keycloakVersion', '10.0.2')
     set('resteasyVersion', '3.9.0.Final')
+    set('testcontainersVersion', '1.14.3')
 }
 
 dependencyManagement {
     imports {
         mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
     }
-}
-
-// adding docker-compose plugin
-
-dockerCompose {
-    useComposeFiles = ['../docker-compose.yml']
-    startedServices = ['keycloak'] // mongodb is not included because it's provided by 'de.flapdoodle.embed:de.flapdoodle.embed.mongo' dependency
 }
 
 // adding integration test
@@ -81,6 +74,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation "org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}"
 
     compileOnly "org.mapstruct:mapstruct:${mapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
@@ -92,7 +86,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
 
-    implementation "org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}"
+    implementation platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:mongodb'
 
     // -- dependencies needed by keycloak-admin-client during tests
     testImplementation "org.keycloak:keycloak-admin-client:${keycloakVersion}"
@@ -116,8 +112,6 @@ test {
 
 check.dependsOn integrationTest
 integrationTest.mustRunAfter test
-
-dockerCompose.isRequiredBy(integrationTest)
 
 jib {
     from {
