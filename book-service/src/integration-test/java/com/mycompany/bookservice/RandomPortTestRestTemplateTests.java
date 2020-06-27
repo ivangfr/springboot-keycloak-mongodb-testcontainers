@@ -6,16 +6,7 @@ import com.mycompany.bookservice.dto.UpdateBookDto;
 import com.mycompany.bookservice.model.Book;
 import com.mycompany.bookservice.repository.BookRepository;
 import lombok.Data;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
-import org.keycloak.representations.idm.ClientRepresentation;
-import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.RealmRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -27,11 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultBook;
@@ -39,75 +28,16 @@ import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultC
 import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultUpdateBookDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(ContainersExtension.class)
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class RandomPortTestRestTemplateTests {
+public class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
 
     @Autowired
     private BookRepository bookRepository;
 
     @Autowired
     private TestRestTemplate testRestTemplate;
-
-    private static Keycloak keycloakAdmin;
-    private static Keycloak keycloakBookService;
-
-    @BeforeAll
-    static void setUp() {
-        keycloakAdmin = KeycloakBuilder.builder()
-                .serverUrl(KEYCLOAK_SERVER_URL)
-                .realm("master")
-                .username("admin")
-                .password("admin")
-                .clientId("admin-cli")
-                .build();
-
-        // Realm
-        RealmRepresentation realmRepresentation = new RealmRepresentation();
-        realmRepresentation.setRealm(COMPANY_SERVICE_REALM_NAME);
-        realmRepresentation.setEnabled(true);
-
-        // Client
-        ClientRepresentation clientRepresentation = new ClientRepresentation();
-        clientRepresentation.setId(BOOK_SERVICE_CLIENT_ID);
-        clientRepresentation.setDirectAccessGrantsEnabled(true);
-        clientRepresentation.setSecret(BOOK_SERVICE_CLIENT_SECRET);
-        realmRepresentation.setClients(Collections.singletonList(clientRepresentation));
-
-        // Client roles
-        Map<String, List<String>> clientRoles = new HashMap<>();
-        clientRoles.put(BOOK_SERVICE_CLIENT_ID, BOOK_SERVICE_ROLES);
-
-        // Credentials
-        CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
-        credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
-        credentialRepresentation.setValue(USER_PASSWORD);
-
-        // User
-        UserRepresentation userRepresentation = new UserRepresentation();
-        userRepresentation.setUsername(USER_USERNAME);
-        userRepresentation.setEnabled(true);
-        userRepresentation.setCredentials(Collections.singletonList(credentialRepresentation));
-        userRepresentation.setClientRoles(clientRoles);
-        realmRepresentation.setUsers(Collections.singletonList(userRepresentation));
-
-        keycloakAdmin.realms().create(realmRepresentation);
-
-        keycloakBookService = KeycloakBuilder.builder()
-                .serverUrl(KEYCLOAK_SERVER_URL)
-                .realm(COMPANY_SERVICE_REALM_NAME)
-                .username(USER_USERNAME)
-                .password(USER_PASSWORD)
-                .clientId(BOOK_SERVICE_CLIENT_ID)
-                .clientSecret(BOOK_SERVICE_CLIENT_SECRET)
-                .build();
-    }
-
-    @AfterAll
-    static void tearDown() {
-        keycloakAdmin.realm(COMPANY_SERVICE_REALM_NAME).remove();
-    }
 
     @Test
     void givenNoBooksWhenGetAllBooksThenReturnStatusOkAndEmptyArray() {
@@ -285,17 +215,8 @@ public class RandomPortTestRestTemplateTests {
         }
     }
 
-    private static final String KEYCLOAK_SERVER_URL = "http://localhost:8080/auth";
-    private static final String COMPANY_SERVICE_REALM_NAME = "company-services";
-    private static final String BOOK_SERVICE_CLIENT_ID = "book-service";
-    private static final String BOOK_SERVICE_CLIENT_SECRET = "abc123";
-    private static final List<String> BOOK_SERVICE_ROLES = Collections.singletonList("manage_books");
-    private static final String USER_USERNAME = "ivan.franchin";
-    private static final String USER_PASSWORD = "123";
-
     private static final String API_BOOKS_URL = "/api/books";
     private static final String API_BOOKS_ID_URL = "/api/books/%s";
-
     private static final String ERROR_NOT_FOUND = "Not Found";
 
 }

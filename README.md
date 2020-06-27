@@ -279,13 +279,12 @@ There are two ways: running a script or using `Keycloak` website
 
 ## Running Unit and Integration Tests
 
-- Before start running the test, make sure you run the [Shutdown](#shutdown) steps. During integration tests, `Testcontainers` will start automatically `MongoDB` and `Keycloak` containers before the tests begin and shuts them down when the tests finish.
-
 - In a terminal and inside `springboot-testing-mongodb-keycloak` root folder, run the command below to run unit and integration tests
   ```
   ./gradlew book-service:clean book-service:assemble book-service:cleanTest \
   book-service:test book-service:integrationTest
   ```
+  > **Note:** During integration tests, `Testcontainers` will start automatically `MongoDB` and `Keycloak` containers before the tests begin and shuts them down when the tests finish.
 
 - From `springboot-testing-mongodb-keycloak` root folder, **Unit Testing Report** can be found at
   ```
