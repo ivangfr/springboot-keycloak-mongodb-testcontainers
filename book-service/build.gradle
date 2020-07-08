@@ -26,7 +26,7 @@ repositories {
 
 ext {
     set('mapstructVersion', '1.3.1.Final')
-    set('springdocOpenApiVerison', '1.4.1')
+    set('springdocOpenApiVerison', '1.4.3')
     set('keycloakVersion', '10.0.2')
     set('resteasyVersion', '3.9.0.Final')
     set('testcontainersVersion', '1.14.3')
@@ -76,7 +76,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation "org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}"
 
-    compileOnly "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 

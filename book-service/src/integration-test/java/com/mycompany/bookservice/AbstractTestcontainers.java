@@ -21,25 +21,21 @@ import java.util.Map;
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
-    /* As "bitnami/mongodb" docker image is used, we needed to configure mongoDBContainer as GenericContainer.
-    MongoDBContainer is used for "mongo" official docker image */
-    private static final GenericContainer<?> mongoDBContainer = new GenericContainer<>("bitnami/mongodb:4.2.7")
-            .withExposedPorts(27017);
-
-    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("jboss/keycloak:10.0.2")
-            .withExposedPorts(8080)
-            .withEnv("KEYCLOAK_USER", "admin")
-            .withEnv("KEYCLOAK_PASSWORD", "admin")
-            .withEnv("DB_VENDOR", "h2");
-    ;
-
+    /* As "bitnami/mongodb" docker image is used, we needed to configure mongoDBContainer as GenericContainer. MongoDBContainer is used for "mongo" official docker image */
+    private static final GenericContainer<?> mongoDBContainer = new GenericContainer<>("bitnami/mongodb:4.2.7");
+    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("jboss/keycloak:10.0.2");
     protected static Keycloak keycloakBookService;
 
     @DynamicPropertySource
     private static void dynamicProperties(DynamicPropertyRegistry registry) {
+        mongoDBContainer.withExposedPorts(27017);
         mongoDBContainer.setWaitStrategy(Wait.forListeningPort().withStartupTimeout(Duration.ofMinutes(2)));
         mongoDBContainer.start();
 
+        keycloakContainer.withExposedPorts(8080)
+                .withEnv("KEYCLOAK_USER", "admin")
+                .withEnv("KEYCLOAK_PASSWORD", "admin")
+                .withEnv("DB_VENDOR", "h2");
         keycloakContainer.setWaitStrategy(Wait.forHttp("/auth").forPort(8080).withStartupTimeout(Duration.ofMinutes(2)));
         keycloakContainer.start();
 
