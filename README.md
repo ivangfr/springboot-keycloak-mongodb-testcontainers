@@ -7,7 +7,7 @@ The goals of this project are:
 - Test using [`Testcontainers`](https://www.testcontainers.org/);
 - Explore the utilities and annotations that `Spring Boot` provides when testing applications.
 
-> **Note:** In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/bookservice-kong-keycloak) repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
+> **Note:** In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/book-service-kong-keycloak) repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
 
 ## Prerequisites
 
