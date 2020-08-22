@@ -9,18 +9,20 @@ The goals of this project are:
 
 > **Note:** In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/book-service-kong-keycloak) repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
 
+## Application
+
+- ### book-service
+  
+  `Spring Boot` Web application that manages books. [`MongoDB`](https://www.mongodb.com) is used as storage, and the application has its sensitive endpoints (add, update and delete books) secured.
+  
+  ![book-service-swagger](images/book-service-swagger.png)
+
 ## Prerequisites
 
 - [`Java 11+`](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)
 - [`Docker`](https://www.docker.com/)
 - [`Docker-Compose`](https://docs.docker.com/compose/install/)
 - [`jq`](https://stedolan.github.io/jq)
-
-## Application
-
-- **book-service**
-  
-  `Spring Boot` Web application that manages books. [`MongoDB`](https://www.mongodb.com) is used as storage, and the application has its sensitive endpoints (add, update and delete books) secured.
 
 ## Start Environment
 
@@ -29,7 +31,7 @@ The goals of this project are:
   docker-compose up -d
   ```
 
-- Wait a little bit until all containers are `Up (healthy)`. You can check their status by running
+- Wait a bit until all containers are `Up (healthy)`. You can check their status by running
   ```
   docker-compose ps
   ```
@@ -111,8 +113,6 @@ There are two ways: running a script or using `Keycloak` website
   ```
   
 - The application's swagger URL is http://localhost:9080/swagger-ui.html
-
-  ![swagger](images/swagger.png)
 
 ## Getting Access Token
 
@@ -296,10 +296,6 @@ There are two ways: running a script or using `Keycloak` website
   book-service/build/reports/tests/integrationTest/index.html
   ```
 
-## References
-
-- https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html
-
 ## Issues
 
 - Disabled [`BookControllerTest`](https://github.com/ivangfr/springboot-testing-mongodb-keycloak/blob/master/book-service/src/test/java/com/mycompany/bookservice/controller/BookControllerTest.java) because I am getting the exception below. The [`adapterConfig` parameter passed to `internalBuild` is `null`](https://github.com/keycloak/keycloak/blob/master/adapters/oidc/adapter-core/src/main/java/org/keycloak/adapters/KeycloakDeploymentBuilder.java#L57)
@@ -312,3 +308,7 @@ There are two ways: running a script or using `Keycloak` website
   	at org.keycloak.adapters.AdapterDeploymentContext.resolveDeployment(AdapterDeploymentContext.java:89)
   ...
   ```
+
+## References
+
+- https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html
