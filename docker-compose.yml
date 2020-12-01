@@ -2,7 +2,7 @@ version: '3.8'
 services:
 
   mongodb:
-    image: bitnami/mongodb:4.2.7
+    image: bitnami/mongodb:4.4.2
     container_name: mongodb
     ports:
       - "27017:27017"
@@ -16,7 +16,7 @@ services:
       start_period: 10s
 
   keycloak:
-    image: jboss/keycloak:10.0.2
+    image: jboss/keycloak:11.0.3
     container_name: keycloak
     ports:
       - "8080:8080"

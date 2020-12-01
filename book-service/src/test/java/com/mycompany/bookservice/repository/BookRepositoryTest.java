@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataMongoTest
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class BookRepositoryTest {
+class BookRepositoryTest {
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -30,7 +30,7 @@ public class BookRepositoryTest {
     void givenNoBookWhenFindAllThenReturnEmptyArray() {
         List<Book> books = bookRepository.findAll();
 
-        assertThat(books).hasSize(0);
+        assertThat(books).isEmpty();
     }
 
     @Test
@@ -47,7 +47,7 @@ public class BookRepositoryTest {
     void givenNonExistingBookIdWhenFindByIdThenReturnBook() {
         Optional<Book> bookFound = bookRepository.findById(UUID.randomUUID());
 
-        assertThat(bookFound.isPresent()).isFalse();
+        assertThat(bookFound).isNotPresent();
     }
 
     @Test
@@ -57,8 +57,8 @@ public class BookRepositoryTest {
 
         Optional<Book> bookFound = bookRepository.findById(book.getId());
 
-        assertThat(bookFound.isPresent()).isTrue();
-        assertThat(bookFound.get()).isEqualToComparingFieldByField(book);
+        assertThat(bookFound).isPresent();
+        assertThat(bookFound.get()).usingRecursiveComparison().isEqualTo(book);
     }
 
     @Test
@@ -77,12 +77,12 @@ public class BookRepositoryTest {
         mongoTemplate.save(book);
 
         Optional<Book> bookFound = bookRepository.findById(book.getId());
-        assertThat(bookFound.isPresent()).isTrue();
+        assertThat(bookFound).isPresent();
 
         bookRepository.delete(book);
 
         bookFound = bookRepository.findById(book.getId());
-        assertThat(bookFound.isPresent()).isFalse();
+        assertThat(bookFound).isNotPresent();
     }
 
     @Test
@@ -91,8 +91,8 @@ public class BookRepositoryTest {
         mongoTemplate.save(book);
 
         Optional<Book> bookFound = bookRepository.findById(book.getId());
-        assertThat(bookFound.isPresent()).isTrue();
-        assertThat(bookFound.get()).isEqualToComparingFieldByField(book);
+        assertThat(bookFound).isPresent();
+        assertThat(bookFound.get()).usingRecursiveComparison().isEqualTo(book);
 
         book.setAuthorName("Ivan Franchin 2");
         book.setTitle("Java 8");
@@ -101,7 +101,7 @@ public class BookRepositoryTest {
         bookRepository.save(book);
 
         bookFound = bookRepository.findById(book.getId());
-        assertThat(bookFound.isPresent()).isTrue();
+        assertThat(bookFound).isPresent();
         assertThat(bookFound.get().getAuthorName()).isEqualTo(book.getAuthorName());
         assertThat(bookFound.get().getTitle()).isEqualTo(book.getTitle());
         assertThat(bookFound.get().getPrice()).isEqualTo(book.getPrice());

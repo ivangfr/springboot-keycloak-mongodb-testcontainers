@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @JsonTest
-public class CreateBookDtoTest {
+class CreateBookDtoTest {
 
     @Autowired
     private JacksonTester<CreateBookDto> jacksonTester;
@@ -28,12 +28,17 @@ public class CreateBookDtoTest {
 
         JsonContent<CreateBookDto> jsonContent = jacksonTester.write(createBookDto);
 
-        assertThat(jsonContent).hasJsonPathStringValue("@.authorName");
-        assertThat(jsonContent).extractingJsonPathStringValue("@.authorName").isEqualTo(createBookDto.getAuthorName());
-        assertThat(jsonContent).hasJsonPathStringValue("@.title");
-        assertThat(jsonContent).extractingJsonPathStringValue("@.title").isEqualTo(createBookDto.getTitle());
-        assertThat(jsonContent).hasJsonPathNumberValue("@.price");
-        assertThat(jsonContent).extractingJsonPathNumberValue("@.price").isEqualTo(createBookDto.getPrice().doubleValue());
+        assertThat(jsonContent)
+                .hasJsonPathStringValue("@.authorName")
+                .extractingJsonPathStringValue("@.authorName").isEqualTo(createBookDto.getAuthorName());
+
+        assertThat(jsonContent)
+                .hasJsonPathStringValue("@.title")
+                .extractingJsonPathStringValue("@.title").isEqualTo(createBookDto.getTitle());
+
+        assertThat(jsonContent)
+                .hasJsonPathNumberValue("@.price")
+                .extractingJsonPathNumberValue("@.price").isEqualTo(createBookDto.getPrice().doubleValue());
     }
 
     @Test

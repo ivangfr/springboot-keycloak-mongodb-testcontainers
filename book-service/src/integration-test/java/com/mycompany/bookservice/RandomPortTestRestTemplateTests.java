@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
+class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
 
     @Autowired
     private BookRepository bookRepository;
@@ -44,7 +44,7 @@ public class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
         ResponseEntity<BookDto[]> responseEntity = testRestTemplate.getForEntity(API_BOOKS_URL, BookDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).hasSize(0);
+        assertThat(responseEntity.getBody()).isEmpty();
     }
 
     @Test

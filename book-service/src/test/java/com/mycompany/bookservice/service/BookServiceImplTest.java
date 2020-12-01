@@ -23,7 +23,7 @@ import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
 @Import(BookServiceImpl.class)
-public class BookServiceImplTest {
+class BookServiceImplTest {
 
     @Autowired
     private BookService bookService;
@@ -37,7 +37,7 @@ public class BookServiceImplTest {
         given(bookRepository.save(book)).willReturn(book);
 
         Book bookSaved = bookService.saveBook(book);
-        assertThat(bookSaved).isEqualToComparingFieldByField(book);
+        assertThat(bookSaved).usingRecursiveComparison().isEqualTo(book);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class BookServiceImplTest {
         given(bookRepository.findAll()).willReturn(Collections.emptyList());
 
         List<Book> booksFound = bookService.getAllBooks();
-        assertThat(booksFound).hasSize(0);
+        assertThat(booksFound).isEmpty();
     }
 
     @Test
@@ -55,7 +55,7 @@ public class BookServiceImplTest {
 
         List<Book> booksFound = bookService.getAllBooks();
         assertThat(booksFound).hasSize(1);
-        assertThat(booksFound.get(0)).isEqualToComparingFieldByField(book);
+        assertThat(booksFound.get(0)).usingRecursiveComparison().isEqualTo(book);
     }
 
     @Test
@@ -65,7 +65,7 @@ public class BookServiceImplTest {
 
         List<Book> booksFound = bookService.getBooksByAuthorName(book.getAuthorName());
         assertThat(booksFound).hasSize(1);
-        assertThat(booksFound.get(0)).isEqualToComparingFieldByField(book);
+        assertThat(booksFound.get(0)).usingRecursiveComparison().isEqualTo(book);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class BookServiceImplTest {
         given(bookRepository.findById(book.getId())).willReturn(Optional.of(book));
 
         Book bookFound = bookService.validateAndGetBookById(book.getId());
-        assertThat(bookFound).isEqualToComparingFieldByField(book);
+        assertThat(bookFound).usingRecursiveComparison().isEqualTo(book);
     }
 
 }

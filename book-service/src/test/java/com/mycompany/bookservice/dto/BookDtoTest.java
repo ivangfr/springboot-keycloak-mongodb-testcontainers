@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @JsonTest
-public class BookDtoTest {
+class BookDtoTest {
 
     @Autowired
     private JacksonTester<BookDto> jacksonTester;
@@ -30,14 +30,21 @@ public class BookDtoTest {
 
         JsonContent<BookDto> jsonContent = jacksonTester.write(bookDto);
 
-        assertThat(jsonContent).hasJsonPathStringValue("@.id");
-        assertThat(jsonContent).extractingJsonPathStringValue("@.id").isEqualTo(bookDto.getId().toString());
-        assertThat(jsonContent).hasJsonPathStringValue("@.authorName");
-        assertThat(jsonContent).extractingJsonPathStringValue("@.authorName").isEqualTo(bookDto.getAuthorName());
-        assertThat(jsonContent).hasJsonPathStringValue("@.title");
-        assertThat(jsonContent).extractingJsonPathStringValue("@.title").isEqualTo(bookDto.getTitle());
-        assertThat(jsonContent).hasJsonPathNumberValue("@.price");
-        assertThat(jsonContent).extractingJsonPathNumberValue("@.price").isEqualTo(bookDto.getPrice().doubleValue());
+        assertThat(jsonContent)
+                .hasJsonPathStringValue("@.id")
+                .extractingJsonPathStringValue("@.id").isEqualTo(bookDto.getId().toString());
+
+        assertThat(jsonContent)
+                .hasJsonPathStringValue("@.authorName")
+                .extractingJsonPathStringValue("@.authorName").isEqualTo(bookDto.getAuthorName());
+
+        assertThat(jsonContent)
+                .hasJsonPathStringValue("@.title")
+                .extractingJsonPathStringValue("@.title").isEqualTo(bookDto.getTitle());
+
+        assertThat(jsonContent)
+                .hasJsonPathNumberValue("@.price")
+                .extractingJsonPathNumberValue("@.price").isEqualTo(bookDto.getPrice().doubleValue());
     }
 
     @Test
@@ -46,7 +53,7 @@ public class BookDtoTest {
 
         BookDto bookDto = jacksonTester.parseObject(content);
 
-        assertThat(bookDto.getId().toString()).isEqualTo("5aa5fad4-03ed-43e0-9e5f-8cfaf1ef616c");
+        assertThat(bookDto.getId()).hasToString("5aa5fad4-03ed-43e0-9e5f-8cfaf1ef616c");
         assertThat(bookDto.getAuthorName()).isEqualTo("Ivan Franchin");
         assertThat(bookDto.getTitle()).isEqualTo("Springboot");
         assertThat(bookDto.getPrice().doubleValue()).isEqualTo(29.99);

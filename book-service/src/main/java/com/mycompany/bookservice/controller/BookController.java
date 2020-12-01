@@ -43,7 +43,7 @@ public class BookController {
     @Operation(summary = "Get list of book. It can be filtered by author name")
     @GetMapping
     public List<BookDto> getBooks(@RequestParam(required = false) String authorName) {
-        boolean filterByAuthorName = !StringUtils.isEmpty(authorName);
+        boolean filterByAuthorName = StringUtils.hasText(authorName);
         if (filterByAuthorName) {
             log.info("Get all books filtering by authorName equals to {}", authorName);
         } else {
