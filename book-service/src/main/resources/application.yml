@@ -16,8 +16,6 @@ keycloak:
   use-resource-role-mappings: true
 
 management:
-  security:
-    enabled: false
   endpoints:
     web:
       exposure.include: beans, env, health, info, metrics, mappings
@@ -32,7 +30,9 @@ springdoc:
 
 ---
 spring:
-  profiles: test
+  config:
+    activate:
+      on-profile: test
   data:
     mongodb:
       host: # \ they will be set dynamically by AbstractTestcontainers

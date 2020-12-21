@@ -94,13 +94,13 @@ There are two ways: running a script or using `Keycloak` website
 - On `Username` field set `ivan.franchin`
 - Click on `Save`
 - Go to `Credentials` tab
-- Set to `New Password` and `Password Confirmation` the value `123`
+- Set to `Password` and `Password Confirmation` the value `123`
 - Turn off the `Temporary` field
-- Click on `Reset password`
-- Confirm the pop up clicking on `Change Password`
+- Click on `Set password` button
+- Confirm the pop up by clicking on `Set Password`
 - Go to `Role Mappings` tab
 - Select `book-service` on the combo-box `Client Roles`
-- Add the role `manage_books` to `ivan.franchin`
+- In `Available Roles` select `manage_books` role and click on `Add selected >>` button
 
 ## Running book-service with Gradle
 
@@ -193,7 +193,7 @@ There are two ways: running a script or using `Keycloak` website
 
 1. Copy the token generated and go back to `Swagger`
 
-1. Click on the `Authorize` button and paste access token (copied previously) in the value field. Then, click on `Authorize` and, to finalize, click on `Close`
+1. Click on the `Authorize` button and paste access token in the `Value` field. Then, click on `Authorize` and, to finalize, click on `Close`
 
 1. Go to `POST /api/books`, click on `Try it out` and then on `Execute` button.
 

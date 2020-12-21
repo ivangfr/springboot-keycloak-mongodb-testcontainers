@@ -1,7 +1,7 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.0'
+    id 'org.springframework.boot' version '2.4.1'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-    id 'com.google.cloud.tools.jib' version '2.5.0'
+    id 'com.google.cloud.tools.jib' version '2.7.0'
 }
 
 group = 'com.mycompany'
@@ -27,10 +27,11 @@ repositories {
 ext {
     set('mapstructVersion', '1.4.1.Final')
     set('lombokMapstructBindingVersion', '0.1.0')
-    set('springdocOpenApiVerison', '1.5.0')
-    set('keycloakVersion', '11.0.3')
-    set('resteasyVersion', '3.9.0.Final')
-    set('testcontainersVersion', '1.15.0')
+    set('springdocOpenApiVerison', '1.5.1')
+    set('keycloakVersion', '12.0.1')
+    set('testcontainersVersion', '1.15.1')
+    set('openjdkImageVersion', '11.0.9')
+    set('dockerImagePrefix', 'docker.mycompany.com')
 }
 
 dependencyManagement {
@@ -75,7 +76,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     implementation "org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}"
+    testImplementation "org.keycloak:keycloak-admin-client:${keycloakVersion}"
 
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
@@ -94,12 +97,6 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mongodb'
 
-    // -- dependencies needed by keycloak-admin-client during tests
-    testImplementation "org.keycloak:keycloak-admin-client:${keycloakVersion}"
-    testImplementation "org.jboss.resteasy:resteasy-client:${resteasyVersion}"
-    testImplementation "org.jboss.resteasy:resteasy-jackson2-provider:${resteasyVersion}"
-    // --
-
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -117,10 +114,10 @@ integrationTest.mustRunAfter test
 
 jib {
     from {
-        image = 'openjdk:11.0.9'
+        image = "openjdk:${openjdkImageVersion}"
     }
     to {
-        image = "docker.mycompany.com/book-service:${project.version}"
+        image = "${dockerImagePrefix}/${project.name}:${project.version}"
     }
     container {
         ports = ['8080']
