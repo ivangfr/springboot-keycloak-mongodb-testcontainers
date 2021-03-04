@@ -7,7 +7,7 @@ The goals of this project are:
 - Test using [`Testcontainers`](https://www.testcontainers.org/);
 - Explore the utilities and annotations that `Spring Boot` provides when testing applications.
 
-> **Note:** In [`kubernetes-environment`](https://github.com/ivangfr/kubernetes-environment/tree/master/book-service-kong-keycloak) repository, it is shown how to deploy this project in `Kubernetes` (`Minikube`)
+> **Note:** In [`kubernetes-minikube-environment`](https://github.com/ivangfr/kubernetes-minikube-environment/tree/master/user-event-sourcing-kafka) repository, it's shown how to deploy this project in `Kubernetes` (`Minikube`)
 
 ## Application
 
@@ -109,7 +109,7 @@ There are two ways: running a script or using `Keycloak` website
 - Run the following command to start the application
   ```
   ./gradlew book-service:clean book-service:bootRun \
-  --args='--server.port=9080 --spring.data.mongodb.username=bookuser --spring.data.mongodb.password=bookpass'
+    --args='--server.port=9080 --spring.data.mongodb.username=bookuser --spring.data.mongodb.password=bookpass'
   ```
   
 - The application's swagger URL is http://localhost:9080/swagger-ui.html
@@ -186,7 +186,7 @@ There are two ways: running a script or using `Keycloak` website
 
    It will return:
    ```
-   TypeError: Failed to fetch
+   Failed to fetch
    ```
 
 1. Get the access token as explained at [Getting Access Token](#getting-access-token)
