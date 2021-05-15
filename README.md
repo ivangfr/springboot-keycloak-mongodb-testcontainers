@@ -69,38 +69,37 @@ There are two ways: running a script or using `Keycloak` website
 
 #### Create a new Realm
 
-- Go to top-left corner and hover the mouse over `Master` realm. A blue button `Add realm` will appear. Click on it
-- On `Name` field, write `company-services`. Click on `Create`
+- Go to top-left corner and hover the mouse over `Master` realm. Click the `Add realm` blue button that will appear
+- Set `company-services` to the `Name` field and click `Create` button
 
 #### Create a new Client
 
-- Click on `Clients` menu on the left
+- On the left menu, click `Clients`
 - Click `Create` button
-- On `Client ID` field type `book-service`
-- Click on `Save`
-- On `Settings` tab, set the `Access Type` to `confidential`
-- Still on `Settings` tab, set the `Valid Redirect URIs` to `http://localhost:9080`
-- Click on `Save`
-- Go to `Credentials` tab. Copy the value on `Secret` field. It will be used on the next steps
-- Go to `Roles` tab
-- Click `Add Role` button
-- On `Role Name` type `manage_books`
-- Click on `Save`
+- Set `book-service` to `Client ID` and click `Save` button
+- In `Settings` tab
+    - Set `confidential` to `Access Type`
+    - Set `http://localhost:9080` to `Valid Redirect URIs`
+    - Click `Save` button
+- In `Credentials` tab, you can find the secret `Keycloak` generated for `simple-service`
+- In `Roles` tab
+    - Click `Add Role` button
+    - Set `manage_books` to `Role Name` and click `Save` button
 
 #### Create a new User
 
-- Click on `Users` menu on the left
-- Click on `Add User` button
-- On `Username` field set `ivan.franchin`
-- Click on `Save`
-- Go to `Credentials` tab
-- Set to `Password` and `Password Confirmation` the value `123`
-- Turn off the `Temporary` field
-- Click on `Set password` button
-- Confirm the pop up by clicking on `Set Password`
-- Go to `Role Mappings` tab
-- Select `book-service` on the combo-box `Client Roles`
-- In `Available Roles` select `manage_books` role and click on `Add selected >>` button
+- On the left menu, click `Users`
+- Click `Add User` button
+- Set `ivan.franchin` to `Username` field
+- Click `Save`
+- In `Credentials` tab
+    - Set the value `123` to `Password` and `Password Confirmation`
+    - Turn off the `Temporary` field
+    - Click `Set password` button
+    - Confirm the pop up and clock `Set Password` red button
+- In `Role Mappings` tab
+    - Select `book-service` on the combo-box `Client Roles`
+    - In `Available Roles`, select `manage_books` role and click `Add selected >>` button
 
 ## Running book-service with Gradle
 
@@ -166,23 +165,18 @@ There are two ways: running a script or using `Keycloak` website
    It will return something like
    ```
    HTTP/1.1 201
-   {
-     "id":"01d984be-26bc-49f5-a201-602293d62b82",
-     "authorName":"ivan",
-     "title":"java 8",
-     "price":10.5
-   }
+   { "id":"01d984be-26bc-49f5-a201-602293d62b82", "authorName":"ivan", "title":"java 8", "price":10.5 }
    ```
 
 ## Test using Swagger
 
 1. Access http://localhost:9080/swagger-ui.html
 
-1. Click on `GET /api/books` to open it. Then, click on `Try it out` button and, finally, on `Execute` button.
+1. Click `GET /api/books` to open it. Then, click `Try it out` button and, finally, click `Execute` button.
 
    It will return a http status code `200` and an empty list or a list with some books if you've already added them
 
-1. Now, let's try to call a secured endpoint without authentication. Click on `POST /api/books` to open it. Then, click on `Try it out` button (you can use the default values) and, finally, on `Execute` button.
+1. Now, let's try to call a secured endpoint without authentication. Click `POST /api/books` to open it. Then, click `Try it out` button (you can use the default values) and, finally, click `Execute` button.
 
    It will return:
    ```
@@ -193,9 +187,9 @@ There are two ways: running a script or using `Keycloak` website
 
 1. Copy the token generated and go back to `Swagger`
 
-1. Click on the `Authorize` button and paste access token in the `Value` field. Then, click on `Authorize` and, to finalize, click on `Close`
+1. Click the `Authorize` button and paste the access token in the `Value` field. Then, click `Authorize` and, to finalize, click `Close`
 
-1. Go to `POST /api/books`, click on `Try it out` and then on `Execute` button.
+1. Go to `POST /api/books`, click `Try it out` and, finally, click `Execute` button.
 
    It will return something like
    ```
