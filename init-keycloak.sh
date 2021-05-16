@@ -39,7 +39,7 @@ echo "CLIENT_ID=$CLIENT_ID"
 echo "---------"
 echo "Getting client secret"
 
-BOOK_SERVICE_CLIENT_SECRET=$(curl -s "http://$KEYCLOAK_URL/auth/admin/realms/company-services/clients/$CLIENT_ID/client-secret" \
+BOOK_SERVICE_CLIENT_SECRET=$(curl -s -X POST "http://$KEYCLOAK_URL/auth/admin/realms/company-services/clients/$CLIENT_ID/client-secret" \
 -H "Authorization: Bearer $ADMIN_TOKEN" | jq -r '.value')
 
 echo "BOOK_SERVICE_CLIENT_SECRET=$BOOK_SERVICE_CLIENT_SECRET"

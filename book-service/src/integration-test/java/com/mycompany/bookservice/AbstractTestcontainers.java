@@ -23,7 +23,7 @@ public abstract class AbstractTestcontainers {
 
     /* As "bitnami/mongodb" docker image is used, we needed to configure mongoDBContainer as GenericContainer. MongoDBContainer is used for "mongo" official docker image */
     private static final GenericContainer<?> mongoDBContainer = new GenericContainer<>("bitnami/mongodb:4.4.6");
-    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("jboss/keycloak:12.0.4");
+    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("jboss/keycloak:13.0.0");
     protected static Keycloak keycloakBookService;
 
     @DynamicPropertySource
