@@ -3,13 +3,11 @@ allprojects {
 }
 
 subprojects {
-	apply plugin: "java"
-	apply plugin: "idea"
+    apply plugin: "java"
+    apply plugin: "idea"
 
-	repositories {
-		mavenLocal()
-		mavenCentral()
-		jcenter()
-	}
-
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
 }
