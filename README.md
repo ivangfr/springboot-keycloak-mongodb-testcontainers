@@ -178,7 +178,7 @@ There are two ways: running a script or using `Keycloak` website
 
 1. Now, let's try to call a secured endpoint without authentication. Click `POST /api/books` to open it. Then, click `Try it out` button (you can use the default values) and, finally, click `Execute` button.
 
-   It will return:
+   It will return
    ```
    Failed to fetch
    ```
@@ -266,10 +266,13 @@ There are two ways: running a script or using `Keycloak` website
   ```
   docker-compose down -v
   ```
-- To remove the Docker image created by this project, run
-  ```
-  docker rmi ivanfranchin/book-service:1.0.0
-  ```
+
+## Cleanup
+
+To remove the Docker image created by this project, go to a terminal and run the following command
+```
+docker rmi ivanfranchin/book-service:1.0.0
+```
 
 ## Running Unit and Integration Tests
 
