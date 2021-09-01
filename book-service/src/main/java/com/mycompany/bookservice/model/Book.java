@@ -7,7 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -16,9 +15,14 @@ import java.util.UUID;
 public class Book {
 
     @Id
-    private UUID id;
+    private String id;
     private String authorName;
     private String title;
     private BigDecimal price;
 
+    public Book(String authorName, String title, BigDecimal price) {
+        this.authorName = authorName;
+        this.title = title;
+        this.price = price;
+    }
 }

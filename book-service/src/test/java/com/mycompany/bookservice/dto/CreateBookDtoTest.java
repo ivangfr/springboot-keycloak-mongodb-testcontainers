@@ -11,7 +11,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import static com.mycompany.bookservice.helper.BookServiceTestHelper.getACreateBookDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -23,8 +22,7 @@ class CreateBookDtoTest {
 
     @Test
     void testSerialize() throws IOException {
-        BigDecimal price = new BigDecimal("29.99");
-        CreateBookDto createBookDto = getACreateBookDto("Ivan Franchin", "Springboot", price);
+        CreateBookDto createBookDto = new CreateBookDto("Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
 
         JsonContent<CreateBookDto> jsonContent = jacksonTester.write(createBookDto);
 
@@ -43,13 +41,12 @@ class CreateBookDtoTest {
 
     @Test
     void testDeserialize() throws IOException {
-        String content = "{\"authorName\":\"Ivan Franchin\",\"title\":\"Springboot\",\"price\":29.99}";
+        String content = "{\"authorName\":\"Ivan Franchin\",\"title\":\"SpringBoot\",\"price\":29.99}";
 
         CreateBookDto createBookDto = jacksonTester.parseObject(content);
 
         assertThat(createBookDto.getAuthorName()).isEqualTo("Ivan Franchin");
-        assertThat(createBookDto.getTitle()).isEqualTo("Springboot");
+        assertThat(createBookDto.getTitle()).isEqualTo("SpringBoot");
         assertThat(createBookDto.getPrice().doubleValue()).isEqualTo(29.99);
     }
-
 }

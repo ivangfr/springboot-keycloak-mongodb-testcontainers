@@ -3,11 +3,10 @@ package com.mycompany.bookservice.service;
 import com.mycompany.bookservice.model.Book;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface BookService {
 
-    List<Book> getAllBooks();
+    List<Book> getBooks();
 
     List<Book> getBooksByAuthorName(String authorName);
 
@@ -15,6 +14,6 @@ public interface BookService {
 
     void deleteBook(Book book);
 
-    Book validateAndGetBookById(UUID id);
+    Book validateAndGetBookById(String id);
 
 }

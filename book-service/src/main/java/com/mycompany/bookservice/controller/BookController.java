@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.mycompany.bookservice.config.SwaggerConfig.BEARER_KEY_SECURITY_SCHEME;
@@ -45,17 +44,17 @@ public class BookController {
     public List<BookDto> getBooks(@RequestParam(required = false) String authorName) {
         boolean filterByAuthorName = StringUtils.hasText(authorName);
         if (filterByAuthorName) {
-            log.info("Get all books filtering by authorName equals to {}", authorName);
+            log.info("Get books filtering by authorName equals to {}", authorName);
         } else {
-            log.info("Get all books");
+            log.info("Get books");
         }
-        List<Book> books = filterByAuthorName ? bookService.getBooksByAuthorName(authorName) : bookService.getAllBooks();
+        List<Book> books = filterByAuthorName ? bookService.getBooksByAuthorName(authorName) : bookService.getBooks();
         return books.stream().map(bookMapper::toBookDto).collect(Collectors.toList());
     }
 
     @Operation(summary = "Get book by id")
     @GetMapping("/{id}")
-    public BookDto getBookById(@PathVariable UUID id) {
+    public BookDto getBookById(@PathVariable String id) {
         log.info("Get books with id equals to {}", id);
         Book book = bookService.validateAndGetBookById(id);
         return bookMapper.toBookDto(book);
@@ -69,7 +68,6 @@ public class BookController {
     public BookDto createBook(@Valid @RequestBody CreateBookDto createBookDto, Principal principal) {
         log.info("Post request made by {} to create a book {}", principal.getName(), createBookDto);
         Book book = bookMapper.toBook(createBookDto);
-        book.setId(UUID.randomUUID());
         book = bookService.saveBook(book);
         return bookMapper.toBookDto(book);
     }
@@ -78,7 +76,7 @@ public class BookController {
             summary = "Update a book",
             security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @PatchMapping("/{id}")
-    public BookDto updateBook(@PathVariable UUID id, @Valid @RequestBody UpdateBookDto updateBookDto, Principal principal) {
+    public BookDto updateBook(@PathVariable String id, @Valid @RequestBody UpdateBookDto updateBookDto, Principal principal) {
         log.info("Patch request made by {} to update book with id {}. New values {}", principal.getName(), id, updateBookDto);
         Book book = bookService.validateAndGetBookById(id);
         bookMapper.updateUserFromDto(updateBookDto, book);
@@ -90,7 +88,7 @@ public class BookController {
             summary = "Delete a book",
             security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @DeleteMapping("/{id}")
-    public BookDto deleteBook(@PathVariable UUID id, Principal principal) {
+    public BookDto deleteBook(@PathVariable String id, Principal principal) {
         log.info("Delete request made by {} to remove book with id {}", principal.getName(), id);
         Book book = bookService.validateAndGetBookById(id);
         bookService.deleteBook(book);

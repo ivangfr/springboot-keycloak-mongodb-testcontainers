@@ -27,7 +27,7 @@ ext {
     set('springdocOpenApiVerison', '1.5.10')
     set('keycloakVersion', '15.0.2')
     set('testcontainersVersion', '1.16.0')
-    set('openjdkImageVersion', '11.0.11')
+    set('openjdkImageVersion', '11.0.12')
     set('dockerImagePrefix', 'ivanfranchin')
 }
 

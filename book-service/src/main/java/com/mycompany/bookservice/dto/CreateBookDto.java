@@ -15,11 +15,11 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class CreateBookDto {
 
-    @Schema(example = "Craig Walls")
+    @Schema(example = "Ivan Franchin")
     @NotBlank
     private String authorName;
 
-    @Schema(example = "Spring Boot")
+    @Schema(example = "SpringBoot")
     @NotBlank
     private String title;
 

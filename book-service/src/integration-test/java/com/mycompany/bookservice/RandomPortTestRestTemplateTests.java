@@ -18,17 +18,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.ActiveProfiles;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
-import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultBook;
-import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultCreateBookDto;
-import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultUpdateBookDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
@@ -40,7 +36,7 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     private TestRestTemplate testRestTemplate;
 
     @Test
-    void givenNoBooksWhenGetAllBooksThenReturnStatusOkAndEmptyArray() {
+    void testGetBooksWhenThereIsNone() {
         ResponseEntity<BookDto[]> responseEntity = testRestTemplate.getForEntity(API_BOOKS_URL, BookDto[].class);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -48,9 +44,8 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     }
 
     @Test
-    void givenOneBookWhenGetAllBooksThenReturnStatusOkAndArrayWithOneBook() {
-        Book book = getDefaultBook();
-        bookRepository.save(book);
+    void testGetBooksWhenThereIsOne() {
+        Book book = bookRepository.save(getDefaultBook());
 
         ResponseEntity<BookDto[]> responseEntity = testRestTemplate.getForEntity(API_BOOKS_URL, BookDto[].class);
 
@@ -64,7 +59,7 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     }
 
     @Test
-    void givenValidBookWhenCreateBookWithoutAuthenticationThenReturnStatus302() {
+    void testCreateBookWithoutAuthentication() {
         CreateBookDto createBookDto = getDefaultCreateBookDto();
         ResponseEntity<String> responseEntity = testRestTemplate.postForEntity(API_BOOKS_URL, createBookDto, String.class);
 
@@ -73,7 +68,7 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     }
 
     @Test
-    void givenValidBookWhenCreateBookInformingInvalidTokenThenReturnStatusUnauthorized() {
+    void testCreateBookInformingInvalidToken() {
         CreateBookDto createBookDto = getDefaultCreateBookDto();
 
         HttpHeaders headers = authBearerHeaders("abcdef");
@@ -84,7 +79,7 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
     }
 
     @Test
-    void givenValidBookWhenCreateBookAuthenticatedThenReturnStatusCreatedAndBookJson() {
+    void testCreateBookInformingValidToken() {
         CreateBookDto createBookDto = getDefaultCreateBookDto();
 
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
@@ -98,17 +93,25 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
         assertThat(responseEntity.getBody().getAuthorName()).isEqualTo(createBookDto.getAuthorName());
         assertThat(responseEntity.getBody().getTitle()).isEqualTo(createBookDto.getTitle());
         assertThat(responseEntity.getBody().getPrice()).isEqualTo(createBookDto.getPrice());
+
+        Optional<Book> bookOptional = bookRepository.findById(responseEntity.getBody().getId());
+        assertThat(bookOptional.isPresent()).isTrue();
+        bookOptional.ifPresent(bookCreated -> {
+            assertThat(bookCreated.getAuthorName()).isEqualTo(createBookDto.getAuthorName());
+            assertThat(bookCreated.getTitle()).isEqualTo(createBookDto.getTitle());
+            assertThat(bookCreated.getPrice()).isEqualTo(createBookDto.getPrice());
+        });
     }
 
     @Test
-    void givenNonExistingBookIdWhenUpdateBookThenReturnStatusNotFound() {
-        UUID id = UUID.randomUUID();
-        UpdateBookDto updateBookDto = getDefaultUpdateBookDto();
+    void testUpdateBookWhenNonExistent() {
+        UpdateBookDto updateBookDto = new UpdateBookDto();
+        updateBookDto.setTitle("SpringBoot 2");
 
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
         HttpHeaders headers = authBearerHeaders(accessToken);
 
-        String url = String.format(API_BOOKS_ID_URL, id);
+        String url = String.format(API_BOOKS_ID_URL, "123");
         ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(url, HttpMethod.PATCH,
                 new HttpEntity<>(updateBookDto, headers), MessageError.class);
 
@@ -117,15 +120,14 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
         assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_NOT_FOUND);
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("Book with id '" + id + "' not found.");
+        assertThat(responseEntity.getBody().getMessage()).isEqualTo("Book with id '123' not found.");
         assertThat(responseEntity.getBody().getPath()).isEqualTo(url);
         assertThat(responseEntity.getBody().getErrors()).isNull();
     }
 
     @Test
-    void givenExistingBookWhenUpdateBookThenReturnStatusOkAndBookJson() {
-        Book book = getDefaultBook();
-        bookRepository.save(book);
+    void testUpdateBookWhenExistent() {
+        Book book = bookRepository.save(getDefaultBook());
 
         UpdateBookDto updateBookDto = new UpdateBookDto();
         updateBookDto.setAuthorName("Ivan Franchin 2");
@@ -144,16 +146,23 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
         assertThat(responseEntity.getBody().getAuthorName()).isEqualTo(updateBookDto.getAuthorName());
         assertThat(responseEntity.getBody().getTitle()).isEqualTo(updateBookDto.getTitle());
         assertThat(responseEntity.getBody().getPrice()).isEqualTo(book.getPrice());
+
+        Optional<Book> bookOptional = bookRepository.findById(responseEntity.getBody().getId());
+        assertThat(bookOptional.isPresent()).isTrue();
+        bookOptional.ifPresent(bookUpdated -> {
+            assertThat(bookUpdated.getAuthorName()).isEqualTo(updateBookDto.getAuthorName());
+            assertThat(bookUpdated.getTitle()).isEqualTo(updateBookDto.getTitle());
+            assertThat(bookUpdated.getPrice()).isEqualTo(book.getPrice());
+        });
     }
 
     @Test
-    void givenNonExistingBookIdWhenDeleteBookThenReturnStatusNotFound() {
-        UUID id = UUID.randomUUID();
+    void testDeleteBookWhenNonExistent() {
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
 
         HttpHeaders headers = authBearerHeaders(accessToken);
 
-        String url = String.format(API_BOOKS_ID_URL, id);
+        String url = String.format(API_BOOKS_ID_URL, "123");
         ResponseEntity<MessageError> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE,
                 new HttpEntity<>(headers), MessageError.class);
 
@@ -162,15 +171,14 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
         assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
         assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
         assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_NOT_FOUND);
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("Book with id '" + id + "' not found.");
+        assertThat(responseEntity.getBody().getMessage()).isEqualTo("Book with id '123' not found.");
         assertThat(responseEntity.getBody().getPath()).isEqualTo(url);
         assertThat(responseEntity.getBody().getErrors()).isNull();
     }
 
     @Test
-    void givenExistingBookIdWhenDeleteBookThenReturnStatusOkAndBookJson() {
-        Book book = getDefaultBook();
-        bookRepository.save(book);
+    void testDeleteBookWhenExistent() {
+        Book book = bookRepository.save(getDefaultBook());
 
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
         HttpHeaders headers = authBearerHeaders(accessToken);
@@ -185,12 +193,23 @@ class RandomPortTestRestTemplateTests extends AbstractTestcontainers {
         assertThat(responseEntity.getBody().getAuthorName()).isEqualTo(book.getAuthorName());
         assertThat(responseEntity.getBody().getTitle()).isEqualTo(book.getTitle());
         assertThat(responseEntity.getBody().getPrice()).isEqualTo(book.getPrice());
+
+        Optional<Book> bookOptional = bookRepository.findById(responseEntity.getBody().getId());
+        assertThat(bookOptional.isPresent()).isFalse();
     }
 
     private HttpHeaders authBearerHeaders(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
         return headers;
+    }
+
+    private Book getDefaultBook() {
+        return new Book("Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
+    }
+
+    private CreateBookDto getDefaultCreateBookDto() {
+        return new CreateBookDto("Ivan Franchin", "SpringBoot", BigDecimal.valueOf(10.99));
     }
 
     @Data

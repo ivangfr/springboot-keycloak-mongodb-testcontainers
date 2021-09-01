@@ -10,15 +10,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-import static com.mycompany.bookservice.helper.BookServiceTestHelper.getDefaultBook;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
@@ -32,58 +32,62 @@ class BookServiceImplTest {
     private BookRepository bookRepository;
 
     @Test
-    void givenValidBookWhenSaveBookThenReturnBook() {
+    void testSaveBook() {
         Book book = getDefaultBook();
-        given(bookRepository.save(book)).willReturn(book);
+        given(bookRepository.save(any(Book.class))).willReturn(book);
 
         Book bookSaved = bookService.saveBook(book);
-        assertThat(bookSaved).usingRecursiveComparison().isEqualTo(book);
+        assertThat(bookSaved).isEqualTo(book);
     }
 
     @Test
-    void givenNoBookWhenGetAllBooksThenReturnEmptyList() {
+    void testGetBooksWhenThereIsNone() {
         given(bookRepository.findAll()).willReturn(Collections.emptyList());
 
-        List<Book> booksFound = bookService.getAllBooks();
+        List<Book> booksFound = bookService.getBooks();
         assertThat(booksFound).isEmpty();
     }
 
     @Test
-    void givenOneBookWhenGetAllBooksThenReturnListWithOneBook() {
+    void testGetBooksWhenThereIsOne() {
         Book book = getDefaultBook();
         given(bookRepository.findAll()).willReturn(Collections.singletonList(book));
 
-        List<Book> booksFound = bookService.getAllBooks();
+        List<Book> booksFound = bookService.getBooks();
         assertThat(booksFound).hasSize(1);
-        assertThat(booksFound.get(0)).usingRecursiveComparison().isEqualTo(book);
+        assertThat(booksFound.get(0)).isEqualTo(book);
     }
 
     @Test
-    void givenExistingBookAuthorNameWithOneBookWhenGetBooksByAuthorNameThenReturnListWithOneBook() {
+    void testGetBooksByAuthorNameWhenAuthorHasOneBook() {
         Book book = getDefaultBook();
         given(bookRepository.findByAuthorNameLike(book.getAuthorName())).willReturn(Collections.singletonList(book));
 
         List<Book> booksFound = bookService.getBooksByAuthorName(book.getAuthorName());
         assertThat(booksFound).hasSize(1);
-        assertThat(booksFound.get(0)).usingRecursiveComparison().isEqualTo(book);
+        assertThat(booksFound.get(0)).isEqualTo(book);
     }
 
     @Test
-    void givenNonExistingBookIdWhenValidateAndGetBookByIdThenThrowBookNotFoundException() {
-        given(bookRepository.findById(any(UUID.class))).willReturn(Optional.empty());
+    void testValidateAndGetBookWhenNonExistent() {
+        given(bookRepository.findById(anyString())).willReturn(Optional.empty());
 
-        UUID id = UUID.randomUUID();
-        Throwable exception = assertThrows(BookNotFoundException.class, () -> bookService.validateAndGetBookById(id));
-        assertThat(String.format("Book with id '%s' not found.", id)).isEqualTo(exception.getMessage());
+        Throwable exception = assertThrows(BookNotFoundException.class, () -> bookService.validateAndGetBookById("123"));
+        assertThat("Book with id '123' not found.").isEqualTo(exception.getMessage());
     }
 
     @Test
-    void givenExistingBookIdWhenValidateAndGetBookByIdThenReturnBook() {
+    void testValidateAndGetBookWhenExistent() {
         Book book = getDefaultBook();
-        given(bookRepository.findById(book.getId())).willReturn(Optional.of(book));
+        given(bookRepository.findById(anyString())).willReturn(Optional.of(book));
 
         Book bookFound = bookService.validateAndGetBookById(book.getId());
-        assertThat(bookFound).usingRecursiveComparison().isEqualTo(book);
+        assertThat(bookFound).isEqualTo(book);
     }
 
+    private Book getDefaultBook() {
+        Book book = new Book("Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
+        book.setId("123");
+        return book;
+    }
 }

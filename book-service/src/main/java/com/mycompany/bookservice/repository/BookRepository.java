@@ -2,12 +2,12 @@ package com.mycompany.bookservice.repository;
 
 import com.mycompany.bookservice.model.Book;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface BookRepository extends MongoRepository<Book, UUID> {
+@Repository
+public interface BookRepository extends MongoRepository<Book, String> {
 
     List<Book> findByAuthorNameLike(String authorName);
-
 }

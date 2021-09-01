@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -16,7 +15,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     @Override
-    public List<Book> getAllBooks() {
+    public List<Book> getBooks() {
         return bookRepository.findAll();
     }
 
@@ -36,8 +35,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book validateAndGetBookById(UUID id) {
+    public Book validateAndGetBookById(String id) {
         return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
     }
-
 }

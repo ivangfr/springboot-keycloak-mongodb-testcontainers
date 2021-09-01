@@ -28,16 +28,3 @@ springdoc:
   swagger-ui:
     groups-order: DESC
     disable-swagger-default-url: true
-
----
-spring:
-  config:
-    activate:
-      on-profile: test
-  data:
-    mongodb:
-      host: # \ they will be set dynamically by AbstractTestcontainers
-      port: # /
-
-keycloak:
-  auth-server-url: # it will be set dynamically by AbstractTestcontainers

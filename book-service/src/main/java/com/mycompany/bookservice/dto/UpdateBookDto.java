@@ -12,10 +12,10 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UpdateBookDto {
 
-    @Schema(example = "James Gosling")
+    @Schema(example = "Ivan G. Franchin")
     private String authorName;
 
-    @Schema(example = "Java 8")
+    @Schema(example = "Java 16")
     private String title;
 
     @Schema(example = "20.5")

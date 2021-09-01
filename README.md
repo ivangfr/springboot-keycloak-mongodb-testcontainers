@@ -13,7 +13,7 @@ The goals of this project are:
 
 - ### book-service
   
-  `Spring Boot` Web application that manages books. [`MongoDB`](https://www.mongodb.com) is used as storage, and the application's sensitive endpoints (like add, update and delete books) are secured.
+  `Spring Boot` Web application that manages books. [`MongoDB`](https://www.mongodb.com) is used as storage, and the application's sensitive endpoints (like create, update and delete books) are secured.
   
   ![book-service-swagger](images/book-service-swagger.png)
 
@@ -111,7 +111,7 @@ There are two ways: running a script or using `Keycloak` website
     --args='--server.port=9080 --spring.data.mongodb.username=bookuser --spring.data.mongodb.password=bookpass'
   ```
   
-- The application's swagger URL is http://localhost:9080/swagger-ui.html
+- The application Swagger URL is http://localhost:9080/swagger-ui.html
 
 ## Getting Access Token
 
@@ -146,7 +146,7 @@ There are two ways: running a script or using `Keycloak` website
    ```
    curl -i -X POST http://localhost:9080/api/books \
      -H "Content-Type: application/json" \
-     -d '{ "authorName": "ivan", "title": "java 8", "price": 10.5 }'
+     -d '{ "authorName": "Ivan Franchin", "title": "Java 8", "price": 10.5 }'
    ```
    It should return:
    ```
@@ -160,12 +160,12 @@ There are two ways: running a script or using `Keycloak` website
    curl -i -X POST http://localhost:9080/api/books \
      -H "Authorization: Bearer $ACCESS_TOKEN" \
      -H "Content-Type: application/json" \
-     -d '{ "authorName": "ivan", "title": "java 8", "price": 10.5 }'
+     -d '{ "authorName": "Ivan Franchin", "title": "Java 8", "price": 10.5 }'
    ```
    It should return something like
    ```
    HTTP/1.1 201
-   { "id":"01d984be-26bc-49f5-a201-602293d62b82", "authorName":"ivan", "title":"java 8", "price":10.5 }
+   { "id":"612f4f9438e39e473c4d098b", "authorName":"Ivan Franchin", "title":"Java 8", "price":10.5 }
    ```
 
 ## Test using Swagger
@@ -195,9 +195,9 @@ There are two ways: running a script or using `Keycloak` website
    ```
    HTTP/1.1 201
    {
-     "id": "5cf212c3-7902-4141-968b-82ae7a3443f1",
-     "authorName": "Craig Walls",
-     "title": "Spring Boot",
+     "id": "612f502f38e39e473c4d098c",
+     "authorName": "Ivan Franchin",
+     "title": "SpringBoot",
      "price": 10.5
    }
    ```
@@ -247,7 +247,7 @@ There are two ways: running a script or using `Keycloak` website
 
 - **MongoDB**
 
-  List all books
+  List books
   ```
   docker exec -it mongodb mongo -ubookuser -pbookpass --authenticationDatabase bookdb
   use bookdb

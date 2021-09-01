@@ -10,9 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.UUID;
 
-import static com.mycompany.bookservice.helper.BookServiceTestHelper.getABookDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -24,15 +22,13 @@ class BookDtoTest {
 
     @Test
     void testSerialize() throws IOException {
-        UUID id = UUID.randomUUID();
-        BigDecimal price = new BigDecimal("29.99");
-        BookDto bookDto = getABookDto(id, "Ivan Franchin", "Springboot", price);
+        BookDto bookDto = new BookDto("123", "Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
 
         JsonContent<BookDto> jsonContent = jacksonTester.write(bookDto);
 
         assertThat(jsonContent)
                 .hasJsonPathStringValue("@.id")
-                .extractingJsonPathStringValue("@.id").isEqualTo(bookDto.getId().toString());
+                .extractingJsonPathStringValue("@.id").isEqualTo(bookDto.getId());
 
         assertThat(jsonContent)
                 .hasJsonPathStringValue("@.authorName")
@@ -49,14 +45,13 @@ class BookDtoTest {
 
     @Test
     void testDeserialize() throws IOException {
-        String content = "{\"id\":\"5aa5fad4-03ed-43e0-9e5f-8cfaf1ef616c\",\"authorName\":\"Ivan Franchin\",\"title\":\"Springboot\",\"price\":29.99}";
+        String content = "{\"id\":\"123\",\"authorName\":\"Ivan Franchin\",\"title\":\"SpringBoot\",\"price\":29.99}";
 
         BookDto bookDto = jacksonTester.parseObject(content);
 
-        assertThat(bookDto.getId()).hasToString("5aa5fad4-03ed-43e0-9e5f-8cfaf1ef616c");
+        assertThat(bookDto.getId()).hasToString("123");
         assertThat(bookDto.getAuthorName()).isEqualTo("Ivan Franchin");
-        assertThat(bookDto.getTitle()).isEqualTo("Springboot");
+        assertThat(bookDto.getTitle()).isEqualTo("SpringBoot");
         assertThat(bookDto.getPrice().doubleValue()).isEqualTo(29.99);
     }
-
 }
