@@ -94,5 +94,4 @@ public class BookController {
         bookService.deleteBook(book);
         return bookMapper.toBookDto(book);
     }
-
 }

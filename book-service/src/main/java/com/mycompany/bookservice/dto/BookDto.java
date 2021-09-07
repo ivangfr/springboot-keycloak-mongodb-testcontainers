@@ -1,19 +1,15 @@
 package com.mycompany.bookservice.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
 import java.math.BigDecimal;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 public class BookDto {
 
-    private String id;
-    private String authorName;
-    private String title;
-    private BigDecimal price;
+    String id;
+    String authorName;
+    String title;
+    BigDecimal price;
 
 }

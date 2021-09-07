@@ -106,5 +106,4 @@ public abstract class AbstractTestcontainers {
     private static final List<String> BOOK_SERVICE_ROLES = Collections.singletonList("manage_books");
     private static final String USER_USERNAME = "ivan.franchin";
     private static final String USER_PASSWORD = "123";
-
 }
