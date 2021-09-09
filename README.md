@@ -31,7 +31,7 @@ The goals of this project are:
   docker-compose up -d
   ```
 
-- Wait a bit until all containers are `Up (healthy)`. You can check their status by running
+- Wait a bit until all containers are `running (healthy)`. You can check their status by running
   ```
   docker-compose ps
   ```
@@ -40,7 +40,7 @@ The goals of this project are:
 
 There are two ways: running a script or using `Keycloak` website
 
-### Running script
+### Running Script
 
 - In a terminal, make sure you are in `springboot-keycloak-mongodb-testcontainers` root folder
 
@@ -53,7 +53,7 @@ There are two ways: running a script or using `Keycloak` website
 
 - Copy the `BOOK_SERVICE_CLIENT_SECRET` value printed at the end. It will be needed whenever we call `Keycloak` to get a token to access `book-service` 
 
-### Using Keycloak website
+### Using Keycloak Website
 
 ![keycloak](images/keycloak.png)
 
