@@ -5,11 +5,10 @@ import lombok.Value;
 import java.math.BigDecimal;
 
 @Value
-public class BookDto {
+public class BookResponse {
 
     String id;
     String authorName;
     String title;
     BigDecimal price;
-
 }

@@ -15,43 +15,43 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @JsonTest
-class BookDtoTest {
+class BookResponseTest {
 
     @Autowired
-    private JacksonTester<BookDto> jacksonTester;
+    private JacksonTester<BookResponse> jacksonTester;
 
     @Test
     void testSerialize() throws IOException {
-        BookDto bookDto = new BookDto("123", "Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
+        BookResponse bookResponse = new BookResponse("123", "Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
 
-        JsonContent<BookDto> jsonContent = jacksonTester.write(bookDto);
+        JsonContent<BookResponse> jsonContent = jacksonTester.write(bookResponse);
 
         assertThat(jsonContent)
                 .hasJsonPathStringValue("@.id")
-                .extractingJsonPathStringValue("@.id").isEqualTo(bookDto.getId());
+                .extractingJsonPathStringValue("@.id").isEqualTo(bookResponse.getId());
 
         assertThat(jsonContent)
                 .hasJsonPathStringValue("@.authorName")
-                .extractingJsonPathStringValue("@.authorName").isEqualTo(bookDto.getAuthorName());
+                .extractingJsonPathStringValue("@.authorName").isEqualTo(bookResponse.getAuthorName());
 
         assertThat(jsonContent)
                 .hasJsonPathStringValue("@.title")
-                .extractingJsonPathStringValue("@.title").isEqualTo(bookDto.getTitle());
+                .extractingJsonPathStringValue("@.title").isEqualTo(bookResponse.getTitle());
 
         assertThat(jsonContent)
                 .hasJsonPathNumberValue("@.price")
-                .extractingJsonPathNumberValue("@.price").isEqualTo(bookDto.getPrice().doubleValue());
+                .extractingJsonPathNumberValue("@.price").isEqualTo(bookResponse.getPrice().doubleValue());
     }
 
     @Test
     void testDeserialize() throws IOException {
         String content = "{\"id\":\"123\",\"authorName\":\"Ivan Franchin\",\"title\":\"SpringBoot\",\"price\":29.99}";
 
-        BookDto bookDto = jacksonTester.parseObject(content);
+        BookResponse bookResponse = jacksonTester.parseObject(content);
 
-        assertThat(bookDto.getId()).hasToString("123");
-        assertThat(bookDto.getAuthorName()).isEqualTo("Ivan Franchin");
-        assertThat(bookDto.getTitle()).isEqualTo("SpringBoot");
-        assertThat(bookDto.getPrice().doubleValue()).isEqualTo(29.99);
+        assertThat(bookResponse.getId()).hasToString("123");
+        assertThat(bookResponse.getAuthorName()).isEqualTo("Ivan Franchin");
+        assertThat(bookResponse.getTitle()).isEqualTo("SpringBoot");
+        assertThat(bookResponse.getPrice().doubleValue()).isEqualTo(29.99);
     }
 }

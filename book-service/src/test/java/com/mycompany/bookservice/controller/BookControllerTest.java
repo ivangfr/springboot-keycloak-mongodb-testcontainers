@@ -1,8 +1,8 @@
 package com.mycompany.bookservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mycompany.bookservice.dto.CreateBookDto;
-import com.mycompany.bookservice.dto.UpdateBookDto;
+import com.mycompany.bookservice.dto.CreateBookRequest;
+import com.mycompany.bookservice.dto.UpdateBookRequest;
 import com.mycompany.bookservice.exception.BookNotFoundException;
 import com.mycompany.bookservice.mapper.BookMapperImpl;
 import com.mycompany.bookservice.model.Book;
@@ -102,14 +102,14 @@ class BookControllerTest {
     @Test
     @WithMockUser(roles = MANAGE_BOOKS)
     void testCreateBook() throws Exception {
-        CreateBookDto createBookDto = new CreateBookDto("Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
+        CreateBookRequest createBookRequest = new CreateBookRequest("Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
         Book book = getDefaultBook();
 
         given(bookService.saveBook(any(Book.class))).willReturn(book);
 
         ResultActions resultActions = mockMvc.perform(post(API_BOOKS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createBookDto)))
+                        .content(objectMapper.writeValueAsString(createBookRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isCreated())
@@ -125,37 +125,37 @@ class BookControllerTest {
     void testUpdateBookWhenExistent() throws Exception {
         Book book = getDefaultBook();
 
-        UpdateBookDto updateBookDto = new UpdateBookDto();
-        updateBookDto.setPrice(BigDecimal.valueOf(99.99));
-        updateBookDto.setTitle("Java 9");
+        UpdateBookRequest updateBookRequest = new UpdateBookRequest();
+        updateBookRequest.setPrice(BigDecimal.valueOf(99.99));
+        updateBookRequest.setTitle("Java 9");
 
         given(bookService.validateAndGetBookById(anyString())).willReturn(book);
         given(bookService.saveBook(any(Book.class))).willReturn(book);
 
         ResultActions resultActions = mockMvc.perform(patch(API_BOOKS_ID_URL, book.getId())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateBookDto)))
+                        .content(objectMapper.writeValueAsString(updateBookRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath(JSON_$_ID, is(book.getId().toString())))
                 .andExpect(jsonPath(JSON_$_AUTHOR_NAME, is(book.getAuthorName())))
-                .andExpect(jsonPath(JSON_$_TITLE, is(updateBookDto.getTitle())))
-                .andExpect(jsonPath(JSON_$_PRICE, is(updateBookDto.getPrice().doubleValue())));
+                .andExpect(jsonPath(JSON_$_TITLE, is(updateBookRequest.getTitle())))
+                .andExpect(jsonPath(JSON_$_PRICE, is(updateBookRequest.getPrice().doubleValue())));
     }
 
     @Test
     @WithMockUser(roles = MANAGE_BOOKS)
     void testUpdateBookWhenNonExistent() throws Exception {
-        UpdateBookDto updateBookDto = new UpdateBookDto();
-        updateBookDto.setTitle("SpringBoot 2");
+        UpdateBookRequest updateBookRequest = new UpdateBookRequest();
+        updateBookRequest.setTitle("SpringBoot 2");
 
         willThrow(BookNotFoundException.class).given(bookService).validateAndGetBookById(anyString());
 
         ResultActions resultActions = mockMvc.perform(patch(API_BOOKS_ID_URL, "123")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateBookDto)))
+                        .content(objectMapper.writeValueAsString(updateBookRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isNotFound());
@@ -194,11 +194,11 @@ class BookControllerTest {
     @Test
     @WithMockUser(roles = FAKE_ROLE)
     void testCreateBookUsingInvalidRoles() throws Exception {
-        CreateBookDto createBookDto = new CreateBookDto("Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
+        CreateBookRequest createBookRequest = new CreateBookRequest("Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
 
         ResultActions resultActions = mockMvc.perform(post(API_BOOKS_URL)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createBookDto)))
+                        .content(objectMapper.writeValueAsString(createBookRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isForbidden());
@@ -207,13 +207,13 @@ class BookControllerTest {
     @Test
     @WithMockUser(roles = FAKE_ROLE)
     void testUpdateBookUsingInvalidRoles() throws Exception {
-        UpdateBookDto updateBookDto = new UpdateBookDto();
-        updateBookDto.setPrice(BigDecimal.valueOf(99.99));
-        updateBookDto.setTitle("Java 9");
+        UpdateBookRequest updateBookRequest = new UpdateBookRequest();
+        updateBookRequest.setPrice(BigDecimal.valueOf(99.99));
+        updateBookRequest.setTitle("Java 9");
 
         ResultActions resultActions = mockMvc.perform(patch(API_BOOKS_ID_URL, "123")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateBookDto)))
+                        .content(objectMapper.writeValueAsString(updateBookRequest)))
                 .andDo(print());
 
         resultActions.andExpect(status().isForbidden());
@@ -249,5 +249,4 @@ class BookControllerTest {
     private static final String JSON_$_0_AUTHOR_NAME = "$[0].authorName";
     private static final String JSON_$_0_TITLE = "$[0].title";
     private static final String JSON_$_0_PRICE = "$[0].price";
-
 }

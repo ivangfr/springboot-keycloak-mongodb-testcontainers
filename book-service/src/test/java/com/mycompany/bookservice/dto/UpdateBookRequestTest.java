@@ -15,38 +15,38 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @JsonTest
-class CreateBookDtoTest {
+class UpdateBookRequestTest {
 
     @Autowired
-    private JacksonTester<CreateBookDto> jacksonTester;
+    private JacksonTester<UpdateBookRequest> jacksonTester;
 
     @Test
     void testSerialize() throws IOException {
-        CreateBookDto createBookDto = new CreateBookDto("Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
+        UpdateBookRequest updateBookRequest = new UpdateBookRequest("Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
 
-        JsonContent<CreateBookDto> jsonContent = jacksonTester.write(createBookDto);
+        JsonContent<UpdateBookRequest> jsonContent = jacksonTester.write(updateBookRequest);
 
         assertThat(jsonContent)
                 .hasJsonPathStringValue("@.authorName")
-                .extractingJsonPathStringValue("@.authorName").isEqualTo(createBookDto.getAuthorName());
+                .extractingJsonPathStringValue("@.authorName").isEqualTo(updateBookRequest.getAuthorName());
 
         assertThat(jsonContent)
                 .hasJsonPathStringValue("@.title")
-                .extractingJsonPathStringValue("@.title").isEqualTo(createBookDto.getTitle());
+                .extractingJsonPathStringValue("@.title").isEqualTo(updateBookRequest.getTitle());
 
         assertThat(jsonContent)
                 .hasJsonPathNumberValue("@.price")
-                .extractingJsonPathNumberValue("@.price").isEqualTo(createBookDto.getPrice().doubleValue());
+                .extractingJsonPathNumberValue("@.price").isEqualTo(updateBookRequest.getPrice().doubleValue());
     }
 
     @Test
     void testDeserialize() throws IOException {
         String content = "{\"authorName\":\"Ivan Franchin\",\"title\":\"SpringBoot\",\"price\":29.99}";
 
-        CreateBookDto createBookDto = jacksonTester.parseObject(content);
+        UpdateBookRequest updateBookRequest = jacksonTester.parseObject(content);
 
-        assertThat(createBookDto.getAuthorName()).isEqualTo("Ivan Franchin");
-        assertThat(createBookDto.getTitle()).isEqualTo("SpringBoot");
-        assertThat(createBookDto.getPrice().doubleValue()).isEqualTo(29.99);
+        assertThat(updateBookRequest.getAuthorName()).isEqualTo("Ivan Franchin");
+        assertThat(updateBookRequest.getTitle()).isEqualTo("SpringBoot");
+        assertThat(updateBookRequest.getPrice().doubleValue()).isEqualTo(29.99);
     }
 }

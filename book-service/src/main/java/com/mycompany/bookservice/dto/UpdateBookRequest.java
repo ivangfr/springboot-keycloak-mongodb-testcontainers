@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateBookDto {
+public class UpdateBookRequest {
 
     @Schema(example = "Ivan G. Franchin")
     private String authorName;
@@ -20,5 +20,4 @@ public class UpdateBookDto {
 
     @Schema(example = "20.5")
     private BigDecimal price;
-
 }

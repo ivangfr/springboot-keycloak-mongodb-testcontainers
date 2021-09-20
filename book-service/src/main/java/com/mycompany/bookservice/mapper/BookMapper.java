@@ -1,8 +1,8 @@
 package com.mycompany.bookservice.mapper;
 
-import com.mycompany.bookservice.dto.BookDto;
-import com.mycompany.bookservice.dto.CreateBookDto;
-import com.mycompany.bookservice.dto.UpdateBookDto;
+import com.mycompany.bookservice.dto.BookResponse;
+import com.mycompany.bookservice.dto.CreateBookRequest;
+import com.mycompany.bookservice.dto.UpdateBookRequest;
 import com.mycompany.bookservice.model.Book;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
@@ -16,10 +16,9 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface BookMapper {
 
-    Book toBook(CreateBookDto createBookDto);
+    Book toBook(CreateBookRequest createBookRequest);
 
-    BookDto toBookDto(Book book);
+    BookResponse toBookResponse(Book book);
 
-    void updateUserFromDto(UpdateBookDto updateBookDto, @MappingTarget Book book);
-
+    void updateUserFromRequest(UpdateBookRequest updateBookRequest, @MappingTarget Book book);
 }

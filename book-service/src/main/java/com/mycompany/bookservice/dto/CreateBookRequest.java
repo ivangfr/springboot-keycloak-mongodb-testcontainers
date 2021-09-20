@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateBookDto {
+public class CreateBookRequest {
 
     @Schema(example = "Ivan Franchin")
     @NotBlank
@@ -27,5 +27,4 @@ public class CreateBookDto {
     @NotNull
     @Positive
     private BigDecimal price;
-
 }

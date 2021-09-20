@@ -28,16 +28,16 @@ public abstract class AbstractTestcontainers {
 
     @DynamicPropertySource
     private static void dynamicProperties(DynamicPropertyRegistry registry) {
-        mongoDBContainer.withExposedPorts(27017);
-        mongoDBContainer.setWaitStrategy(Wait.forListeningPort().withStartupTimeout(Duration.ofMinutes(2)));
-        mongoDBContainer.start();
+        mongoDBContainer.withExposedPorts(27017)
+                .waitingFor(Wait.forListeningPort().withStartupTimeout(Duration.ofMinutes(2)))
+                .start();
 
         keycloakContainer.withExposedPorts(8080)
                 .withEnv("KEYCLOAK_USER", "admin")
                 .withEnv("KEYCLOAK_PASSWORD", "admin")
-                .withEnv("DB_VENDOR", "h2");
-        keycloakContainer.setWaitStrategy(Wait.forHttp("/auth").forPort(8080).withStartupTimeout(Duration.ofMinutes(2)));
-        keycloakContainer.start();
+                .withEnv("DB_VENDOR", "h2")
+                .waitingFor(Wait.forHttp("/auth").forPort(8080).withStartupTimeout(Duration.ofMinutes(2)))
+                .start();
 
         registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
         registry.add("spring.data.mongodb.port", () -> mongoDBContainer.getMappedPort(27017));

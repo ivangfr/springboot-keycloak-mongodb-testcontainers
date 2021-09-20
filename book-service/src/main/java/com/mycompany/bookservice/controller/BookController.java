@@ -1,8 +1,8 @@
 package com.mycompany.bookservice.controller;
 
-import com.mycompany.bookservice.dto.BookDto;
-import com.mycompany.bookservice.dto.CreateBookDto;
-import com.mycompany.bookservice.dto.UpdateBookDto;
+import com.mycompany.bookservice.dto.BookResponse;
+import com.mycompany.bookservice.dto.CreateBookRequest;
+import com.mycompany.bookservice.dto.UpdateBookRequest;
 import com.mycompany.bookservice.mapper.BookMapper;
 import com.mycompany.bookservice.model.Book;
 import com.mycompany.bookservice.service.BookService;
@@ -41,7 +41,7 @@ public class BookController {
 
     @Operation(summary = "Get list of book. It can be filtered by author name")
     @GetMapping
-    public List<BookDto> getBooks(@RequestParam(required = false) String authorName) {
+    public List<BookResponse> getBooks(@RequestParam(required = false) String authorName) {
         boolean filterByAuthorName = StringUtils.hasText(authorName);
         if (filterByAuthorName) {
             log.info("Get books filtering by authorName equals to {}", authorName);
@@ -49,15 +49,15 @@ public class BookController {
             log.info("Get books");
         }
         List<Book> books = filterByAuthorName ? bookService.getBooksByAuthorName(authorName) : bookService.getBooks();
-        return books.stream().map(bookMapper::toBookDto).collect(Collectors.toList());
+        return books.stream().map(bookMapper::toBookResponse).collect(Collectors.toList());
     }
 
     @Operation(summary = "Get book by id")
     @GetMapping("/{id}")
-    public BookDto getBookById(@PathVariable String id) {
+    public BookResponse getBookById(@PathVariable String id) {
         log.info("Get books with id equals to {}", id);
         Book book = bookService.validateAndGetBookById(id);
-        return bookMapper.toBookDto(book);
+        return bookMapper.toBookResponse(book);
     }
 
     @Operation(
@@ -65,33 +65,35 @@ public class BookController {
             security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public BookDto createBook(@Valid @RequestBody CreateBookDto createBookDto, Principal principal) {
-        log.info("Post request made by {} to create a book {}", principal.getName(), createBookDto);
-        Book book = bookMapper.toBook(createBookDto);
+    public BookResponse createBook(@Valid @RequestBody CreateBookRequest createBookRequest, Principal principal) {
+        log.info("Post request made by {} to create a book {}", principal.getName(), createBookRequest);
+        Book book = bookMapper.toBook(createBookRequest);
         book = bookService.saveBook(book);
-        return bookMapper.toBookDto(book);
+        return bookMapper.toBookResponse(book);
     }
 
     @Operation(
             summary = "Update a book",
             security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @PatchMapping("/{id}")
-    public BookDto updateBook(@PathVariable String id, @Valid @RequestBody UpdateBookDto updateBookDto, Principal principal) {
-        log.info("Patch request made by {} to update book with id {}. New values {}", principal.getName(), id, updateBookDto);
+    public BookResponse updateBook(@PathVariable String id,
+                                   @Valid @RequestBody UpdateBookRequest updateBookRequest,
+                                   Principal principal) {
+        log.info("Patch request made by {} to update book with id {}. New values {}", principal.getName(), id, updateBookRequest);
         Book book = bookService.validateAndGetBookById(id);
-        bookMapper.updateUserFromDto(updateBookDto, book);
+        bookMapper.updateUserFromRequest(updateBookRequest, book);
         book = bookService.saveBook(book);
-        return bookMapper.toBookDto(book);
+        return bookMapper.toBookResponse(book);
     }
 
     @Operation(
             summary = "Delete a book",
             security = {@SecurityRequirement(name = BEARER_KEY_SECURITY_SCHEME)})
     @DeleteMapping("/{id}")
-    public BookDto deleteBook(@PathVariable String id, Principal principal) {
+    public BookResponse deleteBook(@PathVariable String id, Principal principal) {
         log.info("Delete request made by {} to remove book with id {}", principal.getName(), id);
         Book book = bookService.validateAndGetBookById(id);
         bookService.deleteBook(book);
-        return bookMapper.toBookDto(book);
+        return bookMapper.toBookResponse(book);
     }
 }
