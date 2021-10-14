@@ -9,6 +9,7 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -21,16 +22,13 @@ import java.util.Map;
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
-    /* As "bitnami/mongodb" docker image is used, we needed to configure mongoDBContainer as GenericContainer. MongoDBContainer is used for "mongo" official docker image */
-    private static final GenericContainer<?> mongoDBContainer = new GenericContainer<>("bitnami/mongodb:4.4.8");
+    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.3");
     private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("jboss/keycloak:15.0.2");
     protected static Keycloak keycloakBookService;
 
     @DynamicPropertySource
     private static void dynamicProperties(DynamicPropertyRegistry registry) {
-        mongoDBContainer.withExposedPorts(27017)
-                .waitingFor(Wait.forListeningPort().withStartupTimeout(Duration.ofMinutes(2)))
-                .start();
+        mongoDBContainer.start();
 
         keycloakContainer.withExposedPorts(8080)
                 .withEnv("KEYCLOAK_USER", "admin")
