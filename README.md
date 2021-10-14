@@ -13,7 +13,7 @@ The goals of this project are:
   
   `Spring Boot` Web application that manages books. [`MongoDB`](https://www.mongodb.com) is used as storage, and the application's sensitive endpoints (like create, update and delete books) are secured.
   
-  ![book-service-swagger](images/book-service-swagger.png)
+  ![book-service-swagger](documentation/book-service-swagger.png)
 
 ## Prerequisites
 
@@ -59,7 +59,7 @@ There are two ways: running a script or using `Keycloak` website
 
 ### Using Keycloak Website
 
-![keycloak](images/keycloak.png)
+![keycloak](documentation/keycloak.png)
 
 #### Login
 
