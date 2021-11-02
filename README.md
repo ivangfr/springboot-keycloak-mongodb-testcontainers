@@ -29,7 +29,7 @@ The goals of this project are:
   docker-compose up -d
   ```
 
-- Wait for `keycloak` and `mongodb` Docker containers to be with state `Up (healthy)`. To check it, run
+- Wait for `keycloak` and `mongodb` Docker containers to be up and running. To check it, run
   ```
   docker-compose ps
   ```
@@ -83,8 +83,7 @@ There are two ways: running a script or using `Keycloak` website
 - Set `book-service` to `Client ID` and click `Save` button
 - In `Settings` tab
   - Set `confidential` to `Access Type`
-  - Set `http://localhost:9080` to Root URL 
-  - Set `/*` to Valid Redirect URIs
+  - Set `http://localhost:9080/*` to Valid Redirect URIs
   - Click `Save` button
 - In `Credentials` tab, you can find the secret `Keycloak` generated for `simple-service`
 - In `Roles` tab
