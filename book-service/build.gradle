@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.5.6'
+    id 'org.springframework.boot' version '2.6.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'com.google.cloud.tools.jib' version '3.1.4'
 }
@@ -29,12 +29,6 @@ ext {
     set('testcontainersVersion', '1.16.2')
     set('openjdkImageVersion', '11.0.13')
     set('dockerImagePrefix', 'ivanfranchin')
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
-    }
 }
 
 // adding integration test
@@ -100,6 +94,13 @@ dependencies {
 
     integrationTestAnnotationProcessor 'org.projectlombok:lombok'
     integrationTestCompileOnly 'org.projectlombok:lombok'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
+        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+    }
 }
 
 test {

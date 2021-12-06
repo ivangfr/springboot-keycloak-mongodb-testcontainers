@@ -6,6 +6,11 @@ spring:
       host: ${MONGODB_HOST:localhost}
       port: ${MONGODB_PORT:27017}
       database: bookdb
+  mongodb:
+    embedded:
+      version: 3.2.2 # see updates at https://github.com/flapdoodle-oss/de.flapdoodle.embed.mongo/tags
+  main:
+    allow-circular-references: true
 
 keycloak:
   auth-server-url: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:8080}/auth

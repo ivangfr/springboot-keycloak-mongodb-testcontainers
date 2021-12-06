@@ -300,11 +300,11 @@ docker rmi ivanfranchin/book-service:1.0.0
   java.lang.NullPointerException
   	at org.keycloak.adapters.KeycloakDeploymentBuilder.internalBuild(KeycloakDeploymentBuilder.java:57)
   	at org.keycloak.adapters.KeycloakDeploymentBuilder.build(KeycloakDeploymentBuilder.java:202)
-  	at org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver.resolve(KeycloakSpringBootConfigResolver.java:39)
+  	at org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver.resolve(KeycloakSpringBootConfigResolver.java:41)
   	at org.keycloak.adapters.springsecurity.config.KeycloakSpringConfigResolverWrapper.resolve(KeycloakSpringConfigResolverWrapper.java:40)
   	at org.keycloak.adapters.AdapterDeploymentContext.resolveDeployment(AdapterDeploymentContext.java:89)
   ...
-  ```
+```
 
 ## References
 
