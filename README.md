@@ -83,7 +83,7 @@ There are two ways: running a script or using `Keycloak` website
 - Set `book-service` to `Client ID` and click `Save` button
 - In `Settings` tab
   - Set `confidential` to `Access Type`
-  - Set `http://localhost:9080/*` to Valid Redirect URIs
+  - Set `http://localhost:9080/*` to `Valid Redirect URIs`
   - Click `Save` button
 - In `Credentials` tab, you can find the secret `Keycloak` generated for `simple-service`
 - In `Roles` tab
@@ -100,7 +100,7 @@ There are two ways: running a script or using `Keycloak` website
   - Set the value `123` to `Password` and `Password Confirmation`
   - Turn off the `Temporary` field
   - Click `Set password` button
-  - Confirm the pop up and clock `Set Password` red button
+  - Confirm the popup and click `Set Password` red button
 - In `Role Mappings` tab
   - Select `book-service` on the combo-box `Client Roles`
   - In `Available Roles`, select `manage_books` role and click `Add selected >>` button
@@ -213,7 +213,7 @@ There are two ways: running a script or using `Keycloak` website
   ./gradlew book-service:clean book-service:jibDockerBuild -x test -x integrationTest
   ```
   | Environment Variable | Description                                                       |
-  | -------------------- | ----------------------------------------------------------------- |
+  |----------------------|-------------------------------------------------------------------|
   | `MONGODB_HOST`       | Specify host of the `Mongo` database to use (default `localhost`) |
   | `MONGODB_PORT`       | Specify port of the `Mongo` database to use (default `27017`)     |
   | `KEYCLOAK_HOST`      | Specify host of the `Keycloak` to use (default `localhost`)       |
@@ -304,7 +304,7 @@ docker rmi ivanfranchin/book-service:1.0.0
   	at org.keycloak.adapters.springsecurity.config.KeycloakSpringConfigResolverWrapper.resolve(KeycloakSpringConfigResolverWrapper.java:40)
   	at org.keycloak.adapters.AdapterDeploymentContext.resolveDeployment(AdapterDeploymentContext.java:89)
   ...
-```
+  ```
 
 ## References
 

@@ -22,8 +22,8 @@ import java.util.Map;
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
-    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.4");
-    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("jboss/keycloak:15.0.2");
+    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.5");
+    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("jboss/keycloak:16.1.0");
     protected static Keycloak keycloakBookService;
 
     @DynamicPropertySource
