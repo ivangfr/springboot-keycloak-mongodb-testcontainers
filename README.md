@@ -63,7 +63,7 @@ There are two ways: running a script or using `Keycloak` website
 
 #### Login
 
-- Access http://localhost:8080/auth/admin/master/console
+- Access http://localhost:8080/admin
 
 - Login with the credentials
   ```
