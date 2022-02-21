@@ -14,7 +14,7 @@ spring:
     allow-circular-references: true
 
 keycloak:
-  auth-server-url: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:8080}/auth
+  auth-server-url: http://${KEYCLOAK_HOST:localhost}:${KEYCLOAK_PORT:8080}
   realm: company-services
   resource: book-service
   ssl-required: external

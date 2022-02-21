@@ -10,13 +10,14 @@ services:
       test: echo 'db.stats().ok' | mongo localhost:27017/bookdb --quiet
 
   keycloak:
-    image: jboss/keycloak:16.1.0
+    image: quay.io/keycloak/keycloak:17.0.0
     container_name: keycloak
     ports:
       - "8080:8080"
     environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
-      DB_VENDOR: h2
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: dev-mem
+    command: start-dev
     healthcheck:
-      test: "curl -f http://localhost:8080/auth || exit 1"
+      test: "curl -f http://localhost:8080/admin || exit 1"

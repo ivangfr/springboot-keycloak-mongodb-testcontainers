@@ -210,7 +210,7 @@ There are two ways: running a script or using `Keycloak` website
 
 - Build Docker Image
   ```
-  ./gradlew book-service:clean book-service:jibDockerBuild -x test -x integrationTest
+  ./docker-build.sh
   ```
   | Environment Variable | Description                                                       |
   |----------------------|-------------------------------------------------------------------|
@@ -267,9 +267,9 @@ There are two ways: running a script or using `Keycloak` website
 
 ## Cleanup
 
-To remove the Docker image created by this project, go to a terminal and run the following command
+To remove the Docker image created by this project, go to a terminal and, inside `springboot-keycloak-mongodb-testcontainers` root folder, run the following script
 ```
-docker rmi ivanfranchin/book-service:1.0.0
+./remove-docker-images.sh
 ```
 
 ## Running Unit and Integration Tests

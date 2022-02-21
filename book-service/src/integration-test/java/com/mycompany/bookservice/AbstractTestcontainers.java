@@ -23,7 +23,7 @@ import java.util.Map;
 public abstract class AbstractTestcontainers {
 
     private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.6");
-    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("jboss/keycloak:16.1.0");
+    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("quay.io/keycloak/keycloak:17.0.0");
     protected static Keycloak keycloakBookService;
 
     @DynamicPropertySource
@@ -31,16 +31,17 @@ public abstract class AbstractTestcontainers {
         mongoDBContainer.start();
 
         keycloakContainer.withExposedPorts(8080)
-                .withEnv("KEYCLOAK_USER", "admin")
-                .withEnv("KEYCLOAK_PASSWORD", "admin")
-                .withEnv("DB_VENDOR", "h2")
-                .waitingFor(Wait.forHttp("/auth").forPort(8080).withStartupTimeout(Duration.ofMinutes(2)))
+                .withEnv("KEYCLOAK_ADMIN", "admin")
+                .withEnv("KEYCLOAK_ADMIN_PASSWORD", "admin")
+                .withEnv("KC_DB", "dev-mem")
+                .withCommand("start-dev")
+                .waitingFor(Wait.forHttp("/admin").forPort(8080).withStartupTimeout(Duration.ofMinutes(2)))
                 .start();
 
         registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
         registry.add("spring.data.mongodb.port", () -> mongoDBContainer.getMappedPort(27017));
 
-        String keycloakServerUrl = String.format("http://%s:%s/auth", keycloakContainer.getHost(), keycloakContainer.getMappedPort(8080));
+        String keycloakServerUrl = String.format("http://%s:%s", keycloakContainer.getHost(), keycloakContainer.getMappedPort(8080));
         registry.add("keycloak.auth-server-url", () -> keycloakServerUrl);
 
         if (keycloakBookService == null) {
