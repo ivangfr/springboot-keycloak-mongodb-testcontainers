@@ -10,7 +10,7 @@ services:
       test: echo 'db.stats().ok' | mongo localhost:27017/bookdb --quiet
 
   keycloak:
-    image: quay.io/keycloak/keycloak:17.0.0
+    image: quay.io/keycloak/keycloak:17.0.1
     container_name: keycloak
     ports:
       - "8080:8080"
