@@ -63,7 +63,7 @@ class BookServiceApplicationTests extends AbstractTestcontainers {
         CreateBookRequest createBookRequest = getDefaultCreateBookRequest();
         ResponseEntity<String> responseEntity = testRestTemplate.postForEntity(API_BOOKS_URL, createBookRequest, String.class);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         assertThat(responseEntity.getBody()).isNull();
     }
 

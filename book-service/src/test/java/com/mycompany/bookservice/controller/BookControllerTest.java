@@ -6,8 +6,8 @@ import com.mycompany.bookservice.dto.UpdateBookRequest;
 import com.mycompany.bookservice.exception.BookNotFoundException;
 import com.mycompany.bookservice.mapper.BookMapperImpl;
 import com.mycompany.bookservice.model.Book;
+import com.mycompany.bookservice.security.JwtAuthConverterProperties;
 import com.mycompany.bookservice.service.BookService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +39,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Disabled
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BookController.class)
-@Import(BookMapperImpl.class) // if BookMapperImpl.class is missing, run: ./gradlew book-service:assemble
+@Import({BookMapperImpl.class, JwtAuthConverterProperties.class}) // if BookMapperImpl.class is missing, run: ./gradlew book-service:assemble
 class BookControllerTest {
 
     @Autowired
@@ -139,7 +138,7 @@ class BookControllerTest {
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath(JSON_$_ID, is(book.getId().toString())))
+                .andExpect(jsonPath(JSON_$_ID, is(book.getId())))
                 .andExpect(jsonPath(JSON_$_AUTHOR_NAME, is(book.getAuthorName())))
                 .andExpect(jsonPath(JSON_$_TITLE, is(updateBookRequest.getTitle())))
                 .andExpect(jsonPath(JSON_$_PRICE, is(updateBookRequest.getPrice().doubleValue())));
@@ -174,7 +173,7 @@ class BookControllerTest {
 
         resultActions.andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath(JSON_$_ID, is(book.getId().toString())))
+                .andExpect(jsonPath(JSON_$_ID, is(book.getId())))
                 .andExpect(jsonPath(JSON_$_AUTHOR_NAME, is(book.getAuthorName())))
                 .andExpect(jsonPath(JSON_$_TITLE, is(book.getTitle())))
                 .andExpect(jsonPath(JSON_$_PRICE, is(book.getPrice().doubleValue())));
@@ -229,7 +228,7 @@ class BookControllerTest {
     }
 
     private Book getDefaultBook() {
-        return new Book("Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
+        return new Book("123", "Ivan Franchin", "SpringBoot", BigDecimal.valueOf(29.99));
     }
 
     private static final String MANAGE_BOOKS = "manage_books";

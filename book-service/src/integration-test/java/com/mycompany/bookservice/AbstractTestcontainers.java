@@ -24,6 +24,7 @@ public abstract class AbstractTestcontainers {
 
     private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.6");
     private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("quay.io/keycloak/keycloak:17.0.1");
+
     protected static Keycloak keycloakBookService;
 
     @DynamicPropertySource
@@ -41,10 +42,15 @@ public abstract class AbstractTestcontainers {
         registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
         registry.add("spring.data.mongodb.port", () -> mongoDBContainer.getMappedPort(27017));
 
-        String keycloakServerUrl = String.format("http://%s:%s", keycloakContainer.getHost(), keycloakContainer.getMappedPort(8080));
-        registry.add("keycloak.auth-server-url", () -> keycloakServerUrl);
+        String keycloakHost = keycloakContainer.getHost();
+        Integer keycloakPort = keycloakContainer.getMappedPort(8080);
+
+        String jwtSetUri = String.format("http://%s:%s/realms/company-services/protocol/openid-connect/certs",
+                keycloakHost, keycloakPort);
+        registry.add("spring.security.oauth2.resourceserver.jwt.jwk-set-uri", () -> jwtSetUri);
 
         if (keycloakBookService == null) {
+            String keycloakServerUrl = String.format("http://%s:%s", keycloakHost, keycloakPort);
             setupKeycloak(keycloakServerUrl);
         }
     }

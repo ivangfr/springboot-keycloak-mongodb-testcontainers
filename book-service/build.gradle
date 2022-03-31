@@ -67,11 +67,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
     implementation "org.springdoc:springdoc-openapi-ui:${springdocOpenApiVerison}"
     implementation "org.springdoc:springdoc-openapi-security:${springdocOpenApiVerison}"
 
-    implementation "org.keycloak:keycloak-spring-boot-starter:${keycloakVersion}"
     testImplementation "org.keycloak:keycloak-admin-client:${keycloakVersion}"
 
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
@@ -98,7 +98,6 @@ dependencies {
 
 dependencyManagement {
     imports {
-        mavenBom "org.keycloak.bom:keycloak-adapter-bom:${keycloakVersion}"
         mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
     }
 }

@@ -152,7 +152,7 @@ There are two ways: running a script or using `Keycloak` website
   ```
   It should return:
   ```
-  HTTP/1.1 302
+  HTTP/1.1 401
   ```
 
 - If you do not have the access token stored in `ACCESS_TOKEN` environment variable, get it by following the steps describe at [Getting Access Token](#getting-access-token)
@@ -182,7 +182,8 @@ There are two ways: running a script or using `Keycloak` website
 
   It will return
   ```
-  Failed to fetch
+  Code: 401
+  Details: Error: response status is 401
   ```
 
 - Get the access token as explained at [Getting Access Token](#getting-access-token)
@@ -291,19 +292,6 @@ To remove the Docker image created by this project, go to a terminal and, inside
 - From `springboot-keycloak-mongodb-testcontainers` root folder, **Integration Testing Report** can be found at
   ```
   book-service/build/reports/tests/integrationTest/index.html
-  ```
-
-## Issues
-
-- Disabled [`BookControllerTest`](https://github.com/ivangfr/springboot-keycloak-mongodb-testcontainers/blob/master/book-service/src/test/java/com/mycompany/bookservice/controller/BookControllerTest.java) because I am getting the exception below. The [`adapterConfig` parameter passed to `internalBuild` is `null`](https://github.com/keycloak/keycloak/blob/master/adapters/oidc/adapter-core/src/main/java/org/keycloak/adapters/KeycloakDeploymentBuilder.java#L57)
-  ```
-  java.lang.NullPointerException
-  	at org.keycloak.adapters.KeycloakDeploymentBuilder.internalBuild(KeycloakDeploymentBuilder.java:57)
-  	at org.keycloak.adapters.KeycloakDeploymentBuilder.build(KeycloakDeploymentBuilder.java:202)
-  	at org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver.resolve(KeycloakSpringBootConfigResolver.java:41)
-  	at org.keycloak.adapters.springsecurity.config.KeycloakSpringConfigResolverWrapper.resolve(KeycloakSpringConfigResolverWrapper.java:40)
-  	at org.keycloak.adapters.AdapterDeploymentContext.resolveDeployment(AdapterDeploymentContext.java:89)
-  ...
   ```
 
 ## References
