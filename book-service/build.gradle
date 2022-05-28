@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.6'
+    id 'org.springframework.boot' version '2.7.0'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'com.google.cloud.tools.jib' version '3.2.1'
 }
@@ -24,10 +24,10 @@ repositories {
 ext {
     set('mapstructVersion', '1.4.2.Final')
     set('lombokMapstructBindingVersion', '0.2.0')
-    set('springdocOpenApiVerison', '1.6.7')
-    set('keycloakVersion', '17.0.1')
+    set('springdocOpenApiVerison', '1.6.9')
+    set('keycloakVersion', '18.0.0')
     set('testcontainersVersion', '1.16.3')
-    set('openjdkImageVersion', '11.0.14.1')
+    set('openjdkImageVersion', '11.0.15')
     set('dockerImagePrefix', 'ivanfranchin')
 }
 
