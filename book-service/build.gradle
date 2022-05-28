@@ -26,7 +26,7 @@ ext {
     set('lombokMapstructBindingVersion', '0.2.0')
     set('springdocOpenApiVerison', '1.6.9')
     set('keycloakVersion', '18.0.0')
-    set('testcontainersVersion', '1.16.3')
+    set('testcontainersVersion', '1.17.2')
     set('openjdkImageVersion', '11.0.15')
     set('dockerImagePrefix', 'ivanfranchin')
 }

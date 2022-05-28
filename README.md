@@ -241,7 +241,7 @@ There are two ways: running a script or using `Keycloak` website
   ACCESS_TOKEN=$(./get-access-token.sh $BOOK_SERVICE_CLIENT_SECRET "keycloak:8080") && echo $ACCESS_TOKEN
   ```
 
-- Test using cURL or Swagger are the same as explained above
+- Test [using cURL](#test-using-curl) or [using Swagger](#test-using-swagger) as explained above
 
 ## Useful Links & Commands
 

@@ -7,6 +7,7 @@ import com.mycompany.bookservice.exception.BookNotFoundException;
 import com.mycompany.bookservice.mapper.BookMapperImpl;
 import com.mycompany.bookservice.model.Book;
 import com.mycompany.bookservice.security.JwtAuthConverterProperties;
+import com.mycompany.bookservice.security.WebSecurityConfig;
 import com.mycompany.bookservice.service.BookService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BookController.class)
-@Import({BookMapperImpl.class, JwtAuthConverterProperties.class}) // if BookMapperImpl.class is missing, run: ./gradlew book-service:assemble
+@Import({BookMapperImpl.class, JwtAuthConverterProperties.class, WebSecurityConfig.class}) // if BookMapperImpl.class is missing, run: ./gradlew book-service:assemble
 class BookControllerTest {
 
     @Autowired
