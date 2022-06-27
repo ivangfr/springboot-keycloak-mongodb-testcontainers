@@ -22,8 +22,8 @@ import java.util.Map;
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
-    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.8");
-    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("quay.io/keycloak/keycloak:18.0.0");
+    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.9");
+    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("quay.io/keycloak/keycloak:18.0.1");
 
     protected static Keycloak keycloakBookService;
 
@@ -45,8 +45,9 @@ public abstract class AbstractTestcontainers {
         String keycloakHost = keycloakContainer.getHost();
         Integer keycloakPort = keycloakContainer.getMappedPort(8080);
 
-        String jwtSetUri = String.format("http://%s:%s/realms/company-services/protocol/openid-connect/certs",
-                keycloakHost, keycloakPort);
+        String issuerUri = String.format("http://%s:%s/realms/company-services", keycloakHost, keycloakPort);
+        String jwtSetUri = String.format("%s/protocol/openid-connect/certs", issuerUri);
+        registry.add("spring.security.oauth2.resourceserver.jwt.issuer-uri", () -> issuerUri);
         registry.add("spring.security.oauth2.resourceserver.jwt.jwk-set-uri", () -> jwtSetUri);
 
         if (keycloakBookService == null) {

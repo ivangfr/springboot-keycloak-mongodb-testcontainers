@@ -13,7 +13,7 @@ The goals of this project are:
   
   `Spring Boot` Web application that manages books. [`MongoDB`](https://www.mongodb.com) is used as storage, and the application's sensitive endpoints (like create, update and delete books) are secured.
   
-  ![book-service-swagger](documentation/book-service-swagger.png)
+  ![book-service-swagger](documentation/book-service-swagger.jpeg)
 
 ## Prerequisites
 
@@ -59,7 +59,7 @@ There are two ways: running a script or using `Keycloak` website
 
 ### Using Keycloak Website
 
-![keycloak](documentation/keycloak.png)
+![keycloak](documentation/keycloak.jpeg)
 
 #### Login
 
@@ -114,7 +114,7 @@ There are two ways: running a script or using `Keycloak` website
   ./gradlew book-service:clean book-service:bootRun --args='--server.port=9080'
   ```
   
-- The application Swagger URL is http://localhost:9080/swagger-ui.html
+- The application Swagger URL is http://localhost:9080/swagger-ui/index.html
 
 ## Getting Access Token
 
@@ -172,7 +172,7 @@ There are two ways: running a script or using `Keycloak` website
 
 ## Test using Swagger
 
-- Access http://localhost:9080/swagger-ui.html
+- Access http://localhost:9080/swagger-ui/index.html
 
 - Click `GET /api/books` to open it. Then, click `Try it out` button and, finally, click `Execute` button.
 

@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(BookController.class)
-@Import({BookMapperImpl.class, JwtAuthConverterProperties.class, WebSecurityConfig.class}) // if BookMapperImpl.class is missing, run: ./gradlew book-service:assemble
+@Import({BookMapperImpl.class, JwtAuthConverterProperties.class, WebSecurityConfig.class})
 class BookControllerTest {
 
     @Autowired
