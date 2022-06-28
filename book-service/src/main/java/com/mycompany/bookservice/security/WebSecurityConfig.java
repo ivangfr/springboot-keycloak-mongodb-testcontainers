@@ -19,7 +19,7 @@ public class WebSecurityConfig {
     private final JwtAuthConverter jwtAuthConverter;
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/books", "/api/books/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()

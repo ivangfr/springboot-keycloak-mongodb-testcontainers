@@ -14,7 +14,7 @@ import java.util.Map;
 public class ErrorAttributesConfig {
 
     @Bean
-    ErrorAttributes errorAttributes() {
+    public ErrorAttributes errorAttributes() {
         return new DefaultErrorAttributes() {
             @Override
             public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
