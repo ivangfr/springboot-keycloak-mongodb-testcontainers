@@ -17,7 +17,7 @@ The goals of this project are:
 
 ## Prerequisites
 
-- [`Java 11+`](https://www.oracle.com/java/technologies/downloads/#java11)
+- [`Java 17+`](https://www.oracle.com/java/technologies/downloads/#java17)
 - [`Docker`](https://www.docker.com/)
 - [`Docker-Compose`](https://docs.docker.com/compose/install/)
 - [`jq`](https://stedolan.github.io/jq)
@@ -129,6 +129,7 @@ There are two ways: running a script or using `Keycloak` website
   ```
   ACCESS_TOKEN=$(./get-access-token.sh $BOOK_SERVICE_CLIENT_SECRET) && echo $ACCESS_TOKEN
   ```
+  > **Note**: In [jwt.io](https://jwt.io), you can decode and verify the `JWT` access token
 
 - The access token has a default expiration time of `5 minutes`
 
@@ -236,10 +237,12 @@ There are two ways: running a script or using `Keycloak` website
   ```
 
 - In order to get the access token from `Keycloak`, run the following commands
-  > **Note:** the `"keycloak:8080"` string is informed in the second argument of the script. It changes `"localhost:8080"` host/port inside the script. This way, we won't have the error complaining about an invalid token due to an invalid token issuer.
   ```
   ACCESS_TOKEN=$(./get-access-token.sh $BOOK_SERVICE_CLIENT_SECRET "keycloak:8080") && echo $ACCESS_TOKEN
   ```
+  > **Note 1**: the `"keycloak:8080"` string is informed in the second argument of the script. It changes `"localhost:8080"` host/port inside the script. This way, we won't have the error complaining about an invalid token due to an invalid token issuer.
+  > 
+  > **Note 2**: In [jwt.io](https://jwt.io), you can decode and verify the `JWT` access token
 
 - Test [using cURL](#test-using-curl) or [using Swagger](#test-using-swagger) as explained above
 
@@ -253,10 +256,6 @@ There are two ways: running a script or using `Keycloak` website
   db.books.find()
   ```
   > Type `exit` to get out of MongoDB shell
-
-- **jwt.io**
-
-  With [jwt.io](https://jwt.io) you can inform the JWT token received from `Keycloak` and the online tool decodes the token, showing its header and payload.
 
 ## Shutdown
 
@@ -282,7 +281,7 @@ To remove the Docker image created by this project, go to a terminal and, inside
     book-service:test \
     book-service:integrationTest
   ```
-  > **Note:** During integration tests, `Testcontainers` will start automatically `MongoDB` and `Keycloak` containers before the tests begin and shuts them down when the tests finish.
+  > **Note**: During integration tests, `Testcontainers` will start automatically `MongoDB` and `Keycloak` containers before the tests begin and shuts them down when the tests finish.
 
 - From `springboot-keycloak-mongodb-testcontainers` root folder, **Unit Testing Report** can be found at
   ```
