@@ -73,37 +73,44 @@ There are two ways: running a script or using `Keycloak` website
 
 #### Create a new Realm
 
-- Go to top-left corner and hover the mouse over `Master` realm. Click the `Add realm` blue button that will appear
-- Set `company-services` to the `Name` field and click `Create` button
+- On the left menu, click the dropdown button that contains `Master` and then, click `Create Realm` button
+- Set `company-services` to the `Realm name` field and click `Create` button
 
 #### Create a new Client
 
 - On the left menu, click `Clients`
-- Click `Create` button
-- Set `book-service` to `Client ID` and click `Save` button
+- Click `Create client` button
+- In `General Settings`
+  - Set `book-service` to `Client ID`
+  - Click `Next` button
+- In `Capability config`
+  - Enable `Client authentication` toggle switch
+  - Click `Save` button
 - In `Settings` tab
-  - Set `confidential` to `Access Type`
   - Set `http://localhost:9080/*` to `Valid Redirect URIs`
   - Click `Save` button
-- In `Credentials` tab, you can find the secret `Keycloak` generated for `simple-service`
+- In `Credentials` tab, you can find the secret generated for `book-service`
 - In `Roles` tab
-  - Click `Add Role` button
-  - Set `manage_books` to `Role Name` and click `Save` button
+  - Click `Create Role` button
+  - Set `manage_books` to `Role Name`
+  - Click `Save` button
 
 #### Create a new User
 
 - On the left menu, click `Users`
-- Click `Add User` button
+- Click `Create new user` button
 - Set `ivan.franchin` to `Username` field
 - Click `Save`
 - In `Credentials` tab
-  - Set the value `123` to `Password` and `Password Confirmation`
-  - Turn off the `Temporary` field
   - Click `Set password` button
-  - Confirm the popup and click `Set Password` red button
+  - Set the value `123` to `Password` and `Password confirmation`
+  - Disable the `Temporary` field toggle switch
+  - Click `Save` button
+  - Confirm by clicking `Save Password` button
 - In `Role Mappings` tab
-  - Select `book-service` on the combo-box `Client Roles`
-  - In `Available Roles`, select `manage_books` role and click `Add selected >>` button
+  - Click `Assign role` button
+  - Click `Filter by Origin` dropdown button and select `book-service`
+  - Select `manage_books` role and click `Assign` button
 
 ## Running book-service with Gradle
 
@@ -114,7 +121,7 @@ There are two ways: running a script or using `Keycloak` website
   ./gradlew book-service:clean book-service:bootRun --args='--server.port=9080'
   ```
   
-- The application Swagger URL is http://localhost:9080/swagger-ui/index.html
+- The application Swagger URL is http://localhost:9080/swagger-ui.html
 
 ## Getting Access Token
 
@@ -173,7 +180,7 @@ There are two ways: running a script or using `Keycloak` website
 
 ## Test using Swagger
 
-- Access http://localhost:9080/swagger-ui/index.html
+- Access http://localhost:9080/swagger-ui.html
 
 - Click `GET /api/books` to open it. Then, click `Try it out` button and, finally, click `Execute` button.
 
