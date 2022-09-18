@@ -23,7 +23,7 @@ import java.util.Map;
 public abstract class AbstractTestcontainers {
 
     private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.12");
-    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("quay.io/keycloak/keycloak:19.0.1");
+    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("quay.io/keycloak/keycloak:19.0.2");
 
     protected static Keycloak keycloakBookService;
 

@@ -8,7 +8,7 @@ spring:
       database: bookdb
   mongodb:
     embedded:
-      version: 3.4.6 # see updates at https://github.com/flapdoodle-oss/de.flapdoodle.embed.mongo/tags
+      version: 3.4.9 # see updates at https://github.com/flapdoodle-oss/de.flapdoodle.embed.mongo/tags
                      # the embedded mongo will be downloaded to ~/.embedmongo folder
   security:
     oauth2:
