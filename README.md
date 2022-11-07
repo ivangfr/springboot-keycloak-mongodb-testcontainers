@@ -156,7 +156,7 @@ There are two ways: running a script or using `Keycloak` website
   ```
   curl -i -X POST http://localhost:9080/api/books \
     -H "Content-Type: application/json" \
-    -d '{ "authorName": "Ivan Franchin", "title": "Java 8", "price": 10.5 }'
+    -d '{"authorName": "Ivan Franchin", "title": "Java 8", "price": 10.5}'
   ```
   It should return:
   ```
@@ -170,12 +170,12 @@ There are two ways: running a script or using `Keycloak` website
   curl -i -X POST http://localhost:9080/api/books \
     -H "Authorization: Bearer $ACCESS_TOKEN" \
     -H "Content-Type: application/json" \
-    -d '{ "authorName": "Ivan Franchin", "title": "Java 8", "price": 10.5 }'
+    -d '{"authorName": "Ivan Franchin", "title": "Java 8", "price": 10.5}'
   ```
   It should return something like
   ```
   HTTP/1.1 201
-  { "id":"612f4f9438e39e473c4d098b", "authorName":"Ivan Franchin", "title":"Java 8", "price":10.5 }
+  {"id":"612f4f9438e39e473c4d098b", "authorName":"Ivan Franchin", "title":"Java 8", "price":10.5}
   ```
 
 ## Test using Swagger

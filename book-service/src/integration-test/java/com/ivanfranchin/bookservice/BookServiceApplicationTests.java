@@ -1,11 +1,12 @@
 package com.ivanfranchin.bookservice;
 
 import com.ivanfranchin.bookservice.dto.BookResponse;
-import com.ivanfranchin.bookservice.model.Book;
-import com.ivanfranchin.bookservice.repository.BookRepository;
 import com.ivanfranchin.bookservice.dto.CreateBookRequest;
 import com.ivanfranchin.bookservice.dto.UpdateBookRequest;
+import com.ivanfranchin.bookservice.model.Book;
+import com.ivanfranchin.bookservice.repository.BookRepository;
 import lombok.Value;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,8 +17,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,7 +25,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class BookServiceApplicationTests extends AbstractTestcontainers {
 
     @Autowired
@@ -34,6 +32,11 @@ class BookServiceApplicationTests extends AbstractTestcontainers {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
+
+    @BeforeEach
+    void setUp() {
+        bookRepository.deleteAll();
+    }
 
     @Test
     void testGetBooksWhenThereIsNone() {

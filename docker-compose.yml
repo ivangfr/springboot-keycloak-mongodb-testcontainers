@@ -2,7 +2,7 @@ version: '3.8'
 services:
 
   mongodb:
-    image: mongo:5.0.12
+    image: mongo:6.0.2
     container_name: mongodb
     ports:
       - "27017:27017"
@@ -10,7 +10,7 @@ services:
       test: echo 'db.stats().ok' | mongosh localhost:27017/bookdb --quiet
 
   keycloak:
-    image: quay.io/keycloak/keycloak:19.0.2
+    image: quay.io/keycloak/keycloak:20.0.0
     container_name: keycloak
     ports:
       - "8080:8080"
