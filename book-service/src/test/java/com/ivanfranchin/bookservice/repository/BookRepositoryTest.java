@@ -1,12 +1,11 @@
 package com.ivanfranchin.bookservice.repository;
 
 import com.ivanfranchin.bookservice.model.Book;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataMongoTest
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class BookRepositoryTest {
 
     @Autowired
@@ -23,6 +21,11 @@ class BookRepositoryTest {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @BeforeEach
+    void setUp() {
+        bookRepository.deleteAll();
+    }
 
     @Test
     void testFindAllWhenThereIsNone() {
