@@ -247,9 +247,9 @@ There are two ways: running a script or using `Keycloak` website
   ```
   ACCESS_TOKEN=$(./get-access-token.sh $BOOK_SERVICE_CLIENT_SECRET "keycloak:8080") && echo $ACCESS_TOKEN
   ```
-  > **Note 1**: the `"keycloak:8080"` string is informed in the second argument of the script. It changes `"localhost:8080"` host/port inside the script. This way, we won't have the error complaining about an invalid token due to an invalid token issuer.
+  > **Note** 1: the `"keycloak:8080"` string is informed in the second argument of the script. It changes `"localhost:8080"` host/port inside the script. This way, we won't have the error complaining about an invalid token due to an invalid token issuer.
   > 
-  > **Note 2**: In [jwt.io](https://jwt.io), you can decode and verify the `JWT` access token
+  > **Note** 2: In [jwt.io](https://jwt.io), you can decode and verify the `JWT` access token
 
 - Test [using cURL](#test-using-curl) or [using Swagger](#test-using-swagger) as explained above
 
