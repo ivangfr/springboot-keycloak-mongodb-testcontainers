@@ -6,11 +6,13 @@ import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RealmRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Duration;
@@ -22,15 +24,16 @@ import java.util.Map;
 @Testcontainers
 public abstract class AbstractTestcontainers {
 
-    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0.4");
-    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("quay.io/keycloak/keycloak:20.0.3");
+    @Container
+    @ServiceConnection
+    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0.6");
+
+    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("quay.io/keycloak/keycloak:21.1.1");
 
     protected static Keycloak keycloakBookService;
 
     @DynamicPropertySource
     private static void dynamicProperties(DynamicPropertyRegistry registry) {
-        mongoDBContainer.start();
-
         keycloakContainer.withExposedPorts(8080)
                 .withEnv("KEYCLOAK_ADMIN", "admin")
                 .withEnv("KEYCLOAK_ADMIN_PASSWORD", "admin")

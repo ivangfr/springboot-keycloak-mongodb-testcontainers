@@ -1,7 +1,7 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.8'
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    id 'com.google.cloud.tools.jib' version '3.3.1'
+    id 'org.springframework.boot' version '3.1.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'com.google.cloud.tools.jib' version '3.3.2'
 }
 
 group = 'com.ivanfranchin'
@@ -22,12 +22,12 @@ repositories {
 }
 
 ext {
-    set('mapstructVersion', '1.5.3.Final')
+    set('mapstructVersion', '1.5.5.Final')
     set('lombokMapstructBindingVersion', '0.2.0')
-    set('springdocOpenApiVerison', '1.6.14')
-    set('keycloakVersion', '20.0.3')
-    set('testcontainersVersion', '1.17.6')
-    set('jdkImageVersion', '17.0.6')
+    set('springdocOpenApiVerison', '2.1.0')
+    set('keycloakVersion', '21.1.1')
+    set('httpClient5Version', '5.2.1')
+    set('jdkImageVersion', '17.0.7')
     set('dockerImagePrefix', 'ivanfranchin')
 }
 
@@ -64,15 +64,18 @@ task integrationTest(type: Test) {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation "org.springdoc:springdoc-openapi-ui:${springdocOpenApiVerison}"
-    implementation "org.springdoc:springdoc-openapi-security:${springdocOpenApiVerison}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-api:${springdocOpenApiVerison}"
 
     testImplementation "org.keycloak:keycloak-admin-client:${keycloakVersion}"
+
+    // this dependency is needed because keycloak-admin-client dependency is still using httpclient4
+    // See: https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#apache-httpclient-in-resttemplate
+    implementation "org.apache.httpcomponents.client5:httpclient5:${httpClient5Version}"
 
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
@@ -87,18 +90,12 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:mongodb'
 
-    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
-    testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     integrationTestAnnotationProcessor 'org.projectlombok:lombok'
     integrationTestCompileOnly 'org.projectlombok:lombok'
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
-    }
 }
 
 tasks.named('test') {

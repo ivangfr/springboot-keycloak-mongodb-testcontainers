@@ -2,13 +2,16 @@ package com.ivanfranchin.bookservice.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 @RequiredArgsConstructor
+@Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
 
@@ -16,18 +19,19 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/books", "/api/books/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/actuator/**").permitAll()
-                .antMatchers("/api/books", "/api/books/**").hasRole(MANAGE_BOOKS)
-                .antMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
-                .anyRequest().authenticated();
-        http.oauth2ResourceServer()
-                .jwt()
-                .jwtAuthenticationConverter(jwtAuthConverter);
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.cors().and().csrf().disable();
-        return http.build();
+        return http
+                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                        .requestMatchers(HttpMethod.GET, "/api/books", "/api/books/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                        .requestMatchers("/api/books", "/api/books/**").hasRole(MANAGE_BOOKS)
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
+                        .anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(
+                        jwt -> jwt.jwtAuthenticationConverter(jwtAuthConverter)))
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .build();
     }
 
     private static final String MANAGE_BOOKS = "manage_books";
