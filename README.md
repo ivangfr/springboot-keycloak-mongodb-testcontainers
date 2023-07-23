@@ -19,19 +19,18 @@ The goals of this project are:
 
 - [`Java 17+`](https://www.oracle.com/java/technologies/downloads/#java17)
 - [`Docker`](https://www.docker.com/)
-- [`Docker-Compose`](https://docs.docker.com/compose/install/)
 - [`jq`](https://stedolan.github.io/jq)
 
 ## Start Environment
 
 - Open a terminal and inside `springboot-keycloak-mongodb-testcontainers` root folder run
   ```
-  docker-compose up -d
+  docker compose up -d
   ```
 
 - Wait for `keycloak` and `mongodb` Docker containers to be up and running. To check it, run
   ```
-  docker-compose ps
+  docker compose ps
   ```
 
 ## Configure Keycloak
@@ -228,7 +227,7 @@ There are two ways: running a script or using `Keycloak` website
   | `KEYCLOAK_HOST`      | Specify host of the `Keycloak` to use (default `localhost`)       |
   | `KEYCLOAK_PORT`      | Specify port of the `Keycloak` to use (default `8080`)            |
   
-- Run `book-service` docker container, joining it to docker-compose network
+- Run `book-service` docker container, joining it to docker compose network
   ```
   docker run --rm --name book-service \
     -p 9080:8080 \
@@ -267,9 +266,9 @@ There are two ways: running a script or using `Keycloak` website
 ## Shutdown
 
 - To stop `book-service`, go to the terminal where the application is running and press `Ctrl+C`
-- To stop and remove docker-compose containers, networks and volumes, make sure you are in `springboot-keycloak-mongodb-testcontainers` and run
+- To stop and remove docker compose containers, networks and volumes, make sure you are in `springboot-keycloak-mongodb-testcontainers` and run
   ```
-  docker-compose down -v
+  docker compose down -v
   ```
 
 ## Cleanup
