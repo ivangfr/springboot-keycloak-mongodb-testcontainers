@@ -49,9 +49,7 @@ public abstract class AbstractTestcontainers {
         Integer keycloakPort = keycloakContainer.getMappedPort(8080);
 
         String issuerUri = String.format("http://%s:%s/realms/company-services", keycloakHost, keycloakPort);
-        String jwtSetUri = String.format("%s/protocol/openid-connect/certs", issuerUri);
         registry.add("spring.security.oauth2.resourceserver.jwt.issuer-uri", () -> issuerUri);
-        registry.add("spring.security.oauth2.resourceserver.jwt.jwk-set-uri", () -> jwtSetUri);
 
         if (keycloakBookService == null) {
             String keycloakServerUrl = String.format("http://%s:%s", keycloakHost, keycloakPort);
