@@ -66,7 +66,7 @@ There are two ways: running a script or using `Keycloak` website
 
 #### Login
 
-- Access http://localhost:8080/admin
+- Access http://localhost:8080
 
 - Login with the credentials
   ```
@@ -76,8 +76,14 @@ There are two ways: running a script or using `Keycloak` website
 
 #### Create a new Realm
 
-- On the left menu, click the dropdown button that contains `Master` and then, click `Create Realm` button
+- On the left menu, click the dropdown button that contains `Keycloak` and then, click `Create Realm` button
 - Set `company-services` to the `Realm name` field and click `Create` button
+
+### Disable Required Action Verify Profile
+
+- On the left menu, click `Authentication`
+- Select `Required actions` tab
+- Disable `Verify Profile`
 
 #### Create a new Client
 
@@ -88,13 +94,13 @@ There are two ways: running a script or using `Keycloak` website
   - Click `Next` button
 - In `Capability config`
   - Enable `Client authentication` toggle switch
-  - Click `Save` button
-- In `Settings` tab
-  - Set `http://localhost:9080/*` to `Valid Redirect URIs`
+  - Click `Next` button
+- In `Login settings` tab
+  - Set `http://localhost:9080/*` to `Valid redirect URIs`
   - Click `Save` button
 - In `Credentials` tab, you can find the secret generated for `book-service`
 - In `Roles` tab
-  - Click `Create Role` button
+  - Click `Create role` button
   - Set `manage_books` to `Role Name`
   - Click `Save` button
 
@@ -103,17 +109,17 @@ There are two ways: running a script or using `Keycloak` website
 - On the left menu, click `Users`
 - Click `Create new user` button
 - Set `ivan.franchin` to `Username` field
-- Click `Save`
+- Click `Create`
 - In `Credentials` tab
   - Click `Set password` button
   - Set the value `123` to `Password` and `Password confirmation`
   - Disable the `Temporary` field toggle switch
   - Click `Save` button
-  - Confirm by clicking `Save Password` button
+  - Confirm by clicking `Save password` button
 - In `Role Mappings` tab
   - Click `Assign role` button
-  - Click `Filter by Origin` dropdown button and select `book-service`
-  - Select `manage_books` role and click `Assign` button
+  - Click `Filter by realm roles` dropdown button and select `Filter by clients`
+  - Select `[book-service] manage_books` name and click `Assign` button
 
 ## Running book-service with Gradle
 
