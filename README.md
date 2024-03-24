@@ -34,15 +34,10 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ## Start Environment
 
-- Open a terminal and inside `springboot-keycloak-mongodb-testcontainers` root folder run
-  ```
-  docker compose up -d
-  ```
-
-- Wait for `keycloak` and `mongodb` Docker containers to be up and running. To check it, run
-  ```
-  docker compose ps
-  ```
+Open a terminal and, inside `springboot-keycloak-mongodb-testcontainers` root folder, run the script below
+```
+./init-environment.sh
+```
 
 ## Configure Keycloak
 
@@ -130,8 +125,6 @@ There are two ways: running a script or using `Keycloak` website
   ```
   ./gradlew book-service:clean book-service:bootRun --args='--server.port=9080'
   ```
-  
-- The application Swagger URL is http://localhost:9080/swagger-ui.html
 
 ## Test using cURL
 
@@ -254,13 +247,13 @@ There are two ways: running a script or using `Keycloak` website
   | `KEYCLOAK_HOST`      | Specify host of the `Keycloak` to use (default `localhost`)       |
   | `KEYCLOAK_PORT`      | Specify port of the `Keycloak` to use (default `8080`)            |
   
-- Run `book-service` docker container, joining it to docker compose network
+- Run `book-service` docker container, joining it to project Docker network
   ```
   docker run --rm --name book-service \
     -p 9080:8080 \
     -e MONGODB_HOST=mongodb \
     -e KEYCLOAK_HOST=keycloak \
-    --network=springboot-keycloak-mongodb-testcontainers_default \
+    --network=springboot-keycloak-mongodb-testcontainers-net \
     ivanfranchin/book-service:1.0.0
   ```
 
@@ -272,7 +265,7 @@ There are two ways: running a script or using `Keycloak` website
 - Run the commands below to get an access token for `ivan.franchin`
   ```
   ACCESS_TOKEN=$(
-    docker run -t --rm -e CLIENT_SECRET=$BOOK_SERVICE_CLIENT_SECRET --network springboot-keycloak-mongodb-testcontainers_default alpine/curl:latest sh -c '
+    docker run -t --rm -e CLIENT_SECRET=$BOOK_SERVICE_CLIENT_SECRET --network springboot-keycloak-mongodb-testcontainers-net alpine/curl:latest sh -c '
       curl -s -X POST http://keycloak:8080/realms/company-services/protocol/openid-connect/token \
         -H "Content-Type: application/x-www-form-urlencoded" \
         -d "username=ivan.franchin" \
@@ -284,7 +277,7 @@ There are two ways: running a script or using `Keycloak` website
   ```
   > **Note** 1: In [jwt.io](https://jwt.io), you can decode and verify the `JWT` access token
   >
-  > **Note** 2: We are running a alpine/curl Docker container and joining it to the docker-compose network. By informing `"keycloak:8080"` host/port we won't have the error complaining about an invalid token due to an invalid token issuer.
+  > **Note** 2: We are running a alpine/curl Docker container and joining it to the project Docker network. By informing `"keycloak:8080"` host/port we won't have the error complaining about an invalid token due to an invalid token issuer.
   
 - Test [using cURL](#test-using-curl) or [using Swagger](#test-using-swagger) as explained above
 
@@ -301,10 +294,10 @@ There are two ways: running a script or using `Keycloak` website
 
 ## Shutdown
 
-- To stop `book-service`, go to the terminal where the application is running and press `Ctrl+C`
-- To stop and remove docker compose containers, networks and volumes, make sure you are in `springboot-keycloak-mongodb-testcontainers` and run
+- To stop `book-service`, go to the terminal where the application is running and press `Ctrl+C`;
+- To stop the Docker containers started using `./init-environment.sh` script, make sure you are in `springboot-keycloak-mongodb-testcontainers` and run the script below:
   ```
-  docker compose down -v
+  ./shutdown-environment.sh
   ```
 
 ## Cleanup
@@ -334,7 +327,3 @@ To remove the Docker image created by this project, go to a terminal and, inside
   ```
   book-service/build/reports/tests/integrationTest/index.html
   ```
-
-## References
-
-- https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html
