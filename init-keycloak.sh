@@ -26,6 +26,14 @@ curl -i -X POST "http://$KEYCLOAK_HOST_PORT/admin/realms" \
   -H "Content-Type: application/json" \
   -d '{"realm": "company-services", "enabled": true}'
 
+echo "Disable the Verify Profile Required Action"
+echo "------------------------------------------"
+
+curl -i -X PUT "http://$KEYCLOAK_HOST_PORT/admin/realms/company-services/authentication/required-actions/VERIFY_PROFILE" \
+  -H "Authorization: Bearer $ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"alias":"VERIFY_PROFILE","name":"Verify Profile","providerId":"VERIFY_PROFILE","enabled":false,"defaultAction":false,"priority":90,"config":{}}'
+
 echo "Creating client"
 echo "---------------"
 
