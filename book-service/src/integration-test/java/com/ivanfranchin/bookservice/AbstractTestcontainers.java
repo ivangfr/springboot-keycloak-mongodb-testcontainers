@@ -5,7 +5,6 @@ import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RealmRepresentation;
-import org.keycloak.representations.idm.RequiredActionProviderRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -67,17 +66,11 @@ public abstract class AbstractTestcontainers {
                 .clientId("admin-cli")
                 .build();
 
-
-        // Disable Required Action Verify Profile
-        RequiredActionProviderRepresentation verifyProfile = new RequiredActionProviderRepresentation();
-        verifyProfile.setAlias(VERIFY_PROFILE_ALIAS);
-        verifyProfile.setEnabled(false);
-
         // Realm
         RealmRepresentation realmRepresentation = new RealmRepresentation();
         realmRepresentation.setRealm(COMPANY_SERVICE_REALM_NAME);
         realmRepresentation.setEnabled(true);
-        realmRepresentation.setRequiredActions(List.of(verifyProfile));
+        realmRepresentation.setRequiredActions(List.of());
 
         // Client
         ClientRepresentation clientRepresentation = new ClientRepresentation();
@@ -121,5 +114,4 @@ public abstract class AbstractTestcontainers {
     private static final List<String> BOOK_SERVICE_ROLES = Collections.singletonList("manage_books");
     private static final String USER_USERNAME = "ivan.franchin";
     private static final String USER_PASSWORD = "123";
-    private static final String VERIFY_PROFILE_ALIAS = "VERIFY_PROFILE";
 }
