@@ -26,13 +26,27 @@ curl -i -X POST "http://$KEYCLOAK_HOST_PORT/admin/realms" \
   -H "Content-Type: application/json" \
   -d '{"realm": "company-services", "enabled": true}'
 
-echo "Disable the Verify Profile Required Action"
-echo "------------------------------------------"
+echo "Get Required Action Verify Profile"
+echo "----------------------------------"
+
+VERIFY_PROFILE_REQUIRED_ACTION=$(curl -s "http://$KEYCLOAK_HOST_PORT/admin/realms/company-services/authentication/required-actions/VERIFY_PROFILE" \
+  -H "Authorization: Bearer $ADMIN_TOKEN" | jq)
+
+echo $VERIFY_PROFILE_REQUIRED_ACTION
+echo
+
+echo "Disable Required Action Verify Profile"
+echo "--------------------------------------"
+
+NEW_VERIFY_PROFILE_REQUIRED_ACTION=$(echo "$VERIFY_PROFILE_REQUIRED_ACTION" | jq '.enabled = false')
+
+echo $NEW_VERIFY_PROFILE_REQUIRED_ACTION
+echo
 
 curl -i -X PUT "http://$KEYCLOAK_HOST_PORT/admin/realms/company-services/authentication/required-actions/VERIFY_PROFILE" \
   -H "Authorization: Bearer $ADMIN_TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"alias":"VERIFY_PROFILE","name":"Verify Profile","providerId":"VERIFY_PROFILE","enabled":false,"defaultAction":false,"priority":90,"config":{}}'
+  -d "$NEW_VERIFY_PROFILE_REQUIRED_ACTION"
 
 echo "Creating client"
 echo "---------------"
