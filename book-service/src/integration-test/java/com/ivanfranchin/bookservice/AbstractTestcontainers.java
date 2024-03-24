@@ -26,9 +26,9 @@ public abstract class AbstractTestcontainers {
 
     @Container
     @ServiceConnection
-    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:7.0.2");
+    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:7.0.6");
 
-    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("quay.io/keycloak/keycloak:22.0.4");
+    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("quay.io/keycloak/keycloak:23.0.7");
 
     protected static Keycloak keycloakBookService;
 

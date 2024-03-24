@@ -1,7 +1,7 @@
 plugins {
-    id 'org.springframework.boot' version '3.1.4'
-    id 'io.spring.dependency-management' version '1.1.3'
-    id 'com.google.cloud.tools.jib' version '3.4.0'
+    id 'org.springframework.boot' version '3.2.4'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.google.cloud.tools.jib' version '3.4.1'
 }
 
 group = 'com.ivanfranchin'
@@ -24,10 +24,10 @@ repositories {
 ext {
     set('mapstructVersion', '1.5.5.Final')
     set('lombokMapstructBindingVersion', '0.2.0')
-    set('springdocOpenApiVerison', '2.2.0')
-    set('keycloakVersion', '22.0.4')
-    set('httpClient5Version', '5.2.1')
-    set('jdkImageVersion', '17.0.8')
+    set('springdocOpenApiVersion', '2.4.0')
+    set('keycloakVersion', '23.0.7')
+    set('httpClient5Version', '5.3.1')
+    set('jdkImageVersion', '17.0.10')
     set('dockerImagePrefix', 'ivanfranchin')
 }
 
@@ -68,7 +68,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-api:${springdocOpenApiVerison}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-api:${springdocOpenApiVersion}"
 
     testImplementation "org.keycloak:keycloak-admin-client:${keycloakVersion}"
 
