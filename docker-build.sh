@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-./gradlew book-service:clean book-service:jibDockerBuild -x test -x integrationTest
+./gradlew book-service:clean book-service:bootBuildImage -x test -x integrationTest
