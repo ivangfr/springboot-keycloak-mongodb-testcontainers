@@ -1,12 +1,18 @@
 plugins {
-    id 'org.springframework.boot' version '3.2.4'
-    id 'io.spring.dependency-management' version '1.1.4'
-    id 'com.google.cloud.tools.jib' version '3.4.1'
+    id 'java'
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'com.google.cloud.tools.jib' version '3.4.4'
 }
 
 group = 'com.ivanfranchin'
 version = '1.0.0'
-sourceCompatibility = 17
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 
 configurations {
     compileOnly {
@@ -24,10 +30,10 @@ repositories {
 ext {
     set('mapstructVersion', '1.5.5.Final')
     set('lombokMapstructBindingVersion', '0.2.0')
-    set('springdocOpenApiVersion', '2.4.0')
-    set('keycloakVersion', '24.0.1')
+    set('springdocOpenApiVersion', '2.6.0')
+    set('keycloakVersion', '26.0.1')
     set('httpClient5Version', '5.3.1')
-    set('jdkImageVersion', '17.0.10')
+    set('jdkImageVersion', '21.0.4')
     set('dockerImagePrefix', 'ivanfranchin')
 }
 
