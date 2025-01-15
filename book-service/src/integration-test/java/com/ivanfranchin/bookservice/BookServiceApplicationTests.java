@@ -93,23 +93,22 @@ class BookServiceApplicationTests extends AbstractTestcontainers {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().id()).isNotNull();
-        assertThat(responseEntity.getBody().authorName()).isEqualTo(createBookRequest.getAuthorName());
-        assertThat(responseEntity.getBody().title()).isEqualTo(createBookRequest.getTitle());
-        assertThat(responseEntity.getBody().price()).isEqualTo(createBookRequest.getPrice());
+        assertThat(responseEntity.getBody().authorName()).isEqualTo(createBookRequest.authorName());
+        assertThat(responseEntity.getBody().title()).isEqualTo(createBookRequest.title());
+        assertThat(responseEntity.getBody().price()).isEqualTo(createBookRequest.price());
 
         Optional<Book> bookOptional = bookRepository.findById(responseEntity.getBody().id());
         assertThat(bookOptional.isPresent()).isTrue();
         bookOptional.ifPresent(bookCreated -> {
-            assertThat(bookCreated.getAuthorName()).isEqualTo(createBookRequest.getAuthorName());
-            assertThat(bookCreated.getTitle()).isEqualTo(createBookRequest.getTitle());
-            assertThat(bookCreated.getPrice()).isEqualTo(createBookRequest.getPrice());
+            assertThat(bookCreated.getAuthorName()).isEqualTo(createBookRequest.authorName());
+            assertThat(bookCreated.getTitle()).isEqualTo(createBookRequest.title());
+            assertThat(bookCreated.getPrice()).isEqualTo(createBookRequest.price());
         });
     }
 
     @Test
     void testUpdateBookWhenNonExistent() {
-        UpdateBookRequest updateBookRequest = new UpdateBookRequest();
-        updateBookRequest.setTitle("SpringBoot 2");
+        UpdateBookRequest updateBookRequest = new UpdateBookRequest(null, "SpringBoot 2", null);
 
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
         HttpHeaders headers = authBearerHeaders(accessToken);
@@ -131,10 +130,7 @@ class BookServiceApplicationTests extends AbstractTestcontainers {
     @Test
     void testUpdateBookWhenExistent() {
         Book book = bookRepository.save(getDefaultBook());
-
-        UpdateBookRequest updateBookRequest = new UpdateBookRequest();
-        updateBookRequest.setAuthorName("Ivan Franchin 2");
-        updateBookRequest.setTitle("Java 9");
+        UpdateBookRequest updateBookRequest = new UpdateBookRequest("Ivan Franchin 2", "Java 9", null);
 
         String accessToken = keycloakBookService.tokenManager().grantToken().getToken();
         HttpHeaders headers = authBearerHeaders(accessToken);
@@ -146,15 +142,15 @@ class BookServiceApplicationTests extends AbstractTestcontainers {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isNotNull();
         assertThat(responseEntity.getBody().id()).isNotNull();
-        assertThat(responseEntity.getBody().authorName()).isEqualTo(updateBookRequest.getAuthorName());
-        assertThat(responseEntity.getBody().title()).isEqualTo(updateBookRequest.getTitle());
+        assertThat(responseEntity.getBody().authorName()).isEqualTo(updateBookRequest.authorName());
+        assertThat(responseEntity.getBody().title()).isEqualTo(updateBookRequest.title());
         assertThat(responseEntity.getBody().price()).isEqualTo(book.getPrice());
 
         Optional<Book> bookOptional = bookRepository.findById(responseEntity.getBody().id());
         assertThat(bookOptional.isPresent()).isTrue();
         bookOptional.ifPresent(bookUpdated -> {
-            assertThat(bookUpdated.getAuthorName()).isEqualTo(updateBookRequest.getAuthorName());
-            assertThat(bookUpdated.getTitle()).isEqualTo(updateBookRequest.getTitle());
+            assertThat(bookUpdated.getAuthorName()).isEqualTo(updateBookRequest.authorName());
+            assertThat(bookUpdated.getTitle()).isEqualTo(updateBookRequest.title());
             assertThat(bookUpdated.getPrice()).isEqualTo(book.getPrice());
         });
     }

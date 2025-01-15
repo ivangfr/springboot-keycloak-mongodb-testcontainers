@@ -25,15 +25,15 @@ class CreateBookRequestTest {
 
         assertThat(jsonContent)
                 .hasJsonPathStringValue("@.authorName")
-                .extractingJsonPathStringValue("@.authorName").isEqualTo(createBookRequest.getAuthorName());
+                .extractingJsonPathStringValue("@.authorName").isEqualTo(createBookRequest.authorName());
 
         assertThat(jsonContent)
                 .hasJsonPathStringValue("@.title")
-                .extractingJsonPathStringValue("@.title").isEqualTo(createBookRequest.getTitle());
+                .extractingJsonPathStringValue("@.title").isEqualTo(createBookRequest.title());
 
         assertThat(jsonContent)
                 .hasJsonPathNumberValue("@.price")
-                .extractingJsonPathNumberValue("@.price").isEqualTo(createBookRequest.getPrice().doubleValue());
+                .extractingJsonPathNumberValue("@.price").isEqualTo(createBookRequest.price().doubleValue());
     }
 
     @Test
@@ -42,8 +42,8 @@ class CreateBookRequestTest {
 
         CreateBookRequest createBookRequest = jacksonTester.parseObject(content);
 
-        assertThat(createBookRequest.getAuthorName()).isEqualTo("Ivan Franchin");
-        assertThat(createBookRequest.getTitle()).isEqualTo("SpringBoot");
-        assertThat(createBookRequest.getPrice().doubleValue()).isEqualTo(29.99);
+        assertThat(createBookRequest.authorName()).isEqualTo("Ivan Franchin");
+        assertThat(createBookRequest.title()).isEqualTo("SpringBoot");
+        assertThat(createBookRequest.price().doubleValue()).isEqualTo(29.99);
     }
 }

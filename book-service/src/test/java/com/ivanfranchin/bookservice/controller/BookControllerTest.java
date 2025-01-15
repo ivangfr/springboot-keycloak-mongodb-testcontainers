@@ -120,10 +120,7 @@ class BookControllerTest {
     @WithMockUser(roles = MANAGE_BOOKS)
     void testUpdateBookWhenExistent() throws Exception {
         Book book = getDefaultBook();
-
-        UpdateBookRequest updateBookRequest = new UpdateBookRequest();
-        updateBookRequest.setPrice(BigDecimal.valueOf(99.99));
-        updateBookRequest.setTitle("Java 9");
+        UpdateBookRequest updateBookRequest = new UpdateBookRequest(null, "Java 9", BigDecimal.valueOf(99.99));
 
         given(bookService.validateAndGetBookById(anyString())).willReturn(book);
         given(bookService.saveBook(any(Book.class))).willReturn(book);
@@ -137,15 +134,14 @@ class BookControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath(JSON_$_ID, is(book.getId())))
                 .andExpect(jsonPath(JSON_$_AUTHOR_NAME, is(book.getAuthorName())))
-                .andExpect(jsonPath(JSON_$_TITLE, is(updateBookRequest.getTitle())))
-                .andExpect(jsonPath(JSON_$_PRICE, is(updateBookRequest.getPrice().doubleValue())));
+                .andExpect(jsonPath(JSON_$_TITLE, is(updateBookRequest.title())))
+                .andExpect(jsonPath(JSON_$_PRICE, is(updateBookRequest.price().doubleValue())));
     }
 
     @Test
     @WithMockUser(roles = MANAGE_BOOKS)
     void testUpdateBookWhenNonExistent() throws Exception {
-        UpdateBookRequest updateBookRequest = new UpdateBookRequest();
-        updateBookRequest.setTitle("SpringBoot 2");
+        UpdateBookRequest updateBookRequest = new UpdateBookRequest(null, "SpringBoot 2", null);
 
         willThrow(BookNotFoundException.class).given(bookService).validateAndGetBookById(anyString());
 
@@ -203,9 +199,7 @@ class BookControllerTest {
     @Test
     @WithMockUser(roles = FAKE_ROLE)
     void testUpdateBookUsingInvalidRoles() throws Exception {
-        UpdateBookRequest updateBookRequest = new UpdateBookRequest();
-        updateBookRequest.setPrice(BigDecimal.valueOf(99.99));
-        updateBookRequest.setTitle("Java 9");
+        UpdateBookRequest updateBookRequest = new UpdateBookRequest(null, "Java 9", BigDecimal.valueOf(99.99));
 
         ResultActions resultActions = mockMvc.perform(patch(API_BOOKS_ID_URL, "123")
                         .contentType(MediaType.APPLICATION_JSON)

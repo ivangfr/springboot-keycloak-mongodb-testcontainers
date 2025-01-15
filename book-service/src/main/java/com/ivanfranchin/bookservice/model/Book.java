@@ -30,21 +30,21 @@ public class Book {
 
     public static Book from(CreateBookRequest createBookRequest) {
         return new Book(
-                createBookRequest.getAuthorName(),
-                createBookRequest.getTitle(),
-                createBookRequest.getPrice()
+                createBookRequest.authorName(),
+                createBookRequest.title(),
+                createBookRequest.price()
         );
     }
 
     public static void updateFrom(UpdateBookRequest updateBookRequest, Book book) {
-        if (updateBookRequest.getAuthorName() != null) {
-            book.setAuthorName(updateBookRequest.getAuthorName());
+        if (updateBookRequest.authorName() != null) {
+            book.setAuthorName(updateBookRequest.authorName());
         }
-        if (updateBookRequest.getTitle() != null) {
-            book.setTitle(updateBookRequest.getTitle());
+        if (updateBookRequest.title() != null) {
+            book.setTitle(updateBookRequest.title());
         }
-        if (updateBookRequest.getPrice() != null) {
-            book.setPrice(updateBookRequest.getPrice());
+        if (updateBookRequest.price() != null) {
+            book.setPrice(updateBookRequest.price());
         }
     }
 }
