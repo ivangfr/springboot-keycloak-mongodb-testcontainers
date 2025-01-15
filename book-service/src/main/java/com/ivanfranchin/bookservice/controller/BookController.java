@@ -3,7 +3,6 @@ package com.ivanfranchin.bookservice.controller;
 import com.ivanfranchin.bookservice.dto.BookResponse;
 import com.ivanfranchin.bookservice.dto.CreateBookRequest;
 import com.ivanfranchin.bookservice.dto.UpdateBookRequest;
-import com.ivanfranchin.bookservice.mapper.BookMapper;
 import com.ivanfranchin.bookservice.model.Book;
 import com.ivanfranchin.bookservice.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +36,6 @@ import static com.ivanfranchin.bookservice.config.SwaggerConfig.BEARER_KEY_SECUR
 public class BookController {
 
     private final BookService bookService;
-    private final BookMapper bookMapper;
 
     @Operation(summary = "Get list of book. It can be filtered by author name")
     @GetMapping
@@ -49,7 +47,7 @@ public class BookController {
             log.info("Get books");
         }
         List<Book> books = filterByAuthorName ? bookService.getBooksByAuthorName(authorName) : bookService.getBooks();
-        return books.stream().map(bookMapper::toBookResponse).collect(Collectors.toList());
+        return books.stream().map(BookResponse::from).collect(Collectors.toList());
     }
 
     @Operation(summary = "Get book by id")
@@ -57,7 +55,7 @@ public class BookController {
     public BookResponse getBookById(@PathVariable String id) {
         log.info("Get books with id equals to {}", id);
         Book book = bookService.validateAndGetBookById(id);
-        return bookMapper.toBookResponse(book);
+        return BookResponse.from(book);
     }
 
     @Operation(
@@ -67,9 +65,8 @@ public class BookController {
     @PostMapping
     public BookResponse createBook(@Valid @RequestBody CreateBookRequest createBookRequest, Principal principal) {
         log.info("Post request made by {} to create a book {}", principal.getName(), createBookRequest);
-        Book book = bookMapper.toBook(createBookRequest);
-        book = bookService.saveBook(book);
-        return bookMapper.toBookResponse(book);
+        Book book = bookService.saveBook(Book.from(createBookRequest));
+        return BookResponse.from(book);
     }
 
     @Operation(
@@ -81,9 +78,9 @@ public class BookController {
                                    Principal principal) {
         log.info("Patch request made by {} to update book with id {}. New values {}", principal.getName(), id, updateBookRequest);
         Book book = bookService.validateAndGetBookById(id);
-        bookMapper.updateUserFromRequest(updateBookRequest, book);
+        Book.updateFrom(updateBookRequest, book);
         book = bookService.saveBook(book);
-        return bookMapper.toBookResponse(book);
+        return BookResponse.from(book);
     }
 
     @Operation(
@@ -94,6 +91,6 @@ public class BookController {
         log.info("Delete request made by {} to remove book with id {}", principal.getName(), id);
         Book book = bookService.validateAndGetBookById(id);
         bookService.deleteBook(book);
-        return bookMapper.toBookResponse(book);
+        return BookResponse.from(book);
     }
 }

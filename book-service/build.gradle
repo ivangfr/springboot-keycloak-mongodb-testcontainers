@@ -27,8 +27,6 @@ repositories {
 }
 
 ext {
-    set('mapstructVersion', '1.6.3')
-    set('lombokMapstructBindingVersion', '0.2.0')
     set('springdocOpenApiVersion', '2.7.0')
     set('keycloakVersion', '26.0.3')
     set('httpClient5Version', '5.4.1')
@@ -79,13 +77,6 @@ dependencies {
     // this dependency is needed because keycloak-admin-client dependency is still using httpclient4
     // See: https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Migration-Guide#apache-httpclient-in-resttemplate
     implementation "org.apache.httpcomponents.client5:httpclient5:${httpClient5Version}"
-
-    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-    testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-
-    // This dependency is needed so that Mapstruct can work with Lombok 1.18.16
-    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'

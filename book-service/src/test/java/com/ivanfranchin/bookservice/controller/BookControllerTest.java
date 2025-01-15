@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ivanfranchin.bookservice.dto.CreateBookRequest;
 import com.ivanfranchin.bookservice.dto.UpdateBookRequest;
 import com.ivanfranchin.bookservice.exception.BookNotFoundException;
-import com.ivanfranchin.bookservice.mapper.BookMapperImpl;
 import com.ivanfranchin.bookservice.model.Book;
 import com.ivanfranchin.bookservice.security.JwtAuthConverterProperties;
 import com.ivanfranchin.bookservice.security.SecurityConfig;
@@ -39,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BookController.class)
-@Import({BookMapperImpl.class, JwtAuthConverterProperties.class, SecurityConfig.class})
+@Import({JwtAuthConverterProperties.class, SecurityConfig.class})
 class BookControllerTest {
 
     @Autowired

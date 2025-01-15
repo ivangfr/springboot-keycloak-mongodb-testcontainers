@@ -1,5 +1,7 @@
 package com.ivanfranchin.bookservice.model;
 
+import com.ivanfranchin.bookservice.dto.CreateBookRequest;
+import com.ivanfranchin.bookservice.dto.UpdateBookRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,5 +26,25 @@ public class Book {
         this.authorName = authorName;
         this.title = title;
         this.price = price;
+    }
+
+    public static Book from(CreateBookRequest createBookRequest) {
+        return new Book(
+                createBookRequest.getAuthorName(),
+                createBookRequest.getTitle(),
+                createBookRequest.getPrice()
+        );
+    }
+
+    public static void updateFrom(UpdateBookRequest updateBookRequest, Book book) {
+        if (updateBookRequest.getAuthorName() != null) {
+            book.setAuthorName(updateBookRequest.getAuthorName());
+        }
+        if (updateBookRequest.getTitle() != null) {
+            book.setTitle(updateBookRequest.getTitle());
+        }
+        if (updateBookRequest.getPrice() != null) {
+            book.setPrice(updateBookRequest.getPrice());
+        }
     }
 }
