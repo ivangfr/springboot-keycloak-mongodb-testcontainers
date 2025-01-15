@@ -18,16 +18,6 @@ jwt:
       resource-id: ${spring.application.name}
       principal-attribute: preferred_username
 
-management:
-  endpoints:
-    web:
-      exposure.include: beans, env, health, info, metrics, mappings
-  endpoint:
-    health:
-      show-details: always
-
 springdoc:
-  show-actuator: true
   swagger-ui:
-    groups-order: DESC
     disable-swagger-default-url: true
