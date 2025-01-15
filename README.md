@@ -1,11 +1,11 @@
 # springboot-keycloak-mongodb-testcontainers
 
-The goals of this project are:
+The goals of this project are to:
 
 - Create a [`Spring Boot`](https://docs.spring.io/spring-boot/index.html) application that manages books, called `book-service`;
-- Use [`Keycloak`](https://www.keycloak.org) as OpenID Connect Provider;
+- Use [`Keycloak`](https://www.keycloak.org) as OpenID Connect provider;
 - Test using [`Testcontainers`](https://testcontainers.com/);
-- Explore the utilities and annotations that `Spring Boot` provides when testing applications.
+- Explore the utilities and annotations that `Spring Boot` provides for testing applications.
 
 ## Proof-of-Concepts & Articles
 
