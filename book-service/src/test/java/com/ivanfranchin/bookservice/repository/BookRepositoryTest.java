@@ -23,7 +23,7 @@ class BookRepositoryTest {
 
     @Container
     @ServiceConnection
-    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:7.0.14");
+    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:8.0.3");
 
     @Autowired
     private MongoTemplate mongoTemplate;

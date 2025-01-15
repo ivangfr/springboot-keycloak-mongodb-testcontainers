@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-MONGO_VERSION="7.0.14"
-KEYCLOAK_VERSION="26.0.1"
+MONGO_VERSION="8.0.3"
+KEYCLOAK_VERSION="26.0.7"
 
 source scripts/my-functions.sh
 
@@ -31,8 +31,8 @@ echo "-----------------"
 docker run -d \
   --name keycloak \
   -p 8080:8080 \
-  -e KEYCLOAK_ADMIN=admin \
-  -e KEYCLOAK_ADMIN_PASSWORD=admin \
+  -e KC_BOOTSTRAP_ADMIN_USERNAME=admin \
+  -e KC_BOOTSTRAP_ADMIN_PASSWORD=admin \
   -e KC_DB=dev-mem \
   --restart=unless-stopped \
   --network=springboot-keycloak-mongodb-testcontainers-net \

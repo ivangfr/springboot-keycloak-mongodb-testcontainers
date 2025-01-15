@@ -6,8 +6,8 @@ import com.ivanfranchin.bookservice.repository.BookRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
@@ -28,7 +28,7 @@ class BookServiceImplTest {
     @Autowired
     private BookService bookService;
 
-    @MockBean
+    @MockitoBean
     private BookRepository bookRepository;
 
     @Test

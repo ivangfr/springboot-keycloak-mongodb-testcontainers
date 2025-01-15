@@ -28,13 +28,13 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ## Prerequisites
 
-- [`Java 21+`](https://www.oracle.com/java/technologies/downloads/#java21)
-- [`Docker`](https://www.docker.com/)
+- [`Java 21`](https://www.oracle.com/java/technologies/downloads/#java21) or higher;
+- A containerization tool (e.g., [`Docker`](https://www.docker.com), [`Podman`](https://podman.io), etc.)
 - [`jq`](https://jqlang.github.io/jq/)
 
 ## Start Environment
 
-Open a terminal and, inside `springboot-keycloak-mongodb-testcontainers` root folder, run the script below
+Open a terminal and, inside the `springboot-keycloak-mongodb-testcontainers` root folder, run the script below
 ```
 ./init-environment.sh
 ```
@@ -45,7 +45,7 @@ There are two ways: running a script or using `Keycloak` website
 
 ### Running Script
 
-- In a terminal, make sure you are in `springboot-keycloak-mongodb-testcontainers` root folder
+- In a terminal, make sure you are inside the `springboot-keycloak-mongodb-testcontainers` root folder
 
 - Run the following script to configure `Keycloak` for `book-service` application
   ```
@@ -123,7 +123,7 @@ There are two ways: running a script or using `Keycloak` website
 
 ## Running book-service with Gradle
 
-- Open a new terminal and navigate to `springboot-keycloak-mongodb-testcontainers` root folder
+- Open a new terminal and navigate to the `springboot-keycloak-mongodb-testcontainers` root folder
 
 - Run the following command to start the application
   ```
@@ -132,11 +132,11 @@ There are two ways: running a script or using `Keycloak` website
 
 ## Running book-service as a Docker Container
 
-- In a terminal, navigate to `springboot-keycloak-mongodb-testcontainers` root folder
+- In a terminal, navigate to the `springboot-keycloak-mongodb-testcontainers` root folder
 
 - Build Docker Image
   ```
-  ./docker-build.sh
+  ./build-docker-images.sh
   ```
   | Environment Variable | Description                                                       |
   |----------------------|-------------------------------------------------------------------|
@@ -290,14 +290,14 @@ There are two ways: running a script or using `Keycloak` website
 
 ## Cleanup
 
-To remove the Docker image created by this project, go to a terminal and, inside `springboot-keycloak-mongodb-testcontainers` root folder, run the following script
+To remove the Docker image created by this project, go to a terminal and, inside the `springboot-keycloak-mongodb-testcontainers` root folder, run the following script
 ```
 ./remove-docker-images.sh
 ```
 
 ## Running Unit and Integration Tests
 
-- In a terminal and inside `springboot-keycloak-mongodb-testcontainers` root folder, run the command below to run unit and integration tests
+- In a terminal and inside the `springboot-keycloak-mongodb-testcontainers` root folder, run the command below to run unit and integration tests
   ```
   ./gradlew book-service:clean book-service:assemble \
     book-service:cleanTest \
@@ -306,12 +306,12 @@ To remove the Docker image created by this project, go to a terminal and, inside
   ```
   > **Note**: During integration tests, `Testcontainers` will start automatically `MongoDB` and `Keycloak` containers before the tests begin and shuts them down when the tests finish.
 
-- From `springboot-keycloak-mongodb-testcontainers` root folder, **Unit Testing Report** can be found at
+- From the `springboot-keycloak-mongodb-testcontainers` root folder, **Unit Testing Report** can be found at
   ```
   book-service/build/reports/tests/test/index.html
   ```
   
-- From `springboot-keycloak-mongodb-testcontainers` root folder, **Integration Testing Report** can be found at
+- From the `springboot-keycloak-mongodb-testcontainers` root folder, **Integration Testing Report** can be found at
   ```
   book-service/build/reports/tests/integrationTest/index.html
   ```

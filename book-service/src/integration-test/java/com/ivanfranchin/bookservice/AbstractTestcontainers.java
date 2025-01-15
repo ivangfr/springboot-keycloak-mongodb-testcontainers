@@ -26,17 +26,17 @@ public abstract class AbstractTestcontainers {
 
     @Container
     @ServiceConnection
-    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:7.0.14");
+    private static final MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:8.0.3");
 
-    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("quay.io/keycloak/keycloak:26.0.1");
+    private static final GenericContainer<?> keycloakContainer = new GenericContainer<>("quay.io/keycloak/keycloak:26.0.7");
 
     protected static Keycloak keycloakBookService;
 
     @DynamicPropertySource
     private static void dynamicProperties(DynamicPropertyRegistry registry) {
         keycloakContainer.withExposedPorts(8080)
-                .withEnv("KEYCLOAK_ADMIN", "admin")
-                .withEnv("KEYCLOAK_ADMIN_PASSWORD", "admin")
+                .withEnv("KC_BOOTSTRAP_ADMIN_USERNAME", "admin")
+                .withEnv("KC_BOOTSTRAP_ADMIN_PASSWORD", "admin")
                 .withEnv("KC_DB", "dev-mem")
                 .withCommand("start-dev")
                 .waitingFor(Wait.forHttp("/admin").forPort(8080).withStartupTimeout(Duration.ofMinutes(2)))
