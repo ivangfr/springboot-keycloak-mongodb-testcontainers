@@ -1,8 +1,9 @@
 package com.ivanfranchin.bookservice.service;
 
-import com.ivanfranchin.bookservice.exception.BookNotFoundException;
-import com.ivanfranchin.bookservice.model.Book;
-import com.ivanfranchin.bookservice.repository.BookRepository;
+import com.ivanfranchin.bookservice.book.BookService;
+import com.ivanfranchin.bookservice.book.exception.BookNotFoundException;
+import com.ivanfranchin.bookservice.book.model.Book;
+import com.ivanfranchin.bookservice.book.BookRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
-@Import(BookServiceImpl.class)
+@Import(BookService.class)
 class BookServiceImplTest {
 
     @Autowired

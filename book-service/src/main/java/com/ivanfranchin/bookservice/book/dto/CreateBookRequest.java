@@ -1,4 +1,4 @@
-package com.ivanfranchin.bookservice.dto;
+package com.ivanfranchin.bookservice.book.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

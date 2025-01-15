@@ -1,6 +1,6 @@
-package com.ivanfranchin.bookservice.dto;
+package com.ivanfranchin.bookservice.book.dto;
 
-import com.ivanfranchin.bookservice.model.Book;
+import com.ivanfranchin.bookservice.book.model.Book;
 
 import java.math.BigDecimal;
 

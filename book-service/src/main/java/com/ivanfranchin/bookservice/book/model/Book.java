@@ -1,7 +1,7 @@
-package com.ivanfranchin.bookservice.model;
+package com.ivanfranchin.bookservice.book.model;
 
-import com.ivanfranchin.bookservice.dto.CreateBookRequest;
-import com.ivanfranchin.bookservice.dto.UpdateBookRequest;
+import com.ivanfranchin.bookservice.book.dto.CreateBookRequest;
+import com.ivanfranchin.bookservice.book.dto.UpdateBookRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

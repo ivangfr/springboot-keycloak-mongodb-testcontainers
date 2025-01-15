@@ -1,10 +1,10 @@
 package com.ivanfranchin.bookservice;
 
-import com.ivanfranchin.bookservice.dto.BookResponse;
-import com.ivanfranchin.bookservice.dto.CreateBookRequest;
-import com.ivanfranchin.bookservice.dto.UpdateBookRequest;
-import com.ivanfranchin.bookservice.model.Book;
-import com.ivanfranchin.bookservice.repository.BookRepository;
+import com.ivanfranchin.bookservice.book.dto.BookResponse;
+import com.ivanfranchin.bookservice.book.dto.CreateBookRequest;
+import com.ivanfranchin.bookservice.book.dto.UpdateBookRequest;
+import com.ivanfranchin.bookservice.book.model.Book;
+import com.ivanfranchin.bookservice.book.BookRepository;
 import lombok.Value;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

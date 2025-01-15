@@ -1,13 +1,14 @@
 package com.ivanfranchin.bookservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ivanfranchin.bookservice.dto.CreateBookRequest;
-import com.ivanfranchin.bookservice.dto.UpdateBookRequest;
-import com.ivanfranchin.bookservice.exception.BookNotFoundException;
-import com.ivanfranchin.bookservice.model.Book;
+import com.ivanfranchin.bookservice.book.BookController;
+import com.ivanfranchin.bookservice.book.dto.CreateBookRequest;
+import com.ivanfranchin.bookservice.book.dto.UpdateBookRequest;
+import com.ivanfranchin.bookservice.book.exception.BookNotFoundException;
+import com.ivanfranchin.bookservice.book.model.Book;
 import com.ivanfranchin.bookservice.security.JwtAuthConverterProperties;
 import com.ivanfranchin.bookservice.security.SecurityConfig;
-import com.ivanfranchin.bookservice.service.BookService;
+import com.ivanfranchin.bookservice.book.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

@@ -1,6 +1,7 @@
 package com.ivanfranchin.bookservice.repository;
 
-import com.ivanfranchin.bookservice.model.Book;
+import com.ivanfranchin.bookservice.book.BookRepository;
+import com.ivanfranchin.bookservice.book.model.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

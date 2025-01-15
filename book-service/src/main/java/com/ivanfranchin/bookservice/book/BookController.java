@@ -1,10 +1,9 @@
-package com.ivanfranchin.bookservice.controller;
+package com.ivanfranchin.bookservice.book;
 
-import com.ivanfranchin.bookservice.dto.BookResponse;
-import com.ivanfranchin.bookservice.dto.CreateBookRequest;
-import com.ivanfranchin.bookservice.dto.UpdateBookRequest;
-import com.ivanfranchin.bookservice.model.Book;
-import com.ivanfranchin.bookservice.service.BookService;
+import com.ivanfranchin.bookservice.book.dto.BookResponse;
+import com.ivanfranchin.bookservice.book.dto.CreateBookRequest;
+import com.ivanfranchin.bookservice.book.dto.UpdateBookRequest;
+import com.ivanfranchin.bookservice.book.model.Book;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
