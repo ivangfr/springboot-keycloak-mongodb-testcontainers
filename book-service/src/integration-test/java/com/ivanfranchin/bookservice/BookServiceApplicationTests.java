@@ -1,11 +1,10 @@
 package com.ivanfranchin.bookservice;
 
+import com.ivanfranchin.bookservice.book.BookRepository;
 import com.ivanfranchin.bookservice.book.dto.BookResponse;
 import com.ivanfranchin.bookservice.book.dto.CreateBookRequest;
 import com.ivanfranchin.bookservice.book.dto.UpdateBookRequest;
 import com.ivanfranchin.bookservice.book.model.Book;
-import com.ivanfranchin.bookservice.book.BookRepository;
-import lombok.Value;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,12 +118,12 @@ class BookServiceApplicationTests extends AbstractTestcontainers {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
-        assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
-        assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_NOT_FOUND);
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("Book with id '123' not found.");
-        assertThat(responseEntity.getBody().getPath()).isEqualTo(url);
-        assertThat(responseEntity.getBody().getErrors()).isNull();
+        assertThat(responseEntity.getBody().timestamp()).isNotEmpty();
+        assertThat(responseEntity.getBody().status()).isEqualTo(404);
+        assertThat(responseEntity.getBody().error()).isEqualTo(ERROR_NOT_FOUND);
+        assertThat(responseEntity.getBody().message()).isEqualTo("Book with id '123' not found.");
+        assertThat(responseEntity.getBody().path()).isEqualTo(url);
+        assertThat(responseEntity.getBody().errors()).isNull();
     }
 
     @Test
@@ -167,12 +166,12 @@ class BookServiceApplicationTests extends AbstractTestcontainers {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(responseEntity.getBody()).isNotNull();
-        assertThat(responseEntity.getBody().getTimestamp()).isNotEmpty();
-        assertThat(responseEntity.getBody().getStatus()).isEqualTo(404);
-        assertThat(responseEntity.getBody().getError()).isEqualTo(ERROR_NOT_FOUND);
-        assertThat(responseEntity.getBody().getMessage()).isEqualTo("Book with id '123' not found.");
-        assertThat(responseEntity.getBody().getPath()).isEqualTo(url);
-        assertThat(responseEntity.getBody().getErrors()).isNull();
+        assertThat(responseEntity.getBody().timestamp()).isNotEmpty();
+        assertThat(responseEntity.getBody().status()).isEqualTo(404);
+        assertThat(responseEntity.getBody().error()).isEqualTo(ERROR_NOT_FOUND);
+        assertThat(responseEntity.getBody().message()).isEqualTo("Book with id '123' not found.");
+        assertThat(responseEntity.getBody().path()).isEqualTo(url);
+        assertThat(responseEntity.getBody().errors()).isNull();
     }
 
     @Test
@@ -211,25 +210,22 @@ class BookServiceApplicationTests extends AbstractTestcontainers {
         return new CreateBookRequest("Ivan Franchin", "SpringBoot", BigDecimal.valueOf(10.99));
     }
 
-    @Value
-    private static class MessageError {
-        String timestamp;
-        int status;
-        String error;
-        String message;
-        String path;
-        String errorCode;
-        List<ErrorDetail> errors;
+    private record MessageError(
+            String timestamp,
+            int status,
+            String error,
+            String message,
+            String path,
+            String errorCode, List<ErrorDetail> errors) {
 
-        @Value
-        public static class ErrorDetail {
-            List<String> codes;
-            String defaultMessage;
-            String objectName;
-            String field;
-            String rejectedValue;
-            boolean bindingFailure;
-            String code;
+        public record ErrorDetail(
+                List<String> codes,
+                String defaultMessage,
+                String objectName,
+                String field,
+                String rejectedValue,
+                boolean bindingFailure,
+                String code) {
         }
     }
 

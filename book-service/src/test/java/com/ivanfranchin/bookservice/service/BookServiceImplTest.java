@@ -56,7 +56,7 @@ class BookServiceImplTest {
 
         List<Book> booksFound = bookService.getBooks();
         assertThat(booksFound).hasSize(1);
-        assertThat(booksFound.get(0)).isEqualTo(book);
+        assertThat(booksFound.getFirst()).isEqualTo(book);
     }
 
     @Test
@@ -66,7 +66,7 @@ class BookServiceImplTest {
 
         List<Book> booksFound = bookService.getBooksByAuthorName(book.getAuthorName());
         assertThat(booksFound).hasSize(1);
-        assertThat(booksFound.get(0)).isEqualTo(book);
+        assertThat(booksFound.getFirst()).isEqualTo(book);
     }
 
     @Test
