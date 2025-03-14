@@ -24,7 +24,7 @@ import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
 @Import(BookService.class)
-class BookServiceImplTest {
+class BookServiceTest {
 
     @Autowired
     private BookService bookService;

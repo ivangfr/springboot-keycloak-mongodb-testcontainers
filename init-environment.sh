@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-MONGO_VERSION="8.0.3"
-KEYCLOAK_VERSION="26.0.7"
+MONGO_VERSION="8.0.5"
+KEYCLOAK_VERSION="26.1.4"
 
 source scripts/my-functions.sh
 

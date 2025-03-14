@@ -1,6 +1,6 @@
 # springboot-keycloak-mongodb-testcontainers
 
-The goals of this project are to:
+The goals of this project are:
 
 - Create a [`Spring Boot`](https://docs.spring.io/spring-boot/index.html) application that manages books, called `book-service`;
 - Use [`Keycloak`](https://www.keycloak.org) as OpenID Connect provider;
@@ -41,7 +41,7 @@ Open a terminal and, inside the `springboot-keycloak-mongodb-testcontainers` roo
 
 ## Configure Keycloak
 
-There are two ways: running a script or using `Keycloak` website
+There are two ways: running a script or using the `Keycloak` website
 
 ### Running Script
 
@@ -52,13 +52,13 @@ There are two ways: running a script or using `Keycloak` website
   ./init-keycloak.sh
   ```
 
-  This script creates:
+  This script will create:
   - `company-services` realm;
   - `book-service` client;
   - `manage_books` client role;
   - user with _username_ `ivan.franchin` and _password_ `123` and with the role `manage_books` assigned.
 
-- The `book-service` client secret (`BOOK_SERVICE_CLIENT_SECRET`) is shown at the end of the execution. It will be used in the next step
+- The `book-service` client secret (`BOOK_SERVICE_CLIENT_SECRET`) is shown at the end of the execution. It will be used in the next step.
 
 - You can check the configuration in `Keycloak` by accessing http://localhost:8080. The credentials are `admin/admin`. 
 
@@ -113,7 +113,7 @@ There are two ways: running a script or using `Keycloak` website
 - In `Credentials` tab
   - Click `Set password` button
   - Set the value `123` to `Password` and `Password confirmation`
-  - Disable the `Temporary` field toggle switch
+  - Disable the `Temporary` toggle switch
   - Click `Save` button
   - Confirm by clicking `Save password` button
 - In `Role Mappings` tab
@@ -192,7 +192,7 @@ There are two ways: running a script or using `Keycloak` website
         -d "client_id=book-service"' | jq -r .access_token)
   echo $ACCESS_TOKEN
   ```
-  > **Note**: We are running a alpine/curl Docker container and joining it to the project Docker network. By informing `"keycloak:8080"` host/port we won't have the error complaining about an invalid token due to an invalid token issuer.
+  > **Note**: We are running a alpine/curl Docker container and joining it to the project Docker network. By specifying `"keycloak:8080"` as host/port, we won't encounter the error related to an invalid token issuer.
 
 - In [jwt.io](https://jwt.io), you can decode and verify the `JWT` access token
 
@@ -228,7 +228,7 @@ There are two ways: running a script or using `Keycloak` website
     -H "Content-Type: application/json" \
     -d '{"authorName": "Ivan Franchin", "title": "Java 8", "price": 10.5}'
   ```
-  It should return something like
+  It should return something like:
   ```
   HTTP/1.1 201
   {"id":"612f4f9438e39e473c4d098b", "authorName":"Ivan Franchin", "title":"Java 8", "price":10.5}
@@ -240,11 +240,11 @@ There are two ways: running a script or using `Keycloak` website
 
 - Click `GET /api/books` to open it. Then, click `Try it out` button and, finally, click `Execute` button.
 
-  It will return a http status code `200` and an empty list or a list with some books if you've already added them
+  It will return a HTTP status code `200` and an empty list or a list with some books if you've already added them.
 
 - Now, let's try to call a secured endpoint without authentication. Click `POST /api/books` to open it. Then, click `Try it out` button (you can use the default values) and, finally, click `Execute` button.
 
-  It will return
+  It will return:
   ```
   Code: 401
   Details: Error: response status is 401
@@ -258,7 +258,7 @@ There are two ways: running a script or using `Keycloak` website
 
 - Go to `POST /api/books`, click `Try it out` and, finally, click `Execute` button.
 
-  It should return something like
+  It should return something like:
   ```
   HTTP/1.1 201
   {
@@ -283,14 +283,14 @@ There are two ways: running a script or using `Keycloak` website
 ## Shutdown
 
 - To stop `book-service`, go to the terminal where the application is running and press `Ctrl+C`;
-- To stop the Docker containers started using `./init-environment.sh` script, make sure you are in `springboot-keycloak-mongodb-testcontainers` and run the script below:
+- To stop the Docker containers started using the `./init-environment.sh` script, make sure you are in `springboot-keycloak-mongodb-testcontainers` and run the script below:
   ```
   ./shutdown-environment.sh
   ```
 
 ## Cleanup
 
-To remove the Docker image created by this project, go to a terminal and, inside the `springboot-keycloak-mongodb-testcontainers` root folder, run the following script
+To remove the Docker image created by this project, go to a terminal and, inside the `springboot-keycloak-mongodb-testcontainers` root folder, run the following script:
 ```
 ./remove-docker-images.sh
 ```
@@ -304,14 +304,14 @@ To remove the Docker image created by this project, go to a terminal and, inside
     book-service:test \
     book-service:integrationTest
   ```
-  > **Note**: During integration tests, `Testcontainers` will start automatically `MongoDB` and `Keycloak` containers before the tests begin and shuts them down when the tests finish.
+  > **Note**: During integration tests, `Testcontainers` will automatically start `MongoDB` and `Keycloak` containers before the tests begin and shut them down when the tests finish.
 
-- From the `springboot-keycloak-mongodb-testcontainers` root folder, **Unit Testing Report** can be found at
+- From the `springboot-keycloak-mongodb-testcontainers` root folder, the **Unit Testing Report** can be found at:
   ```
   book-service/build/reports/tests/test/index.html
   ```
-  
-- From the `springboot-keycloak-mongodb-testcontainers` root folder, **Integration Testing Report** can be found at
+
+- From the `springboot-keycloak-mongodb-testcontainers` root folder, the **Integration Testing Report** can be found at:
   ```
   book-service/build/reports/tests/integrationTest/index.html
   ```
