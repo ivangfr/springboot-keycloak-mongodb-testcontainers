@@ -24,7 +24,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class BookServiceApplicationTests extends AbstractTestcontainers {
+class BookServiceApplicationIT extends AbstractTestcontainers {
 
     @Autowired
     private BookRepository bookRepository;

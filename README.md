@@ -121,13 +121,13 @@ There are two ways: running a script or using the `Keycloak` website
   - Click `Filter by realm roles` dropdown button and select `Filter by clients`
   - Select `[book-service] manage_books` name and click `Assign` button
 
-## Running book-service with Gradle
+## Running book-service with Maven
 
 - Open a new terminal and navigate to the `springboot-keycloak-mongodb-testcontainers` root folder
 
 - Run the following command to start the application
   ```bash
-  ./gradlew book-service:clean book-service:bootRun --args='--server.port=9080'
+  ./mvnw clean spring-boot:run --projects book-service -Dspring-boot.run.jvmArguments="-Dserver.port=9080"
   ```
 
 ## Running book-service as a Docker Container
@@ -162,7 +162,7 @@ There are two ways: running a script or using the `Keycloak` website
   BOOK_SERVICE_CLIENT_SECRET=...
   ```
 
-- **When running book-service with Gradle**
+- **When running book-service with Maven**
 
   Run the commands below to get an access token for `ivan.franchin`
   ```bash
@@ -288,30 +288,24 @@ There are two ways: running a script or using the `Keycloak` website
   ./shutdown-environment.sh
   ```
 
+## Running Tests
+
+- In a terminal and inside the `springboot-keycloak-mongodb-testcontainers` root folder, run the command commands:
+
+  - Unit Tests
+    ```bash
+    ./mvnw clean test --projects book-service
+    ```
+  
+  - Unit and Integration Tests
+    > **Note**: During integration tests, `Testcontainers` will automatically start `MongoDB` and `Keycloak` containers before the tests begin and shut them down when the tests finish.
+    ```bash
+    ./mvnw clean verify --projects book-service
+    ```
+
 ## Cleanup
 
 To remove the Docker image created by this project, go to a terminal and, inside the `springboot-keycloak-mongodb-testcontainers` root folder, run the following script:
 ```bash
 ./remove-docker-images.sh
 ```
-
-## Running Unit and Integration Tests
-
-- In a terminal and inside the `springboot-keycloak-mongodb-testcontainers` root folder, run the command below to run unit and integration tests
-  ```bash
-  ./gradlew book-service:clean book-service:assemble \
-    book-service:cleanTest \
-    book-service:test \
-    book-service:integrationTest
-  ```
-  > **Note**: During integration tests, `Testcontainers` will automatically start `MongoDB` and `Keycloak` containers before the tests begin and shut them down when the tests finish.
-
-- From the `springboot-keycloak-mongodb-testcontainers` root folder, the **Unit Testing Report** can be found at:
-  ```text
-  book-service/build/reports/tests/test/index.html
-  ```
-
-- From the `springboot-keycloak-mongodb-testcontainers` root folder, the **Integration Testing Report** can be found at:
-  ```text
-  book-service/build/reports/tests/integrationTest/index.html
-  ```
