@@ -10,10 +10,10 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.mongodb.MongoDBContainer;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -42,8 +42,8 @@ public abstract class AbstractTestcontainers {
                 .waitingFor(Wait.forHttp("/admin").forPort(8080).withStartupTimeout(Duration.ofMinutes(2)))
                 .start();
 
-        registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
-        registry.add("spring.data.mongodb.port", () -> mongoDBContainer.getMappedPort(27017));
+        registry.add("spring.mongodb.host", mongoDBContainer::getHost);
+        registry.add("spring.mongodb.port", () -> mongoDBContainer.getMappedPort(27017));
 
         String keycloakHost = keycloakContainer.getHost();
         Integer keycloakPort = keycloakContainer.getMappedPort(8080);
@@ -77,24 +77,14 @@ public abstract class AbstractTestcontainers {
         clientRepresentation.setId(BOOK_SERVICE_CLIENT_ID);
         clientRepresentation.setDirectAccessGrantsEnabled(true);
         clientRepresentation.setSecret(BOOK_SERVICE_CLIENT_SECRET);
+        clientRepresentation.setRedirectUris(List.of("http://localhost:9080/*"));
         realmRepresentation.setClients(Collections.singletonList(clientRepresentation));
 
         // Client roles
         Map<String, List<String>> clientRoles = new HashMap<>();
         clientRoles.put(BOOK_SERVICE_CLIENT_ID, BOOK_SERVICE_ROLES);
 
-        // Credentials
-        CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
-        credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
-        credentialRepresentation.setValue(USER_PASSWORD);
-
-        // User
-        UserRepresentation userRepresentation = new UserRepresentation();
-        userRepresentation.setUsername(USER_USERNAME);
-        userRepresentation.setEnabled(true);
-        userRepresentation.setCredentials(Collections.singletonList(credentialRepresentation));
-        userRepresentation.setClientRoles(clientRoles);
-        realmRepresentation.setUsers(Collections.singletonList(userRepresentation));
+        realmRepresentation.setUsers(Collections.singletonList(getUserRepresentation(clientRoles)));
 
         keycloakAdmin.realms().create(realmRepresentation);
 
@@ -106,6 +96,21 @@ public abstract class AbstractTestcontainers {
                 .clientId(BOOK_SERVICE_CLIENT_ID)
                 .clientSecret(BOOK_SERVICE_CLIENT_SECRET)
                 .build();
+    }
+
+    private static UserRepresentation getUserRepresentation(Map<String, List<String>> clientRoles) {
+        // Credentials
+        CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
+        credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
+        credentialRepresentation.setValue(USER_PASSWORD);
+
+        // UserRepresentation
+        UserRepresentation userRepresentation = new UserRepresentation();
+        userRepresentation.setUsername(USER_USERNAME);
+        userRepresentation.setEnabled(true);
+        userRepresentation.setCredentials(Collections.singletonList(credentialRepresentation));
+        userRepresentation.setClientRoles(clientRoles);
+        return userRepresentation;
     }
 
     private static final String COMPANY_SERVICE_REALM_NAME = "company-services";

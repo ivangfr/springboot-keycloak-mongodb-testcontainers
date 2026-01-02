@@ -28,7 +28,7 @@ On [ivangfr.github.io](https://ivangfr.github.io), I have compiled my Proof-of-C
 
 ## Prerequisites
 
-- [`Java 21`](https://www.oracle.com/java/technologies/downloads/#java21) or higher;
+- [`Java 25`](https://www.oracle.com/java/technologies/downloads/#java25) or higher;
 - A containerization tool (e.g., [`Docker`](https://www.docker.com), [`Podman`](https://podman.io), etc.)
 - [`jq`](https://jqlang.github.io/jq/)
 
@@ -76,7 +76,8 @@ There are two ways: running a script or using the `Keycloak` website
 
 #### Create a new Realm
 
-- On the left menu, click the dropdown button that contains `Keycloak` and then, click `Create Realm` button
+- On the left menu, click `Manage Realm`
+- Click `Create realm` button
 - Set `company-services` to the `Realm name` field and click `Create` button
 
 ### Disable Required Action Verify Profile
@@ -94,6 +95,7 @@ There are two ways: running a script or using the `Keycloak` website
   - Click `Next` button
 - In `Capability config`
   - Enable `Client authentication` toggle switch
+  - On the `Authentication flow` section, select `Direct access grants`
   - Click `Next` button
 - In `Login settings` tab
   - Set `http://localhost:9080/*` to `Valid redirect URIs`
@@ -117,9 +119,8 @@ There are two ways: running a script or using the `Keycloak` website
   - Click `Save` button
   - Confirm by clicking `Save password` button
 - In `Role Mappings` tab
-  - Click `Assign role` button
-  - Click `Filter by realm roles` dropdown button and select `Filter by clients`
-  - Select `[book-service] manage_books` name and click `Assign` button
+  - Click `Assign role` button and select `Client roles`
+  - Select `manage_books` and click `Assign` button
 
 ## Running book-service with Maven
 
@@ -192,7 +193,7 @@ There are two ways: running a script or using the `Keycloak` website
         -d "client_id=book-service"' | jq -r .access_token)
   echo $ACCESS_TOKEN
   ```
-  > **Note**: We are running a alpine/curl Docker container and joining it to the project Docker network. By specifying `"keycloak:8080"` as host/port, we won't encounter the error related to an invalid token issuer.
+  > **Note**: We are running alpine/curl Docker container and joining it to the project Docker network. By specifying `"keycloak:8080"` as host/port, we won't encounter the error related to an invalid token issuer.
 
 - In [jwt.io](https://jwt.io), you can decode and verify the `JWT` access token
 
@@ -240,7 +241,7 @@ There are two ways: running a script or using the `Keycloak` website
 
 - Click `GET /api/books` to open it. Then, click `Try it out` button and, finally, click `Execute` button.
 
-  It will return a HTTP status code `200` and an empty list or a list with some books if you've already added them.
+  It will return HTTP status code `200` and an empty list or a list with some books if you've already added them.
 
 - Now, let's try to call a secured endpoint without authentication. Click `POST /api/books` to open it. Then, click `Try it out` button (you can use the default values) and, finally, click `Execute` button.
 

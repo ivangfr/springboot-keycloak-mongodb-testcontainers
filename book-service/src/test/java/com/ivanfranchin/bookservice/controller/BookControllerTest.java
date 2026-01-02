@@ -1,23 +1,23 @@
 package com.ivanfranchin.bookservice.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ivanfranchin.bookservice.book.BookController;
+import com.ivanfranchin.bookservice.book.BookService;
 import com.ivanfranchin.bookservice.book.dto.CreateBookRequest;
 import com.ivanfranchin.bookservice.book.dto.UpdateBookRequest;
 import com.ivanfranchin.bookservice.book.exception.BookNotFoundException;
 import com.ivanfranchin.bookservice.book.model.Book;
 import com.ivanfranchin.bookservice.security.JwtAuthConverterProperties;
 import com.ivanfranchin.bookservice.security.SecurityConfig;
-import com.ivanfranchin.bookservice.book.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import tools.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
 import java.util.Collections;
